@@ -8,7 +8,6 @@ public class Ballon extends Objet{
 	
 
 
-
 	public Ballon(double _x, double _y) 
 	{
 		super(_x, _y);
@@ -44,19 +43,25 @@ public class Ballon extends Objet{
  	 public boolean hitboxslow (Objet tocheck)
  	 {
  		 boolean test=false;
- 		 if (x+r>=tocheck.r)
+ 		 if (x+r>=tocheck.r)// Lire les point cardinaux du ballon W
  		 {
- 			 if(x-r<=tocheck.x+tocheck.r)
+ 			 if(x-r<=tocheck.x+tocheck.r)//E
  			 {
- 				if (y+r>=tocheck.r)
+ 				if (y+r>=tocheck.r)//N
  				{
- 		 			 if(y-r<=tocheck.y+tocheck.r)
+ 		 			 if(y-r<=tocheck.y+tocheck.r)//S
  		 			 {
- 		 				if (Math.sqrt((tocheck.x*tocheck.x-x*x + tocheck.y*tocheck.y-y*y))<r)
+ 		 				if (Math.sqrt((tocheck.x*tocheck.x-x*x + tocheck.y*tocheck.y-y*y))<r)// Distance par rapport aux coins HG
  		 				{
- 		 					if (Math.sqrt((tocheck.x+tocheck.r)*tocheck.x-x*x + tocheck.y*tocheck.y-y*y)<r)
+ 		 					if (Math.sqrt((tocheck.x+tocheck.r)*(tocheck.x+tocheck.r) + tocheck.y*tocheck.y-y*y)<r)//HD
  	 		 				{
- 		 						
+ 		 		 				if (Math.sqrt((tocheck.x*tocheck.x-x*x + (tocheck.y+r)*(tocheck.y+r)-y*y))<r)//BG
+ 		 		 				{
+ 		 		 					if (Math.sqrt((tocheck.x+tocheck.r)*(tocheck.x+tocheck.r) + (tocheck.y+r)*(tocheck.y+r)-y*y)<r)//BD
+ 		 	 		 				{
+ 		 		 						
+ 		 							}
+ 								}
  							}
 						}
  		 			 }
