@@ -9,8 +9,5 @@ public class Snoopy extends Objet {
 	public Snoopy(double _x, double _y)
 	{
 		super(_x, _y);
-		BufferedImage myPicture = ImageIO.read(new File("path-to-file"));
-		JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-		add(picLabel);
 	}
 }
