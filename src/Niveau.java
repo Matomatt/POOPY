@@ -3,10 +3,10 @@ import javax.swing.*;
 import Settings.*;
 import java.util.*;
 
-public class Niveau extends JPanel {
+public class Niveau extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
-	int[][]map = new int[20][10];
+	int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
 	protected ArrayList<Objet> items; 
 	protected Fenetre fenetre;
@@ -27,13 +27,12 @@ public class Niveau extends JPanel {
 			
 		}while(!quit);
 		return true;
-		
 	}
 	
 	public void addall(Objet item)
 	{
 	   items.add(item);
-	   fenetre.add(item,items.size());
+	   this.add(item);
 	   item.setmap(map);
 	}
 	
