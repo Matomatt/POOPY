@@ -1,8 +1,11 @@
-import java.awt.*;
-import java.util.*;
-import java.lang.*;
-import javax.swing.*;
-
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.Console;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+import Settings.*;
 
 
 public class Objet extends JPanel {
@@ -14,10 +17,16 @@ public class Objet extends JPanel {
 	protected  int hitbox;
 	protected  int type;
 	
-	public Objet(double _x,double _y)
+	protected BufferedImage sprite;
+	
+	public Objet(double _x, double _y)
 	{
 		x=_x;
 		y=_y;
+		
+		try { sprite = ImageIO.read(new File("Images/Sprites/default.png"));
+			  sprite = new BufferedImage(globalVar.tileWidth, globalVar.tileHeight, sprite.TYPE_INT_ARGB); }
+		catch (IOException ex) { System.console().writer().println("Couldn't open default sprite..."); }
 	}
  
  
@@ -26,6 +35,8 @@ public class Objet extends JPanel {
 		int result=0;
 		return result;
 	}
+	
+	
 
 }
 
