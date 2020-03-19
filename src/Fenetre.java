@@ -13,7 +13,7 @@ import Engine.Niveau;
 public class Fenetre extends JFrame 
 {
 	private static final long serialVersionUID = 8164118974463460991L;
-	protected ArrayList<Niveau> niveau;
+	protected ArrayList<Niveau> niveaux;
 	int actuallv=0;
 	
 	
@@ -23,16 +23,15 @@ public class Fenetre extends JFrame
 		this.setTitle("Snoopy");
 		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically);
 		this.setVisible(true);
-		this.setLayout(null);
+		this.setLayout(new BorderLayout());
 		
-		niveau= new ArrayList<Niveau>();
+		niveaux= new ArrayList<Niveau>();
 		try {
-			niveau.add( new Niveau("level1"));
+			niveaux.add( new Niveau("level1"));
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		this.add(niveau.get(0));
+		this.add(niveaux.get(0));
 		//niveau.get(0).MainLoop();
 	//	niveau.add(new Niveau("level1.txt"));
 //		try {

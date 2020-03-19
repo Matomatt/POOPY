@@ -3,6 +3,7 @@ import java.awt.*;
 import java.util.*;
 import java.lang.*;
 import java.math.*;
+import Utilitaires.*;
 
 public class Ballon extends Objet{
 
@@ -11,7 +12,7 @@ public class Ballon extends Objet{
 
 	public Ballon(double _x, double _y) 
 	{
-		super(_x, _y);
+		super(_x, _y, ObjectType.BALLON);
 	}
  	 
 	public boolean hitboxfast (Objet tocheck)
