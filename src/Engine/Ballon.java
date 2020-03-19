@@ -32,7 +32,7 @@ public class Ballon extends Objet{
 					{	
 						if (by>= tocheck.y)
 						{
-					 
+							result=true;
 			 			}
 			 		}
 				}
@@ -60,7 +60,7 @@ public class Ballon extends Objet{
  		 		 				{
  		 		 					if (Math.sqrt((tocheck.x+tocheck.r)*(tocheck.x+tocheck.r) + (tocheck.y+r)*(tocheck.y+r)-y*y)<r)//BD
  		 	 		 				{
- 		 		 						
+ 		 		 						test=true;
  		 							}
  								}
  							}

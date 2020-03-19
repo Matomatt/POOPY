@@ -60,4 +60,5 @@ public class Objet extends JPanel {
 		int result=0;
 		return result;
 	}
+	
 }
