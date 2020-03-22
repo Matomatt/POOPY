@@ -21,7 +21,7 @@ public class Niveau extends JPanel implements EventListener {
 	
 	int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
-    protected	Snoopy POOPY;
+    protected Objet POOPY;
 	
 	public Niveau(String name) throws FileNotFoundException
 	{
@@ -49,21 +49,20 @@ public class Niveau extends JPanel implements EventListener {
 	    		{
 	    		case 1:
 	    			this.add(new Objet(i,j, ObjectType.SOLIDBLOC));
-	    			//System.out.print(i*globalVar.tileWidth + " " + j*globalVar.tileHeight + " " );
 	    			break;
 	    		case 9:
-	    			POOPY = new Snoopy(i*globalVar.tileWidth, j*globalVar.tileHeight);
-	    			System.out.print(i*globalVar.tileWidth + " " + j*globalVar.tileHeight + " " );
+	    			POOPY = new Snoopy(i, j);
 	    			map[i][j] = 0;
 	    			this.add(POOPY);
-	    			POOPY.right();
+	    			//C'est comme ça qu'on fait pour bouger n'importe quel objet
+	    			MoveObject(POOPY, Direction.EAST);
+	    			MoveObject(POOPY, Direction.EAST);
 	    			break;
 	    		}
-	    		
 	    	}
-	    	System.out.println("");
+	    	//System.out.println("");
 	    }
-		System.out.println(" nombre de sprite   "+this.getComponentCount());
+		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
 		this.setVisible(true);
 		this.validate();
 		System.out.println(this.getSize());
@@ -100,6 +99,7 @@ public class Niveau extends JPanel implements EventListener {
 		
 	}
 	
+	/*
 	protected void mouvement(int moove) // add binding 
 	{
 		if(moove==0)
@@ -118,6 +118,37 @@ public class Niveau extends JPanel implements EventListener {
 		{
 			POOPY.down();
 		}
+	}
+	*/
+	
+	//Move an object to the desired direction
+	private void MoveObject(Objet o, Direction d)
+	{
+		//If the object is a movable object and can move and if there is nothing blocking the way
+		if (PossibleToMove(o, d))
+		{
+			//Tampon tu connais
+			int exX = o.xInMap; int exY = o.yInMap;
+			//If the object is written on the map (like the movable solid bloc) move returns true
+			if (o.Move(d))
+			{
+				//Exchanging the values in the map array
+				int tmpMap = map[exX][exY];
+				map[exX][exY] = map[o.xInMap][o.yInMap];
+				map[o.xInMap][o.yInMap] = tmpMap;
+			}
+		}
+		//Ok il peut pas bouger mais si c'est snoopy il veut ptet juste regarder du bon coté tu sais pas
+		else if (o.Type() == ObjectType.SNOOPY)
+			((Snoopy)o).ChangeOrientationTo(d);
+			
+	}
+	
+	//returns true if the object is a movable object and can move and if there is nothing blocking the way
+	private boolean PossibleToMove(Objet o, Direction d)
+	{		
+		System.out.println("trying to go there : [" + o.NextCaseX(d) + ", " + o.NextCaseY(d) + "] " + ((Snoopy)o).CanMove(d) + " " + (map[o.NextCaseX(d)][o.NextCaseY(d)] == 0));
+		return (o.CanMove(d) && map[o.NextCaseX(d)][o.NextCaseY(d)] == 0);
 	}
 
 }

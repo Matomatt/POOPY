@@ -19,12 +19,14 @@ public class Objet extends JPanel {
 	protected  static double r;
 	protected int xInMap = 0, yInMap = 0;
 	protected double x=0,y=0;
+	protected double targetX = 0, targetY = 0;
 	protected  JPanel img;
 	protected  int hitbox;
 	protected  ObjectType type;
 	
 	protected BufferedImage sprite;
 	
+	//Si on donne la position en case
 	public Objet(int _x, int _y, ObjectType _type)
 	{
 		xInMap =_x;
@@ -36,6 +38,8 @@ public class Objet extends JPanel {
 		type = _type;
 		Init();
 	}
+	
+	//Si on donne la position pixel perfect
 	public Objet(double _x, double _y, ObjectType _type)
 	{
 		x=_x;
@@ -49,6 +53,9 @@ public class Objet extends JPanel {
 	{
 		this.setLayout(new BorderLayout());
 		
+		targetX = x; targetY = y;
+		
+		//Chargement de sprite par défaut
 		try { sprite = ImageIO.read(new File("./Images/Sprites/default.png"));
 		  //sprite = new BufferedImage(globalVar.tileWidth, globalVar.tileHeight, sprite.TYPE_INT_ARGB);
 			JLabel sp = new JLabel( new ImageIcon(sprite));
@@ -57,8 +64,8 @@ public class Objet extends JPanel {
 	
 		catch (IOException ex) { System.console().writer().println("Couldn't open default sprite..."); }
 		
+		//Les paramètres de base tu connais
 		this.setVisible(true);
-		//this.setBounds((int)x, (int)y-4, globalVar.tileWidth, globalVar.tileHeight);
 		this.setSize(globalVar.tileWidth, globalVar.tileHeight);
 		this.setLocation((int)x, (int)y);
 		this.validate();
@@ -70,4 +77,44 @@ public class Objet extends JPanel {
 		return result;
 	}
 	
+	public ObjectType Type()
+	{
+		return type;
+	}
+	
+	//Les objets de base ils peuvent généralement pas bouger aha sont nuls ces blocs solides
+	public boolean CanMove(Direction d)
+	{
+		return false;
+	}
+	
+	//Les petits calculs de ou il va poser ss fesses après avoir bougé
+	public int NextCaseX(Direction d)
+	{
+		if (d == Direction.WEST)
+			return xInMap-1;
+		if (d == Direction.EAST)
+			return xInMap+1;
+		return xInMap;
+	}
+	public int NextCaseY(Direction d)
+	{
+		if (d == Direction.NORTH)
+			return yInMap-1;
+		if (d == Direction.SOUTH)
+			return yInMap+1;
+		return yInMap;
+	}
+	
+	//Mtn qu'on a fait les calculs et qu'on est chaud pour bouger on bouge et on set la cible vers laquelle il va se déplacer (#animation)
+	public boolean Move(Direction d)
+	{
+		xInMap = NextCaseX(d);
+		yInMap = NextCaseY(d);
+		
+		targetX = xInMap*globalVar.tileWidth;
+		targetY = yInMap*globalVar.tileHeight;
+		
+		return true;
+	}	
 }

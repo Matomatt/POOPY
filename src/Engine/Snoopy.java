@@ -14,7 +14,7 @@ public class Snoopy extends Objet {
 	Direction orientation = Direction.NORTH;
 	
 	
-	public Snoopy(double _x, double _y)
+	public Snoopy(int _x, int _y)
 	{
 		super(_x, _y, ObjectType.SNOOPY);
 		this.remove(0);
@@ -26,8 +26,8 @@ public class Snoopy extends Objet {
 		}
 	}
 	
-	
-	//Pensez √† rajouter l'animamtion du sprite 
+	/*
+	//Pensez √† rajouter l'animation du sprite 
 	public void up() // le d√©placement se fait apr√®s une v√©rif et est call dans niveau 
 	{
 		orientation= Direction.NORTH;
@@ -56,7 +56,30 @@ public class Snoopy extends Objet {
 		y += globalVar.tileHeight;
 		this.setLocation((int)x,(int)y);
 	}
+	*/
 	
+	//A ajouter que si il est dÈj‡ en mvmt bah il peut pas rebouger d'une case, bah ouai sinon il va se tp personne va capter
+	public boolean CanMove(Direction towards)
+	{
+		return true;
+	}
 	
+	//Si il est dans la bonne direction il bouge, sinon il change de direction, il bougera au prochain call
+	public boolean Move(Direction d)
+	{
+		if (orientation == d)
+			super.Move(d);
+		else
+			ChangeOrientationTo(d);
+		System.out.println("Moving from " + x + ", " + y + " to " + targetX + ", " + targetY);
+		//Ca c'est juste pour te montrer ou il est censÈ aller mais comme j'ai pas fait l'animation bah il y bouge pas vraiment (x et y change pas tavu)
+		this.setLocation((int)targetX, (int)targetY);
+		return false;
+	}
 	
+	//On pourra changer le sprite ici en fonction de son orientation
+	public void ChangeOrientationTo(Direction d)
+	{
+		orientation = d;
+	}
 }
