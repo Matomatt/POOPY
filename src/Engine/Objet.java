@@ -32,7 +32,7 @@ public class Objet extends JPanel implements EventListener{
 		
 		x= _x*globalVar.tileWidth;
 		y= _y*globalVar.tileHeight;
-		
+		this.
 		type = _type;
 		Init();
 	}
@@ -90,7 +90,7 @@ public class Objet extends JPanel implements EventListener{
 	
 	//Les objets de base ils peuvent generalement pas bouger aha sont nuls ces blocs solides
 	public boolean CanMove(Direction d) { return false; }
-	//Donc ils sont pas en train de bouger (je mets tout ça la comme ça pas besoin de cast explicite pour savoir si l'objet peut se déplacer)
+	//Donc ils sont pas en train de bouger (je mets tout ï¿½a la comme ï¿½a pas besoin de cast explicite pour savoir si l'objet peut se dï¿½placer)
 	public boolean IsMoving() { return false; }
 	
 	//Les petits calculs de ou il va poser ss fesses aprï¿½s avoir bougï¿½

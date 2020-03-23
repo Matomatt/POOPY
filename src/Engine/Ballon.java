@@ -39,7 +39,7 @@ public class Ballon extends AnimatedObject {
 		}
 	 
 	 return result ;
-}
+	}
  	 public boolean hitboxslow (Objet tocheck)
  	 {
  		 boolean test=false;

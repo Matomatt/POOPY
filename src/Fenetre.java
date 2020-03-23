@@ -32,7 +32,7 @@ public class Fenetre extends JFrame
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		niveaux.get(0).addKeyListener(niveaux.get(0));
+	//	niveaux.get(0).addKeyListener(niveaux.get(0));
 		niveaux.get(0).setFocusable(true);
 		this.add(niveaux.get(0));
 		//niveau.get(0).MainLoop();

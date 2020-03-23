@@ -14,7 +14,7 @@ public class MapDataManager {
 		
 		File mapData = new File("./Maps/" + fileName); 
 		Scanner sc = new Scanner(mapData); 
-		
+		sc.locale();
 		int nbTilesHor = Integer.parseInt(sc.next());
 		int nbTilesVer = Integer.parseInt(sc.next());
 		
@@ -33,7 +33,7 @@ public class MapDataManager {
 	    	System.out.println("");
 	    		
 	    }
-
+	    
 	    sc.close();
 	    
 		return map;

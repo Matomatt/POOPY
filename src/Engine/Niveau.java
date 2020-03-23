@@ -1,4 +1,6 @@
 package Engine;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
@@ -8,7 +10,7 @@ import Settings.*;
 import Data.*;
 import Utilitaires.*;
 
-public class Niveau extends JPanel implements KeyListener {
+public class Niveau extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
@@ -20,12 +22,22 @@ public class Niveau extends JPanel implements KeyListener {
 		int[][] _map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 		
 		_map = MapDataManager.LoadMap(name+".txt");
+		//	this.addKeyListener(new keylistener());
+			Init(_map);
+		this.grabFocus();
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"),"MoveUp");
+		this.getActionMap().put("MoveUp", moveup);
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"),"MoveLeft");
+		this.getActionMap().put("MoveLeft", moveleft);
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"MoveDown");
+		this.getActionMap().put("MoveDown", movedown);
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"),"MoveRight");
+		this.getActionMap().put("MoveRight", moveright);
+		this.validate();
 		
-		Init(_map);
-	//	this.addKeyListener(new keylistener());
 	}
 
-	void Init(int[][] _map)
+	void Init(int[][] _map) 
 	{
 		this.setLayout(null);
 		map = _map;
@@ -78,6 +90,8 @@ public class Niveau extends JPanel implements KeyListener {
 		do
 		{
 			
+			this.grabFocus();
+			this.requestFocus();
 		}while(!quit);
 		return true;
 	}
@@ -124,7 +138,41 @@ public class Niveau extends JPanel implements KeyListener {
 		}
 	}
 	*/
-	
+	Action moveup = new AbstractAction()
+	   {
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				MoveObject(POOPY,Direction.NORTH);
+			}
+	   };	
+	Action moveleft = new AbstractAction()
+		   {
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					MoveObject(POOPY,Direction.WEST);
+				}
+		   };	
+	Action movedown = new AbstractAction()
+			   {
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						MoveObject(POOPY,Direction.SOUTH);
+					}
+			   };	
+	Action moveright = new AbstractAction()
+				   {
+						public void actionPerformed(ActionEvent e) {
+							// TODO Auto-generated method stub
+							MoveObject(POOPY,Direction.EAST);
+						}
+				   };	
+	   
+	protected  Action test()
+	{
+		
+		return null;
+		
+	}
 	//Move an object to the desired direction
 	private void MoveObject(Objet o, Direction d)
 	{
@@ -155,22 +203,5 @@ public class Niveau extends JPanel implements KeyListener {
 		return (o.CanMove(d) && map[o.NextCaseX(d)][o.NextCaseY(d)] == 0);
 	}
 	
-
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("touche"+e.getKeyCode());
-		
-	}
-
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("touche"+e.getKeyCode());
-	}
-
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("touche"+e.getKeyCode());
-		
-	}
-
 }
+
