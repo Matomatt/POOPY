@@ -8,5 +8,6 @@ public class Start {
 		System.out.println("Coucou ca fonctionne");
 		
 		new Fenetre();
+		System.out.println("That's all folks !");
 	}
 }

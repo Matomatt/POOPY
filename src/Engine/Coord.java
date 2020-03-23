@@ -1,8 +1,4 @@
 package Engine;
-import java.awt.*;
-import java.util.*;
-import java.lang.*;
-import javax.swing.*;
 
 
 public class Coord {

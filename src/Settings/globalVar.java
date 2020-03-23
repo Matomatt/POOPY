@@ -6,4 +6,6 @@ public class globalVar {
     
     public static int nbTilesHorizontally = 20;
     public static int nbTilesVertically = 10;
+    
+    public static int FPS = 120;
 }

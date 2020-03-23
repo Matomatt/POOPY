@@ -1,22 +1,15 @@
 package Engine;
-import java.awt.*;
-import java.util.*;
-
-import Settings.globalVar;
-
-import java.lang.*;
-import java.math.*;
 import Utilitaires.*;
 
-public class Ballon extends Objet{
+public class Ballon extends AnimatedObject {
 		
 	int vitesse = 3;
 	int direc= 0;  // je met un int de direction pour keep le dernier moove en mémoire 0 NE 1 NW 2 SW 3 SE  
 
 
-	public Ballon(double _x, double _y) 
+	public Ballon(int _x, int _y) 
 	{
-		super(_x, _y, ObjectType.BALLON);
+		super(_x, _y, 0.6, 0.6, ObjectType.BALLON, true, false);
 	}
  	 
 	public boolean hitboxfast (Objet tocheck)
@@ -81,6 +74,7 @@ public class Ballon extends Objet{
  		 return test;
  	 }
 
+ 	 /*
  	 public int NextCaseX() //
  	 {
  		if (direc == 0|| direc==3) //NE SE
@@ -97,6 +91,9 @@ public class Ballon extends Objet{
  			return yInMap-vitesse;
  		return yInMap;
  	}
+ 	*/
+ 	 
+ 	 /*
  	public boolean Move(ArrayList<Objet> test)
 	{
  		int i;
@@ -108,7 +105,7 @@ public class Ballon extends Objet{
  				xInMap = NextCaseX();
  				yInMap = NextCaseY();
 		return true;
-	}	 	 
+	}*/
  	
  	 
 }

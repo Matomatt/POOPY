@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.CloseAction;
 
 import Settings.globalVar;
 import Engine.Niveau;
@@ -46,6 +47,8 @@ public class Fenetre extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.validate();// sert a valider l'incorporation du nouveau jpanel
 		
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
 	}
 	
 	private void LaunchDefaultLevel() throws FileNotFoundException
@@ -53,6 +56,7 @@ public class Fenetre extends JFrame
 		Niveau defaultLevel = new Niveau("level1");
 		defaultLevel.MainLoop();
 	}
+	
 	
 //	void keyTyped(KeyEvent e)
 //	{

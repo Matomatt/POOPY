@@ -1,19 +1,12 @@
 package Engine;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.Console;
-import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import Data.ImageManager;
 //import Engine.Niveau.keylistener;
 import Settings.*;
 import java.awt.*;
 import java.util.*;
-import java.lang.*;
 import javax.swing.*;
 import Utilitaires.*;
 
@@ -24,20 +17,21 @@ public class Objet extends JPanel implements EventListener{
 	protected int xInMap = 0, yInMap = 0;
 	protected double x=0,y=0;
 	protected double targetX = 0, targetY = 0;
+	
 	protected  JPanel img;
 	protected  int hitbox;
 	protected  ObjectType type;
 	
-	protected BufferedImage sprite;
+	protected JLabel sprite;
 	
 	//Si on donne la position en case
 	public Objet(int _x, int _y, ObjectType _type)
 	{
-		xInMap =_x;
-		yInMap =_y;
+		xInMap = _x;
+		yInMap = _y;
 		
-		x=_x*globalVar.tileWidth;
-		y=_y*globalVar.tileHeight;
+		x= _x*globalVar.tileWidth;
+		y= _y*globalVar.tileHeight;
 		
 		type = _type;
 		Init();
@@ -59,20 +53,28 @@ public class Objet extends JPanel implements EventListener{
 		
 		targetX = x; targetY = y;
 		
-		//Chargement de sprite par dï¿½faut
-		try { sprite = ImageIO.read(new File("./Images/Sprites/default.png"));
-		  //sprite = new BufferedImage(globalVar.tileWidth, globalVar.tileHeight, sprite.TYPE_INT_ARGB);
-			JLabel sp = new JLabel( new ImageIcon(sprite));
-			sp.setBounds(0, 0, globalVar.tileWidth, globalVar.tileHeight);
-			this.add(sp);}
+		//Chargement de sprite par defaut
+		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Sprites/solidbloc1.png", globalVar.tileWidth, globalVar.tileHeight)) );
+		      sprite.setBounds(0, 0, globalVar.tileWidth, globalVar.tileHeight);
+		      this.add(sprite);}
 	
 		catch (IOException ex) { System.console().writer().println("Couldn't open default sprite..."); }
 //		this.addKeyListener(new keylistener());
-		//Les paramï¿½tres de base tu connais
+		//Les parametres de base tu connais
 		this.setVisible(true);
 		this.setSize(globalVar.tileWidth, globalVar.tileHeight);
 		this.setLocation((int)x, (int)y);
 		this.validate();
+	}
+	
+	protected void ChangeSpriteTo(String fileName) throws IOException
+	{
+		sprite.setIcon(new ImageIcon(ImageManager.LoadImage("./Images/Sprites/" + fileName, globalVar.tileWidth, globalVar.tileHeight)));
+	}
+	
+	protected void ChangeSpriteTo(ImageIcon newSprite)
+	{
+		sprite.setIcon(newSprite);
 	}
  
 	public int Hitbox (Objet tocheck)
@@ -86,11 +88,10 @@ public class Objet extends JPanel implements EventListener{
 		return type;
 	}
 	
-	//Les objets de base ils peuvent gï¿½nï¿½ralement pas bouger aha sont nuls ces blocs solides
-	public boolean CanMove(Direction d)
-	{
-		return false;
-	}
+	//Les objets de base ils peuvent generalement pas bouger aha sont nuls ces blocs solides
+	public boolean CanMove(Direction d) { return false; }
+	//Donc ils sont pas en train de bouger (je mets tout ça la comme ça pas besoin de cast explicite pour savoir si l'objet peut se déplacer)
+	public boolean IsMoving() { return false; }
 	
 	//Les petits calculs de ou il va poser ss fesses aprï¿½s avoir bougï¿½
 	public int NextCaseX(Direction d)
