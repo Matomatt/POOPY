@@ -1,13 +1,17 @@
 package Engine;
 import java.awt.*;
 import java.util.*;
+
+import Settings.globalVar;
+
 import java.lang.*;
 import java.math.*;
 import Utilitaires.*;
 
 public class Ballon extends Objet{
-
-	
+		
+	int vitesse = 3;
+	int direc= 0;  // je met un int de direction pour keep le dernier moove en mémoire 0 NE 1 NW 2 SW 3 SE  
 
 
 	public Ballon(double _x, double _y) 
@@ -33,6 +37,7 @@ public class Ballon extends Objet{
 					{	
 						if (by>= tocheck.y)
 						{
+							direc+=1;// changement de direction pas encore intelligent 
 							result=true;
 			 			}
 			 		}
@@ -61,6 +66,7 @@ public class Ballon extends Objet{
  		 		 				{
  		 		 					if (Math.sqrt((tocheck.x+tocheck.r)*(tocheck.x+tocheck.r) + (tocheck.y+r)*(tocheck.y+r)-y*y)<r)//BD
  		 	 		 				{
+ 		 		 						direc+=1;// changement de direction pas encore intelligent 
  		 		 						test=true;
  		 							}
  								}
@@ -75,4 +81,34 @@ public class Ballon extends Objet{
  		 return test;
  	 }
 
+ 	 public int NextCaseX() //
+ 	 {
+ 		if (direc == 0|| direc==3) //NE SE
+ 			return xInMap+vitesse;  // le calcul xinmap+vitesse doit pas être fait indépendament ? j'ai repris le schéma pour +1
+ 		if (direc== 1|| direc== 2 )// NW SW 
+ 			return xInMap-vitesse;
+ 		return xInMap;
+ 	}
+ 	public int NextCaseY()
+ 	{
+ 		if (direc == 0 || direc== 1) // NE NW
+ 			return yInMap+vitesse;
+ 		if (direc== 2 || direc == 3) // SW SE 
+ 			return yInMap-vitesse;
+ 		return yInMap;
+ 	}
+ 	public boolean Move(ArrayList<Objet> test)
+	{
+ 		int i;
+ 		for (i=0;i<test.size();i++)
+ 			if(hitboxslow(test.get(i))==true)
+ 			{
+ 			// directionchange();	// coder la fonction pour bien changer de direction ici 
+ 			}
+ 				xInMap = NextCaseX();
+ 				yInMap = NextCaseY();
+		return true;
+	}	 	 
+ 	
+ 	 
 }

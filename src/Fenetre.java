@@ -31,6 +31,8 @@ public class Fenetre extends JFrame
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
+		niveaux.get(0).addKeyListener(niveaux.get(0));
+		niveaux.get(0).setFocusable(true);
 		this.add(niveaux.get(0));
 		//niveau.get(0).MainLoop();
 	//	niveau.add(new Niveau("level1.txt"));
@@ -41,6 +43,7 @@ public class Fenetre extends JFrame
 //			System.out.println("Moi teuteu, moi pas trouver la map du niveau par d�faut");
 //		}
 		//this.addKeyListener();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.validate();// sert a valider l'incorporation du nouveau jpanel
 		
 	}

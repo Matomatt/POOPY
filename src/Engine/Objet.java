@@ -1,11 +1,15 @@
 package Engine;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
+//import Engine.Niveau.keylistener;
 import Settings.*;
 import java.awt.*;
 import java.util.*;
@@ -13,7 +17,7 @@ import java.lang.*;
 import javax.swing.*;
 import Utilitaires.*;
 
-public class Objet extends JPanel {
+public class Objet extends JPanel implements EventListener{
 	private static final long serialVersionUID = 1L;
 	
 	protected  static double r;
@@ -55,7 +59,7 @@ public class Objet extends JPanel {
 		
 		targetX = x; targetY = y;
 		
-		//Chargement de sprite par défaut
+		//Chargement de sprite par dï¿½faut
 		try { sprite = ImageIO.read(new File("./Images/Sprites/default.png"));
 		  //sprite = new BufferedImage(globalVar.tileWidth, globalVar.tileHeight, sprite.TYPE_INT_ARGB);
 			JLabel sp = new JLabel( new ImageIcon(sprite));
@@ -63,8 +67,8 @@ public class Objet extends JPanel {
 			this.add(sp);}
 	
 		catch (IOException ex) { System.console().writer().println("Couldn't open default sprite..."); }
-		
-		//Les paramètres de base tu connais
+//		this.addKeyListener(new keylistener());
+		//Les paramï¿½tres de base tu connais
 		this.setVisible(true);
 		this.setSize(globalVar.tileWidth, globalVar.tileHeight);
 		this.setLocation((int)x, (int)y);
@@ -82,13 +86,13 @@ public class Objet extends JPanel {
 		return type;
 	}
 	
-	//Les objets de base ils peuvent généralement pas bouger aha sont nuls ces blocs solides
+	//Les objets de base ils peuvent gï¿½nï¿½ralement pas bouger aha sont nuls ces blocs solides
 	public boolean CanMove(Direction d)
 	{
 		return false;
 	}
 	
-	//Les petits calculs de ou il va poser ss fesses après avoir bougé
+	//Les petits calculs de ou il va poser ss fesses aprï¿½s avoir bougï¿½
 	public int NextCaseX(Direction d)
 	{
 		if (d == Direction.WEST)
@@ -106,7 +110,7 @@ public class Objet extends JPanel {
 		return yInMap;
 	}
 	
-	//Mtn qu'on a fait les calculs et qu'on est chaud pour bouger on bouge et on set la cible vers laquelle il va se déplacer (#animation)
+	//Mtn qu'on a fait les calculs et qu'on est chaud pour bouger on bouge et on set la cible vers laquelle il va se dï¿½placer (#animation)
 	public boolean Move(Direction d)
 	{
 		xInMap = NextCaseX(d);
@@ -117,4 +121,25 @@ public class Objet extends JPanel {
 		
 		return true;
 	}	
+//	private class keylistener implements KeyListener
+//	{
+//
+//		public void keyTyped(KeyEvent e) {
+//			// TODO Auto-generated method stub
+//			System.out.println("touche"+e.getKeyCode());
+//			
+//		}
+//
+//		public void keyPressed(KeyEvent e) {
+//			// TODO Auto-generated method stub
+//			System.out.println("touche"+e.getKeyCode());
+//		}
+//
+//		public void keyReleased(KeyEvent e) {
+//			// TODO Auto-generated method stub
+//			System.out.println("touche"+e.getKeyCode());
+//		}
+//		
+//	}
+	
 }
