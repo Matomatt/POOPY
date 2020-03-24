@@ -68,6 +68,7 @@ public class AnimatedObject extends Objet {
 			return;
 		if (alwaysMoving)
 		{
+			System.out.println(vitesse[0] + " / " + vitesse[1] + " + " + vitesse[1]*globalVar.tileHeight);
 			x += vitesse[0]*globalVar.tileWidth;
 			y += vitesse[1]*globalVar.tileHeight;
 		}
@@ -101,7 +102,7 @@ public class AnimatedObject extends Objet {
 		}
 		
 		//System.out.println("Moved to " + x + ", " + y);
-		this.setLocation((int)x-((coordType == CoordType.CENTER)?globalVar.tileWidth:0), (int)y-((coordType == CoordType.CENTER)?globalVar.tileHeight:0));
+		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
 	}
 	
 	public boolean IsMoving()

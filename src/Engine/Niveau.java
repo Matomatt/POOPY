@@ -87,6 +87,8 @@ public class Niveau extends JPanel {
 	    	//System.out.println("");
 	    }
 		
+		//this.add(new Ballon(2,2));
+		
 		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
 		this.requestFocus();
 		this.setVisible(true);
@@ -95,7 +97,7 @@ public class Niveau extends JPanel {
 		
 		ActionListener taskPerformer = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { ballonplay(); } };
-		new javax.swing.Timer(10, taskPerformer).start();
+		new javax.swing.Timer(400, taskPerformer).start();
 	}
 	
 	/*

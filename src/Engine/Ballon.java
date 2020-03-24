@@ -24,6 +24,11 @@ public class Ballon extends AnimatedObject {
 		r = globalVar.tileWidth/2;
 		coordType = CoordType.CENTER;
 		alwaysMoving=true;
+		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
+		
+		System.out.println("Init speed : " + vitesse[0] + ", " + vitesse[1]);
+		
+		//stopMovements=true;
 	}
  	 
 	public boolean hitboxfast (Objet tocheck)// Non fini / fonctionel
@@ -215,7 +220,7 @@ public class Ballon extends AnimatedObject {
  		else	if (direc== 1|| direc== 2 )// NW SW 
  			vitesse[0]=-vit;
  		if (direc == 0|| direc==1) //NE NW
- 			vitesse[1]=-vit;  
+ 			vitesse[1]=-vit;
  		else   if (direc== 3|| direc== 2 )// SE SW 
  			vitesse[1]=vit;
  		//move();
