@@ -54,7 +54,7 @@ public class Fenetre extends JFrame
 	
 	public void launch()
 	{
-		niveaux.get(0).MainLoop();
+		//niveaux.get(0).MainLoop();
 	}
 	
 //	void keyTyped(KeyEvent e)

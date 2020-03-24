@@ -20,5 +20,7 @@ public class AnimatedSolidBloc extends AnimatedObject {
 			System.out.println("Couldn't load solidbloc sprite set");
 			e.printStackTrace();
 		}
+		
+		StopAnimating();
 	}
 }

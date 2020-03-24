@@ -1,6 +1,7 @@
 package Engine;
 import java.io.IOException;
 
+import Settings.globalVar;
 import Utilitaires.*;
 
 public class Ballon extends AnimatedObject {
@@ -19,7 +20,10 @@ public class Ballon extends AnimatedObject {
 			System.out.println("Couldn't load ballon.png ");
 			e.printStackTrace();
 		}
-		//alwaysMoving=true;
+		
+		r = globalVar.tileWidth/2;
+		coordType = CoordType.CENTER;
+		alwaysMoving=true;
 	}
  	 
 	public boolean hitboxfast (Objet tocheck)// Non fini / fonctionel
@@ -52,7 +56,7 @@ public class Ballon extends AnimatedObject {
 	}
  	 public boolean hitboxslow (Objet tocheck)// ATTENTION il faut que ballon ait ses coord sur son centre et que x y de l'objet carré soit en haut a gauche
  	 {
- 		//System.out.println("hitboxslow");
+ 		System.out.println("hitboxslow " + tocheck.x + " " + tocheck.y);
  		 boolean test=false;
  			 if(y>=tocheck.y) // Collision bord droit ou gauche du carré 
  			 {
@@ -214,7 +218,7 @@ public class Ballon extends AnimatedObject {
  			vitesse[1]=-vit;  
  		else   if (direc== 3|| direc== 2 )// SE SW 
  			vitesse[1]=vit;
- 		move();
+ 		//move();
  	 }
  	 /*
  	 public int NextCaseX() //
@@ -247,12 +251,12 @@ public class Ballon extends AnimatedObject {
  				xInMap = NextCaseX();
  				yInMap = NextCaseY();
 		return true;
-	}*/
+	}
  	public void move()
  	{
  		
  		x+=vitesse[0];
  		y+=vitesse[1];	
  		System.out.println("ball x "+x+"   ball y "+y);
- 	}
+ 	}*/
 }

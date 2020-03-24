@@ -1,5 +1,6 @@
 package Engine;
 
+import Utilitaires.CoordType;
 import Utilitaires.Direction;
 import Utilitaires.ObjectType;
 
@@ -69,38 +70,38 @@ public class AnimatedObject extends Objet {
 		{
 			x += vitesse[0]*globalVar.tileWidth;
 			y += vitesse[1]*globalVar.tileHeight;
-			this.setLocation((int)x, (int)y);
-			return;
 		}
-			
-		
-		if (x < targetX)
+		else 
 		{
-			x += vitesse[0]*globalVar.tileWidth;
-			if (x > targetX)
-				x = targetX;
-		}
-		else if (x > targetX)
-		{
-			x -= vitesse[0]*globalVar.tileWidth;
 			if (x < targetX)
-				x = targetX;
+			{
+				x += vitesse[0]*globalVar.tileWidth;
+				if (x > targetX)
+					x = targetX;
+			}
+			else if (x > targetX)
+			{
+				x -= vitesse[0]*globalVar.tileWidth;
+				if (x < targetX)
+					x = targetX;
+			}
+			
+			if (y < targetY)
+			{
+				y += vitesse[1]*globalVar.tileHeight;
+				if (y > targetY)
+					y = targetY;
+			}
+			else if (y > targetY)
+			{
+				y -= vitesse[1]*globalVar.tileHeight;
+				if (y < targetY)
+					y = targetY;
+			}
 		}
 		
-		if (y < targetY)
-		{
-			y += vitesse[1]*globalVar.tileHeight;
-			if (y > targetY)
-				y = targetY;
-		}
-		else if (y > targetY)
-		{
-			y -= vitesse[1]*globalVar.tileHeight;
-			if (y < targetY)
-				y = targetY;
-		}
 		//System.out.println("Moved to " + x + ", " + y);
-		this.setLocation((int)x, (int)y);
+		this.setLocation((int)x-((coordType == CoordType.CENTER)?globalVar.tileWidth:0), (int)y-((coordType == CoordType.CENTER)?globalVar.tileHeight:0));
 	}
 	
 	public boolean IsMoving()

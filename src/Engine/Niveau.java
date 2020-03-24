@@ -1,5 +1,6 @@
 package Engine;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -91,8 +92,13 @@ public class Niveau extends JPanel {
 		this.setVisible(true);
 		this.validate();
 		System.out.println(this.getSize());
+		
+		ActionListener taskPerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { ballonplay(); } };
+		new javax.swing.Timer(10, taskPerformer).start();
 	}
 	
+	/*
 	public boolean MainLoop()
 	{
 		System.out.println("MainLoop");
@@ -104,61 +110,21 @@ public class Niveau extends JPanel {
 		}while(!quit);
 		return true;
 	}
+	*/
+	
 	private void ballonplay() 
 	{
 		int i,y;
-	
+		System.out.println("Play ballon");
 			for(i=0;i<ball.size();i++)
 			{
-				ball.get(i).move();
+				//ball.get(i).move();
 				for(y=0;y<blocs.size();y++)
 				{
 				ball.get(i).hitboxslow(blocs.get(y));
 				}
 			}
 	}
-//	private class keylistener implements KeyListener
-//	{
-//
-//		public void keyTyped(KeyEvent e) {
-//			// TODO Auto-generated method stub
-//			System.out.println("touche"+e.getKeyCode());
-//			
-//		}
-//
-//		public void keyPressed(KeyEvent e) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//
-//		public void keyReleased(KeyEvent e) {
-//			// TODO Auto-generated method stub
-//			
-//		}
-//		
-//	}
-	
-	/*
-	protected void mouvement(int moove) // add binding 
-	{
-		if(moove==0)
-		{
-			POOPY.up();
-		}
-		if(moove==1)
-		{
-			POOPY.right();
-		}
-		if(moove==2)
-		{
-			POOPY.left();
-		}
-		if(moove==3)
-		{
-			POOPY.down();
-		}
-	}
-	*/
 	Action moveup = new AbstractAction()
 	   {
 			public void actionPerformed(ActionEvent e) {
@@ -220,7 +186,7 @@ public class Niveau extends JPanel {
 	//returns true if the object is a movable object and can move and if there is nothing blocking the way
 	private boolean PossibleToMove(Objet o, Direction d)
 	{		
-		System.out.println("trying to go there : [" + o.NextCaseX(d) + ", " + o.NextCaseY(d) + "] " + ((Snoopy)o).CanMove(d) + " " + (map[o.NextCaseX(d)][o.NextCaseY(d)] == 0));
+		//System.out.println("trying to go there : [" + o.NextCaseX(d) + ", " + o.NextCaseY(d) + "] " + ((Snoopy)o).CanMove(d) + " " + (map[o.NextCaseX(d)][o.NextCaseY(d)] == 0));
 		return (o.CanMove(d) && map[o.NextCaseX(d)][o.NextCaseY(d)] == 0);
 	}
 	

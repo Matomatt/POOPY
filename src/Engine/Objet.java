@@ -13,10 +13,11 @@ import Utilitaires.*;
 public class Objet extends JPanel implements EventListener{
 	private static final long serialVersionUID = 1L;
 	
-	protected  static double r;
+	protected double r;
+	protected CoordType coordType = CoordType.LEFTRIGHTCORNER;
 	protected int xInMap = 0, yInMap = 0;
 	protected double x=0,y=0;
-	protected double targetX = 0, targetY = 0; // target ??? 
+	protected double targetX = 0, targetY = 0; // target ???
 	
 	protected  JPanel img;
 	protected  int hitbox;
@@ -52,6 +53,7 @@ public class Objet extends JPanel implements EventListener{
 		this.setLayout(new BorderLayout());
 		
 		targetX = x; targetY = y;
+		r = globalVar.tileWidth;
 		
 		//Chargement de sprite par defaut
 		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Sprites/solidbloc1.png", globalVar.tileWidth, globalVar.tileHeight)) );
