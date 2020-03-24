@@ -97,7 +97,7 @@ public class Niveau extends JPanel {
 		
 		ActionListener taskPerformer = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { ballonplay(); } };
-		new javax.swing.Timer(400, taskPerformer).start();
+		new javax.swing.Timer(10, taskPerformer).start();
 	}
 	
 	/*
@@ -117,7 +117,7 @@ public class Niveau extends JPanel {
 	private void ballonplay() 
 	{
 		int i,y;
-		System.out.println("Play ballon");
+		//System.out.println("Play ballon");
 			for(i=0;i<ball.size();i++)
 			{
 				//ball.get(i).move();

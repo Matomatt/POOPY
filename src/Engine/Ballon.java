@@ -26,7 +26,7 @@ public class Ballon extends AnimatedObject {
 		alwaysMoving=true;
 		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
 		
-		System.out.println("Init speed : " + vitesse[0] + ", " + vitesse[1]);
+		System.out.println("Init speed : " + vitesse[0] + ", " + vitesse[1]+"direcriont initial" + direc);
 		
 		//stopMovements=true;
 	}
@@ -61,13 +61,13 @@ public class Ballon extends AnimatedObject {
 	}
  	 public boolean hitboxslow (Objet tocheck)// ATTENTION il faut que ballon ait ses coord sur son centre et que x y de l'objet carré soit en haut a gauche
  	 {
- 		System.out.println("hitboxslow " + tocheck.x + " " + tocheck.y);
+ 	//	System.out.println("hitboxslow " + tocheck.x + " " + tocheck.y+" vitesse x "+vitesse [0]+ " vitesse y "+ vitesse[1] +" direction " +direc ) ;
  		 boolean test=false;
  			 if(y>=tocheck.y) // Collision bord droit ou gauche du carré 
  			 {
  				 if(y<=tocheck.y+tocheck.r)
  				 {
- 					 if(x+r>=tocheck.x) // Cas bord gauche
+ 					 if((x+r>=tocheck.x)&&(x+r<=tocheck.x+tocheck.r)) // Cas bord gauche
  					 {
  					 test=true;
  					 if (direc==0)
@@ -75,11 +75,11 @@ public class Ballon extends AnimatedObject {
  					 if (direc==3)
  						 direc=2;
  					 vitesseUpdate();
- 					System.out.println("BallonCollisionCG"+direc);
+ 					System.out.println("BallonCollisionCG  direction "+direc);
 						System.out.println("x ballon "+x+"y ballon"+y);
  					 }
  					 
- 					 else if (x-r<=tocheck.x+tocheck.r) 	// Cas bord droit 
+ 					 else if (x-r<=tocheck.x+tocheck.r&&x-r>=tocheck.x) 	// Cas bord droit 
  					 {
  					 test=true;
  					 if (direc==1)
@@ -87,7 +87,7 @@ public class Ballon extends AnimatedObject {
  					 else if (direc==2)
  						 direc=3;
  					 vitesseUpdate();
- 					System.out.println("BallonCollisionCD"+direc);
+ 					System.out.println("BallonCollisionCD  direction"+direc);
 						System.out.println("x ballon "+x+"y ballon"+y);
  					 }
  				 }
@@ -98,7 +98,7 @@ public class Ballon extends AnimatedObject {
  			  {
  				  if (x<=tocheck.x+tocheck.r)
  				  {
- 					  if (y+r>=tocheck.y)// Cas Haut du carré
+ 					  if ((y+r>=tocheck.y)&&(y+r<=tocheck.y+tocheck.r))// Cas Haut du carré
  					  {
  						  test=true;
  						  if(direc==3)
@@ -106,10 +106,10 @@ public class Ballon extends AnimatedObject {
  						  else if (direc==2)
  							  direc=1;
  						 vitesseUpdate();
- 						System.out.println("BallonCollisionCH"+direc);
+ 						System.out.println("BallonCollisionCH "+direc +" Item toché sur le coté haut en  "+y+r+ " y du carré  "+tocheck.y );
 	 						System.out.println("x ballon "+x+"y ballon"+y);
  					  }
- 					  else  if(y-r<=tocheck.y+tocheck.r) //Cas Bas du carré 
+ 					  else  if(y-r<=tocheck.y+tocheck.r&&y-r>=tocheck.y) //Cas Bas du carré 
  					  {
  						  test=true;
  						  if (direc==0)
@@ -124,7 +124,7 @@ public class Ballon extends AnimatedObject {
  			 }
  			 if(test!=true)
  			 {
- 			  if (Math.sqrt((tocheck.x*tocheck.x-x*x + tocheck.y*tocheck.y-y*y))<r)// Distance par rapport aux coins HG
+ 			  if (Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y)*(tocheck.y-y))<=r)// Distance par rapport aux coins HG
 	 				{
  				  		if (direc<2)
 						direc+=2;
@@ -135,7 +135,7 @@ public class Ballon extends AnimatedObject {
 						System.out.println("BallonCollisionG"+direc);
 	 						System.out.println("x ballon "+x+"y ballon"+y);
 	 				}
- 			  else if (Math.sqrt((tocheck.x+tocheck.r)*(tocheck.x+tocheck.r) + tocheck.y*tocheck.y-y*y)<r)//HD
+ 			  else if (Math.sqrt(((tocheck.x+tocheck.r)-x)*((tocheck.x+tocheck.r)-x) + (tocheck.y-y)*(tocheck.y-y))<=r)//HD
 		 				{
  				  				if (direc<2)
 		 						direc+=2;
@@ -146,7 +146,7 @@ public class Ballon extends AnimatedObject {
 		 						System.out.println("BallonCollisionHD"+direc);
  		 						System.out.println("x ballon "+x+"y ballon"+y);
 		 				}
- 			  else if (Math.sqrt((tocheck.x*tocheck.x-x*x + (tocheck.y+r)*(tocheck.y+r)-y*y))<r)//BG
+ 			  else if (Math.sqrt((tocheck.x-x)*(tocheck.x-x) + ((tocheck.y+tocheck.r)-y)*((tocheck.y+tocheck.r)-y))<r)//BG
 	 		 				{
  				  				if (direc<2)
  		 						direc+=2;
@@ -157,7 +157,7 @@ public class Ballon extends AnimatedObject {
  		 						System.out.println("BallonCollisionBG"+direc);
  		 						System.out.println("x ballon "+x+"y ballon"+y);
 	 		 				}
- 			  else if (Math.sqrt((tocheck.x+tocheck.r)*(tocheck.x+tocheck.r) + (tocheck.y+r)*(tocheck.y+r)-y*y)<r)//BD
+ 			  else if (Math.sqrt(((tocheck.x+tocheck.r)-x)*((tocheck.x+tocheck.r)-x) + ((tocheck.y+tocheck.r)-y)*((tocheck.y+tocheck.r)-y))<r)//BD
 	 	 		 				{
 	 		 						if (direc<2)
 	 		 						direc+=2;// changement de direction pas encore intelligent 
@@ -204,11 +204,11 @@ public class Ballon extends AnimatedObject {
 // 			 }
 // 		 }
  		 
- 			if (test==true)
- 			{
-				System.out.println("BallonCollision"+direc);
-				System.out.println("x ballon "+x+"y ballon"+y);
- 			}
+// 			if (test==true)
+// 			{
+//				System.out.println("BallonCollision"+direc);
+//				System.out.println("x ballon "+x+"y ballon"+y);
+// 			}
  		 return test;
  	 }
  	 

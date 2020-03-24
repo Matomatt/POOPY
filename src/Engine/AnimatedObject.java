@@ -68,7 +68,7 @@ public class AnimatedObject extends Objet {
 			return;
 		if (alwaysMoving)
 		{
-			System.out.println(vitesse[0] + " / " + vitesse[1] + " + " + vitesse[1]*globalVar.tileHeight);
+			//System.out.println(vitesse[0] + " / " + vitesse[1] + " + " + vitesse[1]*globalVar.tileHeight);
 			x += vitesse[0]*globalVar.tileWidth;
 			y += vitesse[1]*globalVar.tileHeight;
 		}
