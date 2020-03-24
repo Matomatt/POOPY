@@ -5,14 +5,15 @@ import Settings.globalVar;
 import Utilitaires.*;
 
 public class Ballon extends AnimatedObject {
-		
-	double vit = 0.03;
+	private static final long serialVersionUID = -32406108732612528L;
+	
+	double vit = 4;
 	int direc= 0;  // je met un int de direction pour keep le dernier moove en mémoire 0 NE 1 NW 2 SW 3 SE  
 
 
-	public Ballon(int _x, int _y) 
+	public Ballon(int _x, int _y, boolean _selfMoved)
 	{
-		super(_x, _y,3, 3, ObjectType.BALLON, true, false);// x donné pas bon ? j'ai set la position de dépat
+		super(_x, _y, 3, 3, ObjectType.BALLON, true, false, _selfMoved, false);// x donné pas bon ? j'ai set la position de dépat
 		vitesseUpdate();
 		try {
 			this.ChangeSpriteTo("/ballon/ballon.png");
@@ -209,6 +210,9 @@ public class Ballon extends AnimatedObject {
 //				System.out.println("BallonCollision"+direc);
 //				System.out.println("x ballon "+x+"y ballon"+y);
 // 			}
+ 			 
+ 			if (test==true)
+ 				MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
  		 return test;
  	 }
  	 
@@ -256,12 +260,5 @@ public class Ballon extends AnimatedObject {
  				xInMap = NextCaseX();
  				yInMap = NextCaseY();
 		return true;
-	}
- 	public void move()
- 	{
- 		
- 		x+=vitesse[0];
- 		y+=vitesse[1];	
- 		System.out.println("ball x "+x+"   ball y "+y);
- 	}*/
+	}*/
 }

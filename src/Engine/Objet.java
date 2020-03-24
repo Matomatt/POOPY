@@ -1,13 +1,16 @@
 package Engine;
 import java.io.IOException;
-import javax.swing.JPanel;
 
 import Data.ImageManager;
 //import Engine.Niveau.keylistener;
 import Settings.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.Timer;
+
 import Utilitaires.*;
 
 public class Objet extends JPanel implements EventListener{
@@ -64,8 +67,13 @@ public class Objet extends JPanel implements EventListener{
 		//Les parametres de base tu connais
 		this.setVisible(true);
 		this.setSize(globalVar.tileWidth, globalVar.tileHeight);
-		this.setLocation((int)x, (int)y);
+		Draw();
 		this.validate();
+	}
+	
+	protected void Draw()
+	{
+		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
 	}
 	
 	protected void ChangeSpriteTo(String fileName) throws IOException

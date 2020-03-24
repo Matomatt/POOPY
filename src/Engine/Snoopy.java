@@ -8,9 +8,9 @@ public class Snoopy extends AnimatedObject {
 	
 	Direction orientation = null;
 	
-	public Snoopy(int _x, int _y)
+	public Snoopy(int _x, int _y, boolean _selfMoved)
 	{
-		super(_x, _y, 0.02, 0.02, ObjectType.SNOOPY, true, true);
+		super(_x, _y, 3, 3, ObjectType.SNOOPY, true, true, _selfMoved, true);
 		
 		animateOnlyWhenMoving = true;
 		nbSpritesPerAnimationSequence = 4;

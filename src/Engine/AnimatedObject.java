@@ -27,6 +27,8 @@ public class AnimatedObject extends Objet {
 	protected int animationFrequency = 1000; //in milliseconds
 	protected ImageIcon spriteList[];
 	
+	private static boolean selfMoved = true;
+	private static boolean selfAnimated = true;
 	protected boolean stopAnimation = false;
 	protected boolean animateOnlyWhenMoving = false;
 	
@@ -34,25 +36,45 @@ public class AnimatedObject extends Objet {
 	Timer movementTimer;
 	protected boolean isAnimated;
 	Timer animationTimer;
-
+	
+	public AnimatedObject(int _x, int _y, double vitesseX, double vitesseY, ObjectType _type)
+	{
+		super(_x, _y, _type);
+		Init(vitesseX, vitesseY, true, true, true, true);
+	}
+	
 	public AnimatedObject(int _x, int _y, double vitesseX, double vitesseY, ObjectType _type, boolean _canMove, boolean _isAnimated)
 	{
 		super(_x, _y, _type);
+		Init(vitesseX, vitesseY, _canMove, _isAnimated, true, true);
+	}
+	
+	public AnimatedObject(int _x, int _y, double vitesseX, double vitesseY, ObjectType _type, boolean _canMove, boolean _isAnimated, boolean _selfMoved, boolean _selfAnimated)
+	{
+		super(_x, _y, _type);
+		Init(vitesseX, vitesseY, _canMove, _isAnimated, _selfMoved, _selfAnimated);
+	}
+
+	public void Init(double vitesseX, double vitesseY, boolean _canMove, boolean _isAnimated, boolean _selfMoved, boolean _selfAnimated)
+	{	
+		selfMoved = _selfMoved;
+		selfAnimated = _selfAnimated;
+		
 		vitesse[0] = vitesseX;
 		vitesse[1] = vitesseY;
 		
 		canMove = _canMove;
 		isAnimated = _isAnimated;
 		
-		if (canMove)
+		if (canMove && selfMoved)
 		{
 			ActionListener taskPerformer = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { MoveTowardsTarget((double)1/globalVar.FPS); } };
+			public void actionPerformed(ActionEvent arg0) { MoveTowardsTarget((double)1/globalVar.CalculusFrequency); } };
 			
-			movementTimer = new Timer((int)1000/globalVar.FPS, taskPerformer);
+			movementTimer = new Timer((int)1000/globalVar.CalculusFrequency, taskPerformer);
 			movementTimer.start();
 		}
-		if (isAnimated)
+		if (isAnimated && selfAnimated)
 		{
 			ActionListener taskPerformer = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) { SwitchToNextSprite(); } };
@@ -60,49 +82,53 @@ public class AnimatedObject extends Objet {
 			animationTimer = new Timer(animationFrequency, taskPerformer);
 			animationTimer.start();
 		}
+		
+		ActionListener drawTaskPerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { Draw(); } };
+		new Timer(1000/globalVar.FPS, drawTaskPerformer).start();
 	}
 	
-	public void MoveTowardsTarget(double elapsedTime)
+	protected void MoveTowardsTarget(double elapsedTime)
 	{
 		if (x == targetX && y == targetY && !alwaysMoving || stopMovements)
 			return;
 		if (alwaysMoving)
 		{
 			//System.out.println(vitesse[0] + " / " + vitesse[1] + " + " + vitesse[1]*globalVar.tileHeight);
-			x += vitesse[0]*globalVar.tileWidth;
-			y += vitesse[1]*globalVar.tileHeight;
+			x += vitesse[0]*globalVar.tileWidth*elapsedTime;
+			y += vitesse[1]*globalVar.tileHeight*elapsedTime;
 		}
 		else 
 		{
 			if (x < targetX)
 			{
-				x += vitesse[0]*globalVar.tileWidth;
+				x += vitesse[0]*globalVar.tileWidth*elapsedTime;
 				if (x > targetX)
 					x = targetX;
 			}
 			else if (x > targetX)
 			{
-				x -= vitesse[0]*globalVar.tileWidth;
+				x -= vitesse[0]*globalVar.tileWidth*elapsedTime;
 				if (x < targetX)
 					x = targetX;
 			}
 			
 			if (y < targetY)
 			{
-				y += vitesse[1]*globalVar.tileHeight;
+				y += vitesse[1]*globalVar.tileHeight*elapsedTime;
 				if (y > targetY)
 					y = targetY;
 			}
 			else if (y > targetY)
 			{
-				y -= vitesse[1]*globalVar.tileHeight;
+				y -= vitesse[1]*globalVar.tileHeight*elapsedTime;
 				if (y < targetY)
 					y = targetY;
 			}
 		}
 		
 		//System.out.println("Moved to " + x + ", " + y);
-		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
+		//this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
 	}
 	
 	public boolean IsMoving()

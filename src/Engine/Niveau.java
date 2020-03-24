@@ -18,9 +18,13 @@ public class Niveau extends JPanel {
 	
 	int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
-    protected Objet POOPY;
+    protected Snoopy POOPY;
     protected ArrayList<Ballon> ball;
     protected ArrayList<AnimatedSolidBloc> blocs;
+    
+    Timer movementsTimer;
+    boolean synchronizedMovements = true;
+    
 	public Niveau(String name) throws FileNotFoundException
 	{
 		int[][] _map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
@@ -62,12 +66,12 @@ public class Niveau extends JPanel {
 	    			this.add(blocs.get(blocs.size()-1));
 	    			break;
 	    		case 2:
-	    			ball.add(new Ballon(i,j));
+	    			ball.add(new Ballon(i,j, false));
 	    			this.add(ball.get(ball.size()-1));
 	    			map[i][j] = 0;
 	    			break;
 	    		case 9:
-	    			POOPY = new Snoopy(i, j);
+	    			POOPY = new Snoopy(i, j, false);
 	    			map[i][j] = 0;
 	    			this.add(POOPY);
 	    			break;
@@ -76,45 +80,45 @@ public class Niveau extends JPanel {
 	    	//System.out.println("");
 	    }
 		
-		//this.add(new Ballon(2,2));
-		
 		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
 		this.requestFocus();
 		this.setVisible(true);
 		this.validate();
 		System.out.println(this.getSize());
 		
-		ActionListener taskPerformer = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { ballonplay(); } };
-		new javax.swing.Timer(10, taskPerformer).start();
-	}
-	
-	/*
-	public boolean MainLoop()
-	{
-		System.out.println("MainLoop");
-		boolean quit = false;
-		do
+		if (synchronizedMovements)
 		{
-			ballonplay();// deplacement +hitbox
-			this.requestFocus();
-		}while(!quit);
-		return true;
+			ActionListener movementsTaskPerformer = new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) { movementsTimerTrigger(); } };
+			
+			movementsTimer = new Timer(1000/globalVar.CalculusFrequency, movementsTaskPerformer);
+			movementsTimer.start();
+		}
+		
 	}
-	*/
 	
-	private void ballonplay() 
+	private void movementsTimerTrigger() 
 	{
-		int i,y;
-		//System.out.println("Play ballon");
-			for(i=0;i<ball.size();i++)
-			{
-				//ball.get(i).move();
-				for(y=0;y<blocs.size();y++)
-				{
-				ball.get(i).hitboxslow(blocs.get(y));
-				}
-			}
+		MouvementsBallons(true);
+		POOPY.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
+	}
+	
+	private void MouvementsBallons(boolean checkCollisions) 
+	{
+		for(int i = 0; i < ball.size(); i++)
+		{
+			ball.get(i).MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
+			
+			if (checkCollisions)
+				for(int y=0; y < blocs.size(); y++)
+					CollisionsBallon(ball.get(i));
+		}
+	}
+
+	private void CollisionsBallon(Ballon b) 
+	{
+		for(int y = 0; y < blocs.size(); y++)
+			b.hitboxslow(blocs.get(y));
 	}
 	Action moveup = new AbstractAction()
 	   {

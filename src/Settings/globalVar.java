@@ -8,4 +8,5 @@ public class globalVar {
     public static int nbTilesVertically = 10;
     
     public static int FPS = 120;
+    public static int CalculusFrequency = 240;
 }
