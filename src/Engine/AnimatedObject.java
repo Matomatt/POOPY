@@ -55,9 +55,9 @@ public class AnimatedObject extends Objet {
 		if (isAnimated)
 		{
 			ActionListener taskPerformer = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { SwitchToNextSprite();; } };
+			public void actionPerformed(ActionEvent arg0) { SwitchToNextSprite(); } };
 			
-			animationTimer = new Timer((int)1000/globalVar.FPS, taskPerformer);
+			animationTimer = new Timer(animationFrequency, taskPerformer);
 			animationTimer.start();
 		}
 	}

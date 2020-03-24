@@ -23,7 +23,9 @@ public class Snoopy extends AnimatedObject {
 			System.out.println("Couldn't load snoopySOUTH1.png ");
 			e.printStackTrace();
 		}
+		this.ChangeOrientationTo(Direction.SOUTH);
 		System.out.println("Snoopy"+x);
+		
 	}
 	
 	//A ajouter que si il est d�j� en mvmt bah il peut pas rebouger d'une case, bah ouai sinon il va se tp personne va capter
@@ -50,6 +52,7 @@ public class Snoopy extends AnimatedObject {
 	//On pourra changer le sprite ici en fonction de son orientation
 	public void ChangeOrientationTo(Direction d)
 	{
+		System.out.println("change dir");
 		if (orientation != d)
 		{
 			orientation = d;

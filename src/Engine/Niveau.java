@@ -27,6 +27,7 @@ public class Niveau extends JPanel {
 		ball=new ArrayList<Ballon>(); 
 		blocs=new ArrayList<AnimatedSolidBloc>(); 
 		_map = MapDataManager.LoadMap(name+".txt");
+		
 		//	this.addKeyListener(new keylistener());
 			Init(_map);
 		this.grabFocus();
@@ -63,23 +64,11 @@ public class Niveau extends JPanel {
 	    		case 2:
 	    			ball.add(new Ballon(i,j));
 	    			this.add(ball.get(ball.size()-1));
+	    			map[i][j] = 0;
 	    			break;
 	    		case 9:
 	    			POOPY = new Snoopy(i, j);
 	    			map[i][j] = 0;
-	    			//C'est comme ca qu'on fait pour bouger n'importe quel objet
-	    			MoveObject(POOPY, Direction.SOUTH);
-	    			MoveObject(POOPY, Direction.SOUTH);
-	    			MoveObject(POOPY, Direction.SOUTH);
-	    			MoveObject(POOPY, Direction.WEST);
-	    			MoveObject(POOPY, Direction.WEST);
-	    			MoveObject(POOPY, Direction.WEST);
-	    			MoveObject(POOPY, Direction.NORTH);
-	    			MoveObject(POOPY, Direction.NORTH);
-	    			MoveObject(POOPY, Direction.NORTH);
-	    			MoveObject(POOPY, Direction.EAST);
-	    			MoveObject(POOPY, Direction.EAST);
-	    			MoveObject(POOPY, Direction.EAST);
 	    			this.add(POOPY);
 	    			break;
 	    		}

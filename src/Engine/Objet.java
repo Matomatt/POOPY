@@ -33,7 +33,6 @@ public class Objet extends JPanel implements EventListener{
 		
 		x= _x*globalVar.tileWidth;
 		y= _y*globalVar.tileHeight;
-		this.
 		type = _type;
 		Init();
 	}

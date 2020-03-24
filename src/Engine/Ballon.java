@@ -26,7 +26,7 @@ public class Ballon extends AnimatedObject {
 		alwaysMoving=true;
 		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
 		
-		System.out.println("Init speed : " + vitesse[0] + ", " + vitesse[1]+"direcriont initial" + direc);
+		System.out.println("Init speed : " + vitesse[0] + ", " + vitesse[1]+"direction initial" + direc);
 		
 		//stopMovements=true;
 	}
