@@ -35,6 +35,7 @@ public class Fenetre extends JFrame
 	//	niveaux.get(0).addKeyListener(niveaux.get(0));
 		niveaux.get(0).setFocusable(true);
 		this.add(niveaux.get(0));
+	
 		//niveau.get(0).MainLoop();
 	//	niveau.add(new Niveau("level1.txt"));
 //		try {
@@ -44,19 +45,17 @@ public class Fenetre extends JFrame
 //			System.out.println("Moi teuteu, moi pas trouver la map du niveau par d�faut");
 //		}
 		//this.addKeyListener();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		this.validate();// sert a valider l'incorporation du nouveau jpanel
 		
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		//setDefaultCloseOperation(DISPOSE_ON_CLOSE); /// SALLE MECHANT PLUS JAMAIS MA RAM OSCOUR
 		
 	}
 	
-	private void LaunchDefaultLevel() throws FileNotFoundException
+	public void launch()
 	{
-		Niveau defaultLevel = new Niveau("level1");
-		defaultLevel.MainLoop();
+		niveaux.get(0).MainLoop();
 	}
-	
 	
 //	void keyTyped(KeyEvent e)
 //	{

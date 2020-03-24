@@ -4,6 +4,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 import Settings.*;
@@ -16,11 +18,13 @@ public class Niveau extends JPanel {
 	int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
     protected Objet POOPY;
-	
+    protected ArrayList<Ballon> ball;
+    protected ArrayList<AnimatedSolidBloc> blocs;
 	public Niveau(String name) throws FileNotFoundException
 	{
 		int[][] _map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
-		
+		ball=new ArrayList<Ballon>(); 
+		blocs=new ArrayList<AnimatedSolidBloc>(); 
 		_map = MapDataManager.LoadMap(name+".txt");
 		//	this.addKeyListener(new keylistener());
 			Init(_map);
@@ -52,7 +56,12 @@ public class Niveau extends JPanel {
 	    		switch(map[i][j])
 	    		{
 	    		case 1:
-	    			this.add(new AnimatedSolidBloc(i,j));
+	    			blocs.add(new AnimatedSolidBloc(i,j));
+	    			this.add(blocs.get(blocs.size()-1));
+	    			break;
+	    		case 2:
+	    			ball.add(new Ballon(i,j));
+	    			this.add(ball.get(ball.size()-1));
 	    			break;
 	    		case 9:
 	    			POOPY = new Snoopy(i, j);
@@ -86,16 +95,28 @@ public class Niveau extends JPanel {
 	
 	public boolean MainLoop()
 	{
+		System.out.println("MainLoop");
 		boolean quit = false;
 		do
 		{
-			
-			this.grabFocus();
+			ballonplay();// deplacement +hitbox
 			this.requestFocus();
 		}while(!quit);
 		return true;
 	}
+	private void ballonplay() 
+	{
+		int i,y;
 	
+			for(i=0;i<ball.size();i++)
+			{
+				ball.get(i).move();
+				for(y=0;y<blocs.size();y++)
+				{
+				ball.get(i).hitboxslow(blocs.get(y));
+				}
+			}
+	}
 //	private class keylistener implements KeyListener
 //	{
 //

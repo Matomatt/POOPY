@@ -16,7 +16,7 @@ public class Objet extends JPanel implements EventListener{
 	protected  static double r;
 	protected int xInMap = 0, yInMap = 0;
 	protected double x=0,y=0;
-	protected double targetX = 0, targetY = 0;
+	protected double targetX = 0, targetY = 0; // target ??? 
 	
 	protected  JPanel img;
 	protected  int hitbox;

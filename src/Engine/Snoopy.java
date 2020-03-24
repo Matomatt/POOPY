@@ -23,9 +23,10 @@ public class Snoopy extends AnimatedObject {
 			System.out.println("Couldn't load snoopySOUTH1.png ");
 			e.printStackTrace();
 		}
+		System.out.println("Snoopy"+x);
 	}
 	
-	//A ajouter que si il est déjà en mvmt bah il peut pas rebouger d'une case, bah ouai sinon il va se tp personne va capter
+	//A ajouter que si il est dï¿½jï¿½ en mvmt bah il peut pas rebouger d'une case, bah ouai sinon il va se tp personne va capter
 	public boolean CanMove(Direction towards)
 	{
 		if (!IsMoving() && orientation == towards)
@@ -41,7 +42,7 @@ public class Snoopy extends AnimatedObject {
 		else
 			ChangeOrientationTo(d);
 		System.out.println("Moving from " + x + ", " + y + " to " + targetX + ", " + targetY);
-		//Ca c'est juste pour te montrer ou il est censé aller mais comme j'ai pas fait l'animation bah il y bouge pas vraiment (x et y change pas tavu)
+		//Ca c'est juste pour te montrer ou il est censï¿½ aller mais comme j'ai pas fait l'animation bah il y bouge pas vraiment (x et y change pas tavu)
 		//this.setLocation((int)targetX, (int)targetY);
 		return false;
 	}
