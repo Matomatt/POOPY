@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 import javax.swing.*;
@@ -22,15 +23,16 @@ public class Fenetre extends JFrame
 	public Fenetre ()
 	{
 		this.setTitle("Snoopy");
-		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically);
+		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+18, globalVar.tileHeight*globalVar.nbTilesVertically+46);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 		
 		niveaux= new ArrayList<Niveau>();
 		try {
 			niveaux.add( new Niveau("level1"));
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	//	niveaux.get(0).addKeyListener(niveaux.get(0));
 		niveaux.get(0).setFocusable(true);

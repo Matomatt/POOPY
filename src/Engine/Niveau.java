@@ -5,6 +5,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -25,7 +26,7 @@ public class Niveau extends JPanel {
     Timer movementsTimer;
     boolean synchronizedMovements = true;
     
-	public Niveau(String name) throws FileNotFoundException
+	public Niveau(String name) throws IOException
 	{
 		int[][] _map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 		ball=new ArrayList<Ballon>(); 
