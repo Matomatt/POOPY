@@ -131,7 +131,14 @@ public class Objet extends JPanel implements EventListener{
 		targetY = yInMap*globalVar.tileHeight;
 		
 		return true;
-	}	
+	}
+	
+	public boolean MemeCaseQue(Objet o)
+	{
+		if (xInMap == o.xInMap && yInMap == o.yInMap)
+			return true;
+		return false;
+	}
 //	private class keylistener implements KeyListener
 //	{
 //

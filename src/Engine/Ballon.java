@@ -22,7 +22,7 @@ public class Ballon extends AnimatedObject {
 			e.printStackTrace();
 		}
 		
-		r = globalVar.tileWidth/2;
+		r = globalVar.tileWidth/4;
 		coordType = CoordType.CENTER;
 		alwaysMoving=true;
 		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));

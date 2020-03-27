@@ -7,6 +7,8 @@ import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -22,16 +24,20 @@ public class Niveau extends JPanel {
     protected Snoopy POOPY;
     protected ArrayList<Ballon> ballons = new ArrayList<Ballon>();
     protected ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
+    protected ArrayList<Oiseau> oiseaux = new ArrayList<Oiseau>();
     
     Timer movementsTimer;
-    boolean synchronizedMovements = true;
+    boolean synchronizedMovements = false;
+    
+    Timer keyTimer = new Timer(800, new ActionListener() { public void actionPerformed(ActionEvent arg0) { ExecuteKey(waitingKey, true); } });
+    int waitingKey = 0;
     
 	@SuppressWarnings("serial")
 	public Niveau(String name) throws IOException
 	{
 		this.setLayout(null);
 		
-		//	this.addKeyListener(new keylistener());
+		//this.addKeyListener(new keylistener());
 		
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
 		
@@ -56,16 +62,16 @@ public class Niveau extends JPanel {
 		this.grabFocus();
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"),"MoveUp");
-		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { MoveObject(POOPY,Direction.NORTH); } });
+		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 1; keyTimer.restart(); } });
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"),"MoveLeft");
-		this.getActionMap().put("MoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { MoveObject(POOPY,Direction.WEST); } });
+		this.getActionMap().put("MoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 2; keyTimer.restart(); } });
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"MoveDown");
-		this.getActionMap().put("MoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { MoveObject(POOPY,Direction.SOUTH); } });
+		this.getActionMap().put("MoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 3; keyTimer.restart(); } });
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"),"MoveRight");
-		this.getActionMap().put("MoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { MoveObject(POOPY,Direction.EAST); } });
+		this.getActionMap().put("MoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 4; keyTimer.restart(); } });
 		
 		this.validate();
 		
@@ -86,19 +92,35 @@ public class Niveau extends JPanel {
 	    		//System.out.print(map[i][j]);
 	    		switch(map[i][j])
 	    		{
-	    		case 1:
-	    			blocs.add(new AnimatedSolidBloc(i,j));
-	    			this.add(blocs.get(blocs.size()-1));
-	    			break;
-	    		case 2:
+	    		case 7:
 	    			ballons.add(new Ballon(i,j, !synchronizedMovements));
 	    			this.add(ballons.get(ballons.size()-1));
 	    			map[i][j] = 0;
 	    			break;
-	    		case 9:
+	    		case 8:
 	    			POOPY = new Snoopy(i, j, !synchronizedMovements);
-	    			map[i][j] = 0;
 	    			this.add(POOPY);
+	    			map[i][j] = 0;
+	    			break;
+	    		}
+	    	}
+	    	//System.out.println("");
+	    }
+		
+		for (int j=0; j<globalVar.nbTilesVertically; j++)
+	    {
+	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
+	    	{
+	    		//System.out.print(map[i][j]);
+	    		switch(map[i][j])
+	    		{
+	    		case 4:
+	    			blocs.add(new AnimatedSolidBloc(i,j));
+	    			this.add(blocs.get(blocs.size()-1));
+	    			break;
+	    		case 9:
+	    			oiseaux.add(new Oiseau(i,j));
+	    			this.add(oiseaux.get(oiseaux.size()-1));
 	    			break;
 	    		}
 	    	}
@@ -108,9 +130,15 @@ public class Niveau extends JPanel {
 	
 	private void movementsTimerTrigger() 
 	{
+		ExecuteKey(waitingKey, false);
+		
 		MouvementBallons(true);
+		
 		if (synchronizedMovements)
 			POOPY.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
+		
+		if (!POOPY.IsMoving())
+			CollisionsSnoopy();
 	}
 	
 	private void MouvementBallons(boolean checkCollisions) 
@@ -132,8 +160,25 @@ public class Niveau extends JPanel {
 			b.hitboxslow(blocs.get(y));
 	}
 	
+	private void CollisionsSnoopy()
+	{
+		Oiseau catchedOiseau = null;
+		for (Oiseau oiseau : oiseaux) {
+			if (((Objet) POOPY).MemeCaseQue((Objet)oiseau))
+			{
+				catchedOiseau = oiseau;
+				break;
+			}
+		}
+		if (catchedOiseau != null)
+		{
+			this.remove(catchedOiseau);
+			oiseaux.remove(catchedOiseau);
+		}
+	}
+	
 	//Move an object to the desired direction
-	private void MoveObject(Objet o, Direction d)
+	private boolean MoveObject(Objet o, Direction d)
 	{
 		//If the object is a movable object and can move and if there is nothing blocking the way
 		if (PossibleToMove(o, d))
@@ -147,19 +192,42 @@ public class Niveau extends JPanel {
 				int tmpMap = map[exX][exY];
 				map[exX][exY] = map[o.xInMap][o.yInMap];
 				map[o.xInMap][o.yInMap] = tmpMap;
+				return true;
 			}
 		}
 		//Ok il peut pas bouger mais si c'est snoopy il veut ptet juste regarder du bon cot� tu sais pas
 		else if (o.Type() == ObjectType.SNOOPY && !o.IsMoving())
-			((Snoopy)o).ChangeOrientationTo(d);
+				return ((Snoopy)o).ChangeOrientationTo(d);
+			
+		return false;
 			
 	}
 	
 	//returns true if the object is a movable object and can move and if there is nothing blocking the way
 	private boolean PossibleToMove(Objet o, Direction d)
-	{		
+	{	
+		Integer l[] = {0, 9};
+		List<Integer> nonSolidObjects = Arrays.asList(l);
 		//System.out.println("trying to go there : [" + o.NextCaseX(d) + ", " + o.NextCaseY(d) + "] " + ((Snoopy)o).CanMove(d) + " " + (map[o.NextCaseX(d)][o.NextCaseY(d)] == 0));
-		return (o.CanMove(d) && map[o.NextCaseX(d)][o.NextCaseY(d)] == 0);
+		return (o.CanMove(d) && nonSolidObjects.contains(map[o.NextCaseX(d)][o.NextCaseY(d)]));
+	}
+	
+	private void ExecuteKey(int key, boolean timerTriggered)
+	{
+		boolean successful = false;
+		switch(key)
+		{
+		case 1 : successful = MoveObject(POOPY,Direction.NORTH); break;
+		case 2 : successful = MoveObject(POOPY,Direction.WEST); break;
+		case 3 : successful = MoveObject(POOPY,Direction.SOUTH); break;
+		case 4 : successful = MoveObject(POOPY,Direction.EAST); break;
+		}
+		
+		if(successful || timerTriggered)
+		{
+			keyTimer.stop();
+			waitingKey = 0;
+		}
 	}
 	
 	

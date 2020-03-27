@@ -41,7 +41,7 @@ public class Snoopy extends AnimatedObject {
 	}
 	
 	//On pourra changer le sprite ici en fonction de son orientation
-	public void ChangeOrientationTo(Direction d)
+	public boolean ChangeOrientationTo(Direction d)
 	{
 		System.out.println("change dir");
 		if (orientation != d)
@@ -53,7 +53,9 @@ public class Snoopy extends AnimatedObject {
 				System.out.println("Couldn't load snoopy " + Direction.nameOf(d) + " sprite set");
 				e.printStackTrace();
 			}
+			return true;
 		}
+		return false;
 		
 	}
 }
