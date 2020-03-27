@@ -132,8 +132,6 @@ public class AnimatedObject extends Objet {
 	
 	public boolean IsMoving()
 	{
-		if (!(x == targetX && y == targetY && !alwaysMoving || stopMovements))
-			System.out.println("Snoopy's moving");
 		if (x == targetX && y == targetY && !alwaysMoving || stopMovements)
 			return false;
 		return true;

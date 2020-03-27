@@ -7,6 +7,6 @@ public class globalVar {
     public static int nbTilesHorizontally = 21;
     public static int nbTilesVertically = 10;
     
-    public static int FPS = 120;
-    public static int CalculusFrequency = 240;
+    public static int FPS = 120; // en Hz
+    public static int CalculusFrequency = 240; //en Hz
 }

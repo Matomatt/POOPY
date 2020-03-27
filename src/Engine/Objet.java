@@ -133,7 +133,7 @@ public class Objet extends JPanel implements EventListener{
 		return true;
 	}
 	
-	public boolean MemeCaseQue(Objet o)
+	public boolean SameTileAs(Objet o)
 	{
 		if (xInMap == o.xInMap && yInMap == o.yInMap)
 			return true;

@@ -33,7 +33,7 @@ public class Snoopy extends AnimatedObject {
 	public boolean Move(Direction d)
 	{
 		if (orientation == d)
-			super.Move(d);
+			return super.Move(d);
 		else
 			ChangeOrientationTo(d);
 		
@@ -43,7 +43,6 @@ public class Snoopy extends AnimatedObject {
 	//On pourra changer le sprite ici en fonction de son orientation
 	public boolean ChangeOrientationTo(Direction d)
 	{
-		System.out.println("change dir");
 		if (orientation != d)
 		{
 			orientation = d;
@@ -56,6 +55,10 @@ public class Snoopy extends AnimatedObject {
 			return true;
 		}
 		return false;
-		
+	}
+	
+	public void RefreshSprite()
+	{
+		this.ChangeSpriteTo(spriteList[currentSprite]);
 	}
 }
