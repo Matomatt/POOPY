@@ -17,18 +17,11 @@ public class Snoopy extends AnimatedObject {
 		
 		ChangeAnimationFrequency(100);
 		
-		try {
-			this.ChangeSpriteTo("/snoopy/snoopySOUTH1.png");
-		} catch (IOException e) {
-			System.out.println("Couldn't load snoopySOUTH1.png ");
-			e.printStackTrace();
-		}
 		this.ChangeOrientationTo(Direction.SOUTH);
-		System.out.println("Snoopy"+x);
-		
+		this.ChangeSpriteTo(spriteList[currentSprite]);
 	}
 	
-	//A ajouter que si il est d�j� en mvmt bah il peut pas rebouger d'une case, bah ouai sinon il va se tp personne va capter
+	//A ajouter que si il est deja en mvmt il peut pas rebouger d'une case, bah ouai sinon il va jamais s'arreter personne va capter
 	public boolean CanMove(Direction towards)
 	{
 		if (!IsMoving() && orientation == towards)
@@ -43,9 +36,7 @@ public class Snoopy extends AnimatedObject {
 			super.Move(d);
 		else
 			ChangeOrientationTo(d);
-		System.out.println("Moving from " + x + ", " + y + " to " + targetX + ", " + targetY);
-		//Ca c'est juste pour te montrer ou il est cens� aller mais comme j'ai pas fait l'animation bah il y bouge pas vraiment (x et y change pas tavu)
-		//this.setLocation((int)targetX, (int)targetY);
+		
 		return false;
 	}
 	
@@ -59,7 +50,7 @@ public class Snoopy extends AnimatedObject {
 			try {
 				LoadSpriteSet(orientation);
 			} catch (IOException e) {
-				System.out.println("Couldn't load snoopy sprite set");
+				System.out.println("Couldn't load snoopy " + Direction.nameOf(d) + " sprite set");
 				e.printStackTrace();
 			}
 		}

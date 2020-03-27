@@ -15,43 +15,67 @@ import Data.*;
 import Utilitaires.*;
 
 public class Niveau extends JPanel {
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 5093936493506272943L;
+
 	int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
     protected Snoopy POOPY;
-    protected ArrayList<Ballon> ball;
-    protected ArrayList<AnimatedSolidBloc> blocs;
+    protected ArrayList<Ballon> ballons = new ArrayList<Ballon>();
+    protected ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
     
     Timer movementsTimer;
     boolean synchronizedMovements = true;
     
+	@SuppressWarnings("serial")
 	public Niveau(String name) throws IOException
 	{
-		int[][] _map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
-		ball=new ArrayList<Ballon>(); 
-		blocs=new ArrayList<AnimatedSolidBloc>(); 
-		_map = MapDataManager.LoadMap(name+".txt");
+		this.setLayout(null);
 		
 		//	this.addKeyListener(new keylistener());
-			Init(_map);
+		
+		LoadObjects(MapDataManager.LoadMap(name+".txt"));
+		
+		if (POOPY == null)
+		{
+			System.out.println("Ce niveau ne contient pas Snoopy, impossible d'y jouer, retour au menu...");
+			return;
+		}
+		
+		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
+		this.requestFocus();
+		this.setVisible(true);
+		this.validate();
+		
+		//Synchronized Movements, gardez if !synchronized pour les collisions
+		ActionListener movementsTaskPerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) { movementsTimerTrigger(); } };
+		
+		movementsTimer = new Timer(1000/globalVar.CalculusFrequency, movementsTaskPerformer);
+		movementsTimer.start();
+		
 		this.grabFocus();
+		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"),"MoveUp");
-		this.getActionMap().put("MoveUp", moveup);
+		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { MoveObject(POOPY,Direction.NORTH); } });
+		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"),"MoveLeft");
-		this.getActionMap().put("MoveLeft", moveleft);
+		this.getActionMap().put("MoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { MoveObject(POOPY,Direction.WEST); } });
+		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"MoveDown");
-		this.getActionMap().put("MoveDown", movedown);
+		this.getActionMap().put("MoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { MoveObject(POOPY,Direction.SOUTH); } });
+		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"),"MoveRight");
-		this.getActionMap().put("MoveRight", moveright);
+		this.getActionMap().put("MoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { MoveObject(POOPY,Direction.EAST); } });
+		
 		this.validate();
 		
 	}
 
-	void Init(int[][] _map) 
+	void LoadObjects(int[][] _map) 
 	{
-		this.setLayout(null);
+		
 		map = _map;
+		
 		this.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally,  globalVar.tileHeight*globalVar.nbTilesVertically);
 		System.out.println("screen size : " + globalVar.tileWidth*globalVar.nbTilesHorizontally + " " +  globalVar.tileHeight*globalVar.nbTilesVertically);
 		
@@ -67,52 +91,38 @@ public class Niveau extends JPanel {
 	    			this.add(blocs.get(blocs.size()-1));
 	    			break;
 	    		case 2:
-	    			ball.add(new Ballon(i,j, false));
-	    			this.add(ball.get(ball.size()-1));
+	    			ballons.add(new Ballon(i,j, !synchronizedMovements));
+	    			this.add(ballons.get(ballons.size()-1));
 	    			map[i][j] = 0;
 	    			break;
 	    		case 9:
-	    			POOPY = new Snoopy(i, j, false);
+	    			POOPY = new Snoopy(i, j, !synchronizedMovements);
 	    			map[i][j] = 0;
 	    			this.add(POOPY);
 	    			break;
 	    		}
 	    	}
 	    	//System.out.println("");
-	    }
-		
-		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
-		this.requestFocus();
-		this.setVisible(true);
-		this.validate();
-		System.out.println(this.getSize());
-		
-		if (synchronizedMovements)
-		{
-			ActionListener movementsTaskPerformer = new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) { movementsTimerTrigger(); } };
-			
-			movementsTimer = new Timer(1000/globalVar.CalculusFrequency, movementsTaskPerformer);
-			movementsTimer.start();
-		}
-		
+	    }		
 	}
 	
 	private void movementsTimerTrigger() 
 	{
-		MouvementsBallons(true);
-		POOPY.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
+		MouvementBallons(true);
+		if (synchronizedMovements)
+			POOPY.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
 	}
 	
-	private void MouvementsBallons(boolean checkCollisions) 
+	private void MouvementBallons(boolean checkCollisions) 
 	{
-		for(int i = 0; i < ball.size(); i++)
+		for(int i = 0; i < ballons.size(); i++)
 		{
-			ball.get(i).MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
+			if (synchronizedMovements)
+				ballons.get(i).MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
 			
 			if (checkCollisions)
 				for(int y=0; y < blocs.size(); y++)
-					CollisionsBallon(ball.get(i));
+					CollisionsBallon(ballons.get(i));
 		}
 	}
 
@@ -121,41 +131,7 @@ public class Niveau extends JPanel {
 		for(int y = 0; y < blocs.size(); y++)
 			b.hitboxslow(blocs.get(y));
 	}
-	Action moveup = new AbstractAction()
-	   {
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				MoveObject(POOPY,Direction.NORTH);
-			}
-	   };	
-	Action moveleft = new AbstractAction()
-		   {
-				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					MoveObject(POOPY,Direction.WEST);
-				}
-		   };	
-	Action movedown = new AbstractAction()
-			   {
-					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						MoveObject(POOPY,Direction.SOUTH);
-					}
-			   };	
-	Action moveright = new AbstractAction()
-				   {
-						public void actionPerformed(ActionEvent e) {
-							// TODO Auto-generated method stub
-							MoveObject(POOPY,Direction.EAST);
-						}
-				   };	
-	   
-	protected  Action test()
-	{
-		
-		return null;
-		
-	}
+	
 	//Move an object to the desired direction
 	private void MoveObject(Objet o, Direction d)
 	{
@@ -185,6 +161,38 @@ public class Niveau extends JPanel {
 		//System.out.println("trying to go there : [" + o.NextCaseX(d) + ", " + o.NextCaseY(d) + "] " + ((Snoopy)o).CanMove(d) + " " + (map[o.NextCaseX(d)][o.NextCaseY(d)] == 0));
 		return (o.CanMove(d) && map[o.NextCaseX(d)][o.NextCaseY(d)] == 0);
 	}
+	
+	
+	/*
+	Action moveup = new AbstractAction()
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			MoveObject(POOPY,Direction.NORTH);
+		}
+	};	
+	Action moveleft = new AbstractAction()
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			MoveObject(POOPY,Direction.WEST);
+		}
+	};	
+	Action movedown = new AbstractAction()
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			MoveObject(POOPY,Direction.SOUTH);
+		}
+	};
+	Action moveright = new AbstractAction()
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			MoveObject(POOPY,Direction.EAST);
+		}
+	};
+	*/
 	
 }
 

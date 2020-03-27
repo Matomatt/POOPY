@@ -53,6 +53,7 @@ public class Objet extends JPanel implements EventListener{
 	protected void Init()
 	{
 		this.setLayout(new BorderLayout());
+		this.setOpaque(false);
 		
 		targetX = x; targetY = y;
 		r = globalVar.tileWidth;

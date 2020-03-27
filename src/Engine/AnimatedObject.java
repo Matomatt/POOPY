@@ -1,6 +1,5 @@
 package Engine;
 
-import Utilitaires.CoordType;
 import Utilitaires.Direction;
 import Utilitaires.ObjectType;
 
