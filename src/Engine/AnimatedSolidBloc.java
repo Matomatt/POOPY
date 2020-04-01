@@ -11,8 +11,7 @@ public class AnimatedSolidBloc extends AnimatedObject {
 	{
 		super(_x, _y, 0, 0, ObjectType.SOLIDBLOC, false, true);
 		nbSpritesPerAnimationSequence = 4;
-		animationFrequency = 100;
-		animationTimer.setDelay(animationFrequency);
+		ChangeAnimationFrequency(100);
 		
 		try {
 			LoadSpriteSet();

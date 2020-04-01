@@ -145,6 +145,11 @@ public class Niveau extends JPanel {
 	    	{
 	    		switch(ObjectType.typeOfInt(map[i][j]))
 	    		{
+	    		case PIEGE:
+	    			this.add(new Piege(i,j));
+	    			if(!nonSolidObjects.contains(map[i][j]))
+	    				nonSolidObjects.add(map[i][j]);
+	    			break;
 	    		case MOVINGBLOC:
 	    			movingBlocs.add(new MovingBloc(i, j, !synchronizedMovements));
 	    			this.add(movingBlocs.get(movingBlocs.size()-1));
@@ -235,10 +240,14 @@ public class Niveau extends JPanel {
 	
 	private void CollisionsSnoopy()
 	{
-		//La seule collision de snoopy c'est avec les oiseaux en dehors d'etre bloque par la map (gerer dans les MoveObject)
-		//Et snoopy n'attrape un oiseau que s'il est a l'arret
+		//La seule collision de snoopy c'est avec les oiseaux et lesp pieges en dehors d'etre bloque par la map (gerer dans les MoveObject)
+		//Et snoopy n'attrape un oiseau ou on ne compte le piege que s'il est a l'arret (vient de passer par la case)
 		if (POOPY.IsMoving())
 			return;
+		
+		  ///////////////
+		 //  OISEAUX  //
+		///////////////
 		
 		Oiseau catchedOiseau = null;
 		//On regarde tous les oiseaux pour voir si snoopy ne se trouverai pas sur la case de l'un deux
@@ -264,6 +273,14 @@ public class Niveau extends JPanel {
 		{
 			System.out.println("Et c'est la wiiin");
 		}
+		
+		  //////////////
+		 //  PIEGES  //
+		//////////////
+		
+		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE))
+			System.out.println("Et c'est la looooose");
+		
 	}
 	
 	private boolean SpacePressed()

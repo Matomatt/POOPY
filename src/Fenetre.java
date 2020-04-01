@@ -30,8 +30,9 @@ public class Fenetre extends JFrame
 		
 		niveaux= new ArrayList<Niveau>();
 		try {
-			//niveaux.add( new Niveau("level1"));
-			niveaux.add(new Niveau("level1P1", true));
+			//niveaux.add( new Niveau("level1", false));
+			//niveaux.add(new Niveau("level1P1", true));
+			niveaux.add( new Niveau("level2", false));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
