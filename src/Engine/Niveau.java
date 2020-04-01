@@ -27,8 +27,9 @@ public class Niveau extends JPanel {
 
 	private Snoopy POOPY;
 	private ArrayList<Ballon> ballons = new ArrayList<Ballon>();
-	private ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
+	private ArrayList<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
 	private ArrayList<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
+	private ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
 	private ArrayList<Oiseau> oiseaux = new ArrayList<Oiseau>();
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
     
@@ -145,6 +146,10 @@ public class Niveau extends JPanel {
 	    	{
 	    		switch(ObjectType.typeOfInt(map[i][j]))
 	    		{
+	    		case BREAKABLEBLOC:
+	    			breakableBlocs.add(new BreakableBloc(i,j));
+	    			this.add(breakableBlocs.get(breakableBlocs.size()-1));
+	    			break;
 	    		case PIEGE:
 	    			this.add(new Piege(i,j));
 	    			if(!nonSolidObjects.contains(map[i][j]))
@@ -286,21 +291,33 @@ public class Niveau extends JPanel {
 	private boolean SpacePressed()
 	{
 		System.out.println("Space pressed");
-		int movingblocX = POOPY.NextCaseX(POOPY.orientation);
-		int movingblocY = POOPY.NextCaseY(POOPY.orientation);
+		int blocX = POOPY.NextCaseX(POOPY.orientation);
+		int blocY = POOPY.NextCaseY(POOPY.orientation);
 		
-		if (map[movingblocX][movingblocY] == ObjectType.mapIdOf(ObjectType.MOVINGBLOC))
+		switch (ObjectType.typeOfInt(map[blocX][blocY]))
 		{
+		case MOVINGBLOC:
 			for (MovingBloc movingBloc : movingBlocs) {
-				if (movingBloc.xInMap == movingblocX && movingBloc.yInMap == movingblocY)
+				if (movingBloc.xInMap == blocX && movingBloc.yInMap == blocY)
 				{
 					System.out.println("MovingBloc found");
 					if (MoveObject(movingBloc, POOPY.orientation))
 					{
-						map[movingBloc.xInMap][movingBloc.yInMap]  = map[movingblocX][movingblocY];
-						map[movingblocX][movingblocY] = 0;
+						map[movingBloc.xInMap][movingBloc.yInMap]  = map[blocX][blocY];
+						map[blocX][blocY] = 0;
 						return true;
 					}
+				}
+			}
+			break;
+		case BREAKABLEBLOC:
+			for (BreakableBloc breakableBloc : breakableBlocs) {
+				if (breakableBloc.xInMap == blocX && breakableBloc.yInMap == blocY)
+				{
+					System.out.println("breakableBloc found");
+					if (breakableBloc.stopAnimation)
+						breakableBloc.Break();
+					map[blocX][blocY] = 0;
 				}
 			}
 		}
