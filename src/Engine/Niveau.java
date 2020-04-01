@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,26 +20,29 @@ import Utilitaires.*;
 
 public class Niveau extends JPanel {
 	private static final long serialVersionUID = 5093936493506272943L;
+	private static final String idPartie = "1";
+	private String name;
 
-	int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
+	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
-    protected Snoopy POOPY;
-    protected ArrayList<Ballon> ballons = new ArrayList<Ballon>();
-    protected ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
-    protected ArrayList<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
-    protected ArrayList<Oiseau> oiseaux = new ArrayList<Oiseau>();
-	List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
+	private Snoopy POOPY;
+	private ArrayList<Ballon> ballons = new ArrayList<Ballon>();
+	private ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
+	private ArrayList<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
+	private ArrayList<Oiseau> oiseaux = new ArrayList<Oiseau>();
+	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
     
-    Timer movementsTimer;
-    boolean synchronizedMovements = false;
+	private Timer movementsTimer;
+	private boolean synchronizedMovements = true;
     
-    Timer keyTimer = new Timer(500, new ActionListener() { public void actionPerformed(ActionEvent arg0) { waitingKey=0; keyTimer.stop(); } });
-    int waitingKey = 0;
+	private Timer keyTimer = new Timer(500, new ActionListener() { public void actionPerformed(ActionEvent arg0) { waitingKey=0; keyTimer.stop(); } });
+	private int waitingKey = 0;
     
 	@SuppressWarnings("serial")
-	public Niveau(String name) throws IOException
+	public Niveau(String _name, boolean load) throws IOException
 	{
 		this.setLayout(null);
+		name = _name;
 		
 		//this.addKeyListener(new keylistener());
 		nonSolidObjects.add(0);
@@ -47,6 +52,14 @@ public class Niveau extends JPanel {
 		{
 			System.out.println("Ce niveau ne contient pas Snoopy, impossible d'y jouer, retour au menu...");
 			return;
+		}
+		
+		if (load)
+		{
+			List<Ballon> _ballons = SaveManager.LoadSaveNiveau(name);
+			for (Ballon b : _ballons) {
+				AddBallon(b);
+			}
 		}
 		
 		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
@@ -79,6 +92,18 @@ public class Niveau extends JPanel {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),"SnoopyDo");
 		this.getActionMap().put("SnoopyDo", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 5; keyTimer.restart(); } });
 		
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true),"Save");
+		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { 
+			try {
+				SaveThis();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} } });
+		
 		this.validate();
 		
 	}
@@ -99,8 +124,7 @@ public class Niveau extends JPanel {
 	    		switch(ObjectType.typeOfInt(map[i][j]))
 	    		{
 	    		case BALLON:
-	    			ballons.add(new Ballon(i,j, !synchronizedMovements));
-	    			this.add(ballons.get(ballons.size()-1));
+	    			AddBallon(new Ballon(i,j, !synchronizedMovements));
 	    			map[i][j] = 0;
 	    			break;
 	    		case SNOOPY:
@@ -140,6 +164,12 @@ public class Niveau extends JPanel {
 	    		}
 	    	}
 	    }		
+	}
+	
+	public void AddBallon(Ballon b)
+	{
+		ballons.add(b);
+		this.add(b);
 	}
 	
 	//Calculs effectues sur la frequence globalVar.CalculusFrequency
@@ -278,8 +308,38 @@ public class Niveau extends JPanel {
 	{
 		for(int y = 0; y < blocs.size(); y++)
 			b.hitboxslow(blocs.get(y), true);
+		for(int y = 0; y < movingBlocs.size(); y++)
+			b.hitboxslow(movingBlocs.get(y), true);
 		if(b.hitboxslow(POOPY, false))
 			System.out.println("Et c'est la loooose");
-	}	
+	}
+	
+	private void SaveThis() throws FileNotFoundException, UnsupportedEncodingException
+	{
+		PrintWriter saveFile = new PrintWriter("./Maps/" + name + "P" + idPartie + ".txt", "UTF-8");
+		
+		System.out.println("Saving...");
+		
+		saveFile.println(globalVar.nbTilesHorizontally + " " + globalVar.nbTilesVertically);
+		
+	    for (int j=0; j<globalVar.nbTilesVertically; j++)
+	    {
+	    	String lineToPrint = "";
+	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
+	    		lineToPrint+= (((((Objet)POOPY).IsHere(i, j))?8:map[i][j]) + ((i >= globalVar.nbTilesHorizontally - 1)?"":" "));
+	    	
+	    	saveFile.println(lineToPrint);
+	    }
+	    
+	    if (!ballons.isEmpty())
+	    {
+	    	saveFile.println("Ballons");
+	    	for (Ballon ballon : ballons)
+		    	saveFile.println(ballon.SavingInfo());
+	    }
+	    
+	    
+	    saveFile.close();
+	}
 }
 

@@ -11,9 +11,24 @@ public class Ballon extends AnimatedObject {
 	int direc= 0;  // je mets un int de direction pour keep le dernier moove en mémoire 0 NE 1 NW 2 SW 3 SE  
 
 
+	public Ballon(double _x, double _y, int _dir, boolean _selfMoved)
+	{
+		super((int)_x/globalVar.tileWidth, (int)_y/globalVar.tileHeight, 3, 3, ObjectType.BALLON, true, false, _selfMoved, false);// x donné pas bon ? j'ai set la position de dépat
+		x = _x;
+		y = _y;
+		direc = _dir;
+		InitBallon();
+	}
 	public Ballon(int _x, int _y, boolean _selfMoved)
 	{
 		super(_x, _y, 3, 3, ObjectType.BALLON, true, false, _selfMoved, false);// x donné pas bon ? j'ai set la position de dépat
+		x += globalVar.tileWidth/2;
+		y += globalVar.tileWidth/2;
+		InitBallon();
+	}
+
+	private void InitBallon()
+	{
 		vitesseUpdate();
 		try {
 			this.ChangeSpriteTo("/ballon/ballon.png");
@@ -31,7 +46,6 @@ public class Ballon extends AnimatedObject {
 
 		//stopMovements=true;
 	}
-
 	public boolean hitboxfast (Objet tocheck)// Non fini / fonctionel
 	{
 		boolean result=false;
@@ -232,6 +246,12 @@ public class Ballon extends AnimatedObject {
 			vitesse[1]=vit;
 		//move();
 	}
+	
+	public String SavingInfo()
+	{
+		return (int)x + " " + (int)y + " " + direc;
+	}
+	
 	/*
  	 public int NextCaseX() //
  	 {

@@ -7,6 +7,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.CloseAction;
 
+import Data.SaveManager;
 import Settings.globalVar;
 import Engine.Niveau;
 
@@ -29,7 +30,8 @@ public class Fenetre extends JFrame
 		
 		niveaux= new ArrayList<Niveau>();
 		try {
-			niveaux.add( new Niveau("level1"));
+			//niveaux.add( new Niveau("level1"));
+			niveaux.add(new Niveau("level1P1", true));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

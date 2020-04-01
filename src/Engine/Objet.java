@@ -139,6 +139,11 @@ public class Objet extends JPanel implements EventListener{
 			return true;
 		return false;
 	}
+	
+	public boolean IsHere(int i, int j)
+	{
+		return (xInMap == i && yInMap == j);
+	}
 //	private class keylistener implements KeyListener
 //	{
 //
