@@ -53,7 +53,7 @@ public class Partie extends JPanel {
 	}
 	private void LoadPartie(String fileToLoad)
 	{
-		//
+		
 	}
 	public void pPressed()
 	{

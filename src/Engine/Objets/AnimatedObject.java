@@ -1,4 +1,4 @@
-package Engine;
+package Engine.Objets;
 
 import Utilitaires.Direction;
 import Utilitaires.ObjectType;
@@ -29,7 +29,7 @@ public class AnimatedObject extends Objet {
 	
 	private static boolean selfMoved = true;
 	private static boolean selfAnimated = true;
-	protected boolean stopAnimation = false;
+	public boolean stopAnimation = false;
 	protected boolean animateOnlyWhenMoving = false;
 	
 	protected boolean canMove;
@@ -88,7 +88,7 @@ public class AnimatedObject extends Objet {
 		new Timer(1000/globalVar.FPS, drawTaskPerformer).start();
 	}
 	
-	protected void MoveTowardsTarget(double elapsedTime)
+	public void MoveTowardsTarget(double elapsedTime)
 	{
 		if (x == targetX && y == targetY && !alwaysMoving || stopMovements)
 			return;

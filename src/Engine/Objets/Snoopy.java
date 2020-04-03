@@ -1,4 +1,4 @@
-package Engine;
+package Engine.Objets;
 import java.io.IOException;
 
 import Utilitaires.*;
@@ -6,7 +6,7 @@ import Utilitaires.*;
 public class Snoopy extends AnimatedObject {
 	private static final long serialVersionUID = -7782172256474576827L;
 	
-	Direction orientation = null;
+	public Direction orientation = null;
 	
 	public Snoopy(int _x, int _y, boolean _selfMoved)
 	{

@@ -1,4 +1,4 @@
-package Engine;
+package Engine.Objets;
 import java.io.IOException;
 
 import Data.ImageManager;
@@ -18,7 +18,9 @@ public class Objet extends JPanel implements EventListener{
 	
 	protected double r;
 	protected CoordType coordType = CoordType.LEFTRIGHTCORNER;
-	protected int xInMap = 0, yInMap = 0;
+	public int xInMap = 0;
+
+	public int yInMap = 0;
 	protected double x=0,y=0;
 	protected double targetX = 0, targetY = 0; // target ???
 	

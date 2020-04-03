@@ -18,6 +18,15 @@ import javax.swing.*;
 //import Pause;
 import Settings.*;
 import Data.*;
+import Engine.Objets.AnimatedSolidBloc;
+import Engine.Objets.Ballon;
+import Engine.Objets.BreakableBloc;
+import Engine.Objets.MovingBloc;
+import Engine.Objets.Objet;
+import Engine.Objets.Oiseau;
+import Engine.Objets.Piege;
+import Engine.Objets.Snoopy;
+import Engine.Objets.TapisRoulant;
 import Utilitaires.*;
 
 public class Niveau extends JPanel {

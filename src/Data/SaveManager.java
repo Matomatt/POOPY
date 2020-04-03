@@ -10,8 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Engine.Ballon;
 import Engine.Niveau;
+import Engine.Objets.Ballon;
 import Settings.globalVar;
 import Utilitaires.ParametresPartie;
 
