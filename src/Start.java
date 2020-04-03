@@ -1,4 +1,3 @@
-import Engine.Niveau;
 import Utilitaires.ObjectType;
 import Engine.*;
 

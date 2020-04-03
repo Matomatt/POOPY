@@ -15,6 +15,7 @@ import java.io.File;
 
 import javax.swing.*;
 
+//import Pause;
 import Settings.*;
 import Data.*;
 import Utilitaires.*;
@@ -23,7 +24,7 @@ public class Niveau extends JPanel {
 	private static final long serialVersionUID = 5093936493506272943L;
 	private static final String idPartie = "1";
 	private String name;
-
+	//private Pause pause;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
 	private Snoopy POOPY;
@@ -42,7 +43,7 @@ public class Niveau extends JPanel {
 	private int waitingKey = 0;
     
 	@SuppressWarnings("serial")
-	public Niveau(String _name, boolean load) throws IOException
+	public Niveau(String _name, boolean load) throws IOException  /// Rajouter partie au constructeur
 	{
 		this.setLayout(null);
 		name = _name;
@@ -106,11 +107,29 @@ public class Niveau extends JPanel {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} } });
+				
+		
+		
+		
 		
 		this.validate();
 		
 	}
-
+	
+	private void pause()  // Timer to stop 
+	{
+		
+		//partie.pPressed();
+		
+		
+		// Stop timer ? 
+		
+	}
+	private void resume()
+	{
+		
+	}
+	
 	void LoadObjects(int[][] _map) 
 	{
 		
