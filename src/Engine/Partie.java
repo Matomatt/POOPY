@@ -29,7 +29,7 @@ public class Partie extends JPanel {
 		this.setLayout(null);
 		niveaux= new ArrayList<Niveau>();
 		try {	
-			niveaux.add( new Niveau("level1", false));
+			niveaux.add( new Niveau("level2", false));
 		}
 		 catch (IOException e) {
 				e.printStackTrace();

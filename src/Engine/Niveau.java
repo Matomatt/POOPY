@@ -48,6 +48,7 @@ public class Niveau extends JPanel {
 	private Timer movementsTimer;
 	private boolean synchronizedMovements = true;
     
+	private KeysPressedList keysPressedList = new KeysPressedList();
 	private Timer keyTimer = new Timer(500, new ActionListener() { public void actionPerformed(ActionEvent arg0) { waitingKey=0; keyTimer.stop(); } });
 	private int waitingKey = 0;
     
@@ -90,6 +91,7 @@ public class Niveau extends JPanel {
 		this.grabFocus();
 		
 		//When key pressed add to list + timer, when key released take off list, when key action is done succesfully start timer, when wanting to do a key action, make sure timer for this key is out (avoid doing twice the same thing when only wanted once but key still pressed for a few ms)
+		/*
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"),"MoveUp");
 		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 1; keyTimer.restart(); } });
 		
@@ -98,12 +100,32 @@ public class Niveau extends JPanel {
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"MoveDown");
 		this.getActionMap().put("MoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 3; keyTimer.restart(); } });
+		*/
 		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"),"MoveRight");
-		this.getActionMap().put("MoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 4; keyTimer.restart(); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
+		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.UP); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true),"StopMoveUp");
+		this.getActionMap().put("StopMoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.UP); } });
+		
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false),"MoveLeft");
+		this.getActionMap().put("MoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.LEFT); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true),"StopMoveLeft");
+		this.getActionMap().put("StopMoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.LEFT); } });
+		
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false),"MoveDown");
+		this.getActionMap().put("MoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.DOWN); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true),"StopMoveDown");
+		this.getActionMap().put("StopMoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.DOWN); } });
+		
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false),"MoveRight");
+		this.getActionMap().put("MoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.RIGHT); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true),"StopMoveRight");
+		this.getActionMap().put("StopMoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.RIGHT); } });
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),"SnoopyDo");
-		this.getActionMap().put("SnoopyDo", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 5; keyTimer.restart(); } });
+		this.getActionMap().put("SnoopyDo", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.SPACE); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true),"SnoopyStop");
+		this.getActionMap().put("SnoopyStop", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.SPACE); } });
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true),"Save");
 		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { 
@@ -223,7 +245,7 @@ public class Niveau extends JPanel {
 	//Calculs effectues sur la frequence globalVar.CalculusFrequency
 	private void movementsTimerTrigger() 
 	{
-		ExecuteKey(waitingKey); //Si une touche a ete appuyee et est donc en attente on l'execute
+		ExecuteKeys(); //Si une touche a ete appuyee et est donc en attente on l'execute
 		
 		MouvementBallons(true); //Contient les collisions donc a lance meme si les mouvements ne sont pas synchronisees (que la balle bouge sur son propre timer)
 		
@@ -242,25 +264,13 @@ public class Niveau extends JPanel {
 		}
 	}
 	
-	private void ExecuteKey(int key)
+	private void ExecuteKeys()
 	{
-		boolean successful = false;
-		switch(key)
-		{
-		case 1 : successful = MoveObject(POOPY,Direction.NORTH); break;
-		case 2 : successful = MoveObject(POOPY,Direction.WEST); break;
-		case 3 : successful = MoveObject(POOPY,Direction.SOUTH); break;
-		case 4 : successful = MoveObject(POOPY,Direction.EAST); break;
-		case 5 : successful = SpacePressed(); break;
-		default: successful = true;
-		}
-		
-		//Si l'action a bien ete realise ou que le cooldown de l'hysteresis es tarrive a son terme on reinitialise la touche en attente et le timer
-		if(successful)
-		{
-			keyTimer.stop();
-			waitingKey = 0;
-		}
+		if (keysPressedList.ActionReadyOf(KeyType.UP)) if (MoveObject(POOPY,Direction.NORTH)) keysPressedList.FireKey(KeyType.UP);
+		if (keysPressedList.ActionReadyOf(KeyType.LEFT)) if (MoveObject(POOPY,Direction.WEST)) keysPressedList.FireKey(KeyType.LEFT);
+		if (keysPressedList.ActionReadyOf(KeyType.DOWN)) if (MoveObject(POOPY,Direction.SOUTH)) keysPressedList.FireKey(KeyType.DOWN);
+		if (keysPressedList.ActionReadyOf(KeyType.RIGHT)) if (MoveObject(POOPY,Direction.EAST)) keysPressedList.FireKey(KeyType.RIGHT);
+		if (keysPressedList.ActionReadyOf(KeyType.SPACE)) if ( SpacePressed()) keysPressedList.FireKey(KeyType.UP);
 	}
 	
 	//Move an object to the desired direction, returns true if the object moved or changed direction succesfully
