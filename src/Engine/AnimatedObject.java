@@ -17,13 +17,14 @@ public class AnimatedObject extends Objet {
 
 	private static final long serialVersionUID = -3920430219062203809L;
 	
+	protected double initSpeed[] = new double[2];
 	protected double vitesse[] = new double[2];
 	protected boolean alwaysMoving = false;
 	protected boolean stopMovements = false;
 	
 	protected int nbSpritesPerAnimationSequence = 1;
 	protected int currentSprite = 0;
-	protected int animationFrequency = 1000; //in milliseconds
+	protected int animationFrequency = 100; //in milliseconds
 	protected ImageIcon spriteList[];
 	
 	private static boolean selfMoved = true;
@@ -59,8 +60,8 @@ public class AnimatedObject extends Objet {
 		selfMoved = _selfMoved;
 		selfAnimated = _selfAnimated;
 		
-		vitesse[0] = vitesseX;
-		vitesse[1] = vitesseY;
+		initSpeed[0] = vitesse[0] = vitesseX;
+		initSpeed[1] = vitesse[1] = vitesseY;
 		
 		canMove = _canMove;
 		isAnimated = _isAnimated;
@@ -167,6 +168,7 @@ public class AnimatedObject extends Objet {
 	{
 		animationFrequency = newDelay;
 		animationTimer.setDelay(animationFrequency);
+		animationTimer.setInitialDelay(animationFrequency);
 	}
 	
 	public void StopAnimating()
@@ -179,6 +181,13 @@ public class AnimatedObject extends Objet {
 	{
 		stopAnimation = false;
 		animationTimer.start();
+	}
+	
+	public boolean CollideWith(Objet o)
+	{
+		if (o.x+globalVar.tileWidth < x || o.x > x+globalVar.tileWidth || o.y+globalVar.tileHeight < y || o.y > y+globalVar.tileHeight)
+			return false;
+		return true;
 	}
 
 }

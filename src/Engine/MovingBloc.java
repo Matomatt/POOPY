@@ -11,7 +11,7 @@ public class MovingBloc extends AnimatedObject {
 		super(_x, _y, 3, 3, ObjectType.MOVINGBLOC, true, true, _selfMoved, true);
 		
 		ChangeAnimationFrequency(100);
-		nbSpritesPerAnimationSequence = 15;
+		nbSpritesPerAnimationSequence = 6;//15;
 		animateOnlyWhenMoving = false;
 		
 		try {

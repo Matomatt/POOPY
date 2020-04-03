@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.io.File;
 
 import javax.swing.*;
 
@@ -30,6 +31,7 @@ public class Niveau extends JPanel {
 	private ArrayList<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
 	private ArrayList<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
 	private ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
+	private ArrayList<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
 	private ArrayList<Oiseau> oiseaux = new ArrayList<Oiseau>();
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
     
@@ -163,6 +165,14 @@ public class Niveau extends JPanel {
 	    			blocs.add(new AnimatedSolidBloc(i,j));
 	    			this.add(blocs.get(blocs.size()-1));
 	    			break;
+	    		case APPARITION:
+	    			break;
+	    		case TAPISROULANT:
+	    			tapisRoulants.add(new TapisRoulant(i, j, Direction.NORTH));
+	    			this.add(tapisRoulants.get(tapisRoulants.size()-1));
+	    			if(!nonSolidObjects.contains(map[i][j]))
+	    				nonSolidObjects.add(map[i][j]);
+	    			break;
 	    		case OISEAU:
 	    			oiseaux.add(new Oiseau(i,j));
 	    			this.add(oiseaux.get(oiseaux.size()-1));
@@ -197,8 +207,11 @@ public class Niveau extends JPanel {
 			}
 		}
 			
-		
 		CollisionsSnoopy();
+		
+		for (TapisRoulant tapisRoulant : tapisRoulants) {
+			CollisionsTapis(tapisRoulant);
+		}
 	}
 	
 	private void ExecuteKey(int key)
@@ -284,7 +297,16 @@ public class Niveau extends JPanel {
 		//////////////
 		
 		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE))
+		{
+			/*
+			String bip = "bip.mp3";
+			Media hit = new Media(new File(bip).toURI().toString());
+			MediaPlayer mediaPlayer = new MediaPlayer(hit);
+			mediaPlayer.play();
+			*/
 			System.out.println("Et c'est la looooose");
+		}
+			
 		
 	}
 	
@@ -320,6 +342,9 @@ public class Niveau extends JPanel {
 					map[blocX][blocY] = 0;
 				}
 			}
+			break;
+		default:
+			break;
 		}
 		
 		return false;
@@ -346,6 +371,13 @@ public class Niveau extends JPanel {
 			b.hitboxslow(movingBlocs.get(y), true);
 		if(b.hitboxslow(POOPY, false))
 			System.out.println("Et c'est la loooose");
+	}
+	
+	private void CollisionsTapis(TapisRoulant t)
+	{
+		for (MovingBloc movingBloc : movingBlocs) {
+			
+		}
 	}
 	
 	private void SaveThis() throws FileNotFoundException, UnsupportedEncodingException

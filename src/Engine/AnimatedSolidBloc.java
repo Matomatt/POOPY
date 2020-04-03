@@ -10,8 +10,8 @@ public class AnimatedSolidBloc extends AnimatedObject {
 	public AnimatedSolidBloc(int _x, int _y)
 	{
 		super(_x, _y, 0, 0, ObjectType.SOLIDBLOC, false, true);
-		nbSpritesPerAnimationSequence = 4;
-		ChangeAnimationFrequency(100);
+		nbSpritesPerAnimationSequence = 2;
+		ChangeAnimationFrequency(2000);
 		
 		try {
 			LoadSpriteSet();
@@ -20,6 +20,6 @@ public class AnimatedSolidBloc extends AnimatedObject {
 			e.printStackTrace();
 		}
 		this.ChangeSpriteTo(spriteList[currentSprite]);
-		StopAnimating();
+		//StopAnimating();
 	}
 }

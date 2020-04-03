@@ -14,8 +14,8 @@ public class BreakableBloc extends AnimatedObject {
 	public BreakableBloc(int _x, int _y)
 	{
 		super(_x, _y, 0, 0, ObjectType.BREAKABLEBLOC, false, true);
-		nbSpritesPerAnimationSequence = 4;
-		ChangeAnimationFrequency(100);
+		nbSpritesPerAnimationSequence = 6;
+		ChangeAnimationFrequency(50);
 		
 		try {
 			LoadSpriteSet();
@@ -44,7 +44,7 @@ public class BreakableBloc extends AnimatedObject {
 	public void BreakingCycle()
 	{
 		SwitchToNextSprite();
-		if (currentSprite == 3)
+		if (currentSprite >= nbSpritesPerAnimationSequence-1)
 		{
 			broken = true;
 			StopAnimating();
