@@ -34,6 +34,7 @@ public class Partie extends JPanel {
 	protected int vies = 5;
 	private int timeLeft = 0;
 	private int unlockedLevels = 1;
+	private int totallv=1;
 	
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
@@ -46,7 +47,7 @@ public class Partie extends JPanel {
 		
 		if (name.isEmpty())
 		{
-			try { niveaux.add( new Niveau("level2", this, false)); }
+			try { niveaux.add( new Niveau("level1", this, false)); }
 			catch (IOException e) { e.printStackTrace(); }
 		}
 		else {
@@ -82,6 +83,7 @@ public class Partie extends JPanel {
 
 	
 		unlockedLevels = numlv;
+		
 		
 		niveaux= new ArrayList<Niveau>();
 		try {	
@@ -132,7 +134,21 @@ public class Partie extends JPanel {
 	
 	public void next()
 	{
-		niveaux.get(0).getName();
+		if(totallv>unlockedLevels)
+		{
+			remove(niveaux.get(unlockedLevels-1));
+			add(niveaux.get(unlockedLevels));
+			this.revalidate();
+			this.update(getGraphics());
+			time.cancel();
+			time=new Time(niveaux.get(unlockedLevels));
+			unlockedLevels+=1;
+		}
+		else
+		{
+			System.out.println("gg tu as gagné voici ton score : "+score);
+			//you win 
+		}
 	}
 	
 	protected void menu()

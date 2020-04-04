@@ -194,28 +194,36 @@ public class Niveau extends JPanel {
 		if (vie<=0)
 		{
 			// AFFICHER JPanel GameOver
-			movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
-			movementsTimer.stop();
-			
-			POOPY.Kill();
-			POOPY = null;
-			for (Ballon ballon : ballons) { ballon.Kill(); }
-			for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Kill();}
-			for (MovingBloc movingBloc : movingBlocs) { movingBloc.Kill();  }
-			for (AnimatedSolidBloc bloc : blocs) { bloc.Kill(); }
-			for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Kill();}
-			keysPressedList.Kill();
-			
-			this.removeAll();
-			this.getInputMap().clear();
-			this.getActionMap().clear();
-			
-			System.gc();
-			
+			killAll();
 			partie.perdu();
 		}
 	}
+	private void win()
+	{
+		killAll();
+		partie.next();
+	}
 	
+	private void killAll()
+	{
+		movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
+		movementsTimer.stop();
+		
+		POOPY.Kill();
+		POOPY = null;
+		for (Ballon ballon : ballons) { ballon.Kill(); }
+		for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Kill();}
+		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Kill();  }
+		for (AnimatedSolidBloc bloc : blocs) { bloc.Kill(); }
+		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Kill();}
+		keysPressedList.Kill();
+		
+		this.removeAll();
+		this.getInputMap().clear();
+		this.getActionMap().clear();
+		
+		System.gc();
+	}
 	
 	
 	private void pause()  // Timer to stop 
@@ -435,6 +443,7 @@ public class Niveau extends JPanel {
 		if(oiseaux.isEmpty())
 		{
 			System.out.println("Et c'est la wiiin");
+			win();
 		}
 		
 		  /////////////////////
