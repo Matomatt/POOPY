@@ -59,7 +59,29 @@ public class Partie extends JPanel {
 			}
 		}
 
+		Init();
+	}
+	
+	public Partie(Fenetre fene, int numlv )
+	{
+		fenetre=fene;
 		
+		unlockedLevels = numlv;
+		
+		niveaux= new ArrayList<Niveau>();
+		try {	
+			niveaux.add( new Niveau("level"+numlv, this, false));
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		Init();
+		
+	}
+	
+	private void Init()
+	{
 		time = new Time(niveaux.get(0));
 		
 		niveaux.get(0).setFocusable(true);
@@ -72,34 +94,6 @@ public class Partie extends JPanel {
 		
 		this.setVisible(true);
 		this.validate();
-	}
-	public Partie(Fenetre fene, int numlv )
-	{
-		
-		
-		fenetre=fene;
-		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
-		this.setLayout(null);
-		
-		unlockedLevels = numlv;
-		
-		
-		niveaux= new ArrayList<Niveau>();
-		try {	
-			niveaux.add( new Niveau("level"+numlv, this, false));
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		niveaux.get(0).setFocusable(true);
-		
-		this.add(niveaux.get(0));
-		
-		time = new Time(niveaux.get(0));
-		this.setVisible(true);
-		
-		this.validate();
-		
 	}
 	
 	protected void perdu()
