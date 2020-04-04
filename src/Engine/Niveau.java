@@ -356,7 +356,6 @@ public class Niveau extends JPanel {
 	//Calculs effectues sur la frequence globalVar.CalculusFrequency
 	private void movementsTimerTrigger() 
 	{
-		System.out.println("triggered");
 		if (CollisionsSnoopy()) //Si return true ca veut dire c'est la mort
 			return;
 		

@@ -67,7 +67,7 @@ public class Snoopy extends AnimatedObject {
 	
 	public void RefreshSprite()
 	{
-		this.ChangeSpriteTo(spriteList[currentSprite]);
+		this.update(this.getGraphics());
 	}
 	
 	public void EndImmunity()

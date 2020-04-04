@@ -91,12 +91,11 @@ public class Partie extends JPanel {
 	{
 		time.cancel();
 		niveaux.removeAll(niveaux);
+		niveaux=null;
 		this.removeAll();
 		this.add(new GameOver(score,this.getWidth(),this.getHeight()));
-		System.out.println("crash?");
-		
-		
-		//menu();
+		this.update(this.getGraphics());
+		menu();
 	}
 	protected void addscore(int lvscore)
 	{
@@ -122,7 +121,7 @@ public class Partie extends JPanel {
 		
 	}
 	
-	private void SavePartie(String _name) throws FileNotFoundException, UnsupportedEncodingException
+	private void SavePartie(String _name, String _level, boolean EnCours) throws FileNotFoundException, UnsupportedEncodingException
 	{
 		name = _name;
 		

@@ -15,18 +15,12 @@ public class KeysPressedList {
 	
 	public void add(KeyType _key)
 	{
-		
 		if (!IsPressed(_key))
-		{
 			list.add(new KeyHolder(_key));
-			System.out.println("adding key");
-		}
-			
 	}
 	
 	public void remove(KeyType _key)
 	{
-		System.out.println("removing key");
 		KeyHolder firingKey;
 		if ((firingKey = GetKeyHolder(_key)) != null)
 			list.remove(firingKey);
