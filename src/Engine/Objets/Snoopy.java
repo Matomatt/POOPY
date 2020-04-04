@@ -81,4 +81,11 @@ public class Snoopy extends AnimatedObject {
 		immune = true;
 		immuneTimer.restart();
 	}
+	
+	public void Kill()
+	{
+		super.Kill();
+		immuneTimer.stop();
+		immuneTimer = null;
+	}
 }

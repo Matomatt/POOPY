@@ -66,4 +66,11 @@ public class KeysPressedList {
 		if (IsPressed(key))
 			GetKeyHolder(key).StartCooldown();
 	}
+	
+	public void Kill()
+	{
+		for (KeyHolder keyHolder : list) {
+			keyHolder.Kill();
+		}
+	}
 }

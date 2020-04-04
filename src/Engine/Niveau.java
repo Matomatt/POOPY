@@ -70,6 +70,7 @@ public class Niveau extends JPanel {
 
 	{
 		this.setLayout(null);
+		this.setOpaque(false);
 		name = _name;
 
 		vie=3;
@@ -105,7 +106,7 @@ public class Niveau extends JPanel {
 		
 		//Synchronized Movements, gardez if !synchronized pour les collisions
 		ActionListener movementsTaskPerformer = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { movementsTimerTrigger(); } };
+			public void actionPerformed(ActionEvent arg0) { /*System.out.println("ah");*/ movementsTimerTrigger(); } };
 		
 		movementsTimer = new Timer(1000/globalVar.CalculusFrequency, movementsTaskPerformer);
 		movementsTimer.start();
@@ -186,6 +187,18 @@ public class Niveau extends JPanel {
 		if (vie<=0)
 		{
 			// AFFICHER JPanel GameOver
+			movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
+			movementsTimer.stop();
+			movementsTimer = null;
+			POOPY.Kill();
+			POOPY = null;
+			for (Ballon ballon : ballons) { ballon.Kill(); ballons.remove(ballon); }
+			for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Kill(); breakableBlocs.remove(breakableBloc); }
+			for (MovingBloc movingBloc : movingBlocs) { movingBloc.Kill(); movingBlocs.remove(movingBloc); }
+			for (AnimatedSolidBloc bloc : blocs) { bloc.Kill(); blocs.remove(bloc); }
+			for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Kill(); tapisRoulant.remove(tapisRoulant); }
+			keysPressedList.Kill();
+			System.gc();
 			partie.perdu();
 			
 		}
@@ -196,15 +209,8 @@ public class Niveau extends JPanel {
 	private void pause()  // Timer to stop 
 	{
 		
-		partie.pPressed();// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appelé 
-		
-		try {
-			//C'est qu'une 
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//partie.pPressed();// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appelé 
+		partie.getComponent(0).setVisible(!partie.getComponent(0).isVisible());
 		
 		// Stop timer (va falloir foreach toutes les listes et trigger leur fonction pause, y'aurait pas plus simple que le faire � la mano ?)
 		

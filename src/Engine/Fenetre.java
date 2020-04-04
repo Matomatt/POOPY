@@ -20,7 +20,7 @@ public class Fenetre extends JFrame
 	public Fenetre ()
 	{
 		this.setTitle("Snoopy");
-		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+18, globalVar.tileHeight*globalVar.nbTilesVertically+46);
+		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+6, globalVar.tileHeight*globalVar.nbTilesVertically+32);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 		this.setResizable(false);

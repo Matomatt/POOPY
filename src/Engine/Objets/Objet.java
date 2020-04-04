@@ -66,7 +66,7 @@ public class Objet extends JPanel implements EventListener{
 		      this.add(sprite);}
 	
 		catch (IOException ex) { System.console().writer().println("Couldn't open default sprite..."); }
-//		this.addKeyListener(new keylistener());
+
 		//Les parametres de base tu connais
 		this.setVisible(true);
 		this.setSize(globalVar.tileWidth, globalVar.tileHeight);

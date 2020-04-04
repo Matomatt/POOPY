@@ -29,4 +29,10 @@ public class KeyHolder {
 		cooldown = false;
 		cooldownTimer.stop();
 	}
+	
+	public void Kill()
+	{
+		cooldownTimer.stop();
+		cooldownTimer = null;
+	}
 }

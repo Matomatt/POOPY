@@ -6,6 +6,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import javax.swing.*;
+
+import Engine.Objets.TapisRoulant;
+import Utilitaires.Direction;
+
 import java.util.TimerTask;
 import java.util.Timer;
 public class Partie extends JPanel {
@@ -40,7 +44,8 @@ public class Partie extends JPanel {
 		
 		time=new Time(niveaux.get(0));
 		niveaux.get(0).setFocusable(true);
-
+		this.add(new Pause(this));
+		this.getComponent(0).setVisible(false);
 		this.add(niveaux.get(0));
 		
 		this.setVisible(true);
@@ -62,11 +67,19 @@ public class Partie extends JPanel {
 			}
 		niveaux.get(0).setFocusable(true);
 	
+		
 		this.add(niveaux.get(0));
+		
 		time=new Time(niveaux.get(0));
 		this.setVisible(true);
 		this.validate();
 		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	protected void perdu()
