@@ -76,17 +76,22 @@ public class Niveau extends JPanel {
 		this.setOpaque(false);
 		name = _name;
 		
+		temps=new JLabel(new String("Remaining Time: " + seconde));
+		temps.setFont(new Font("DISPLAY",Font.PLAIN,30));
+		temps.setSize(300, 100);
+		temps.setForeground(Color.BLUE);
+		temps.setLocation(50, 20);
+		temps.setVisible(true);
+		
+		this.add(temps);
+	
 		
 		vie=3;
 		partie=p;
 
 		namePartie = p.getName();
 
-		temps=new JLabel("Timer"+seconde);
-		temps.setFont(new Font("DISPLAY",Font.PLAIN,18));
-		temps.setForeground(Color.DARK_GRAY);
-		temps.setLocation(50, 20);
-		add(temps);
+		
 		
 //		lvtimer= buffertimer.timerzero();
 		//this.addKeyListener(new keylistener());
@@ -174,6 +179,8 @@ public class Niveau extends JPanel {
 		
 		
 		
+		
+	
 		this.validate();
 		
 	}
@@ -182,6 +189,7 @@ public class Niveau extends JPanel {
 	public void timergestion()
 	{
 		seconde-=1;
+		temps.setText(new String("Remaining Time: " + seconde));
 		System.out.println("seconde"+seconde);
 		if (seconde<=0)
 		{
@@ -262,7 +270,7 @@ public class Niveau extends JPanel {
 	    {
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
 	    	{
-	    		//On récupère les paramètres de l'objet s'il y en a
+	    		//On rï¿½cupï¿½re les paramï¿½tres de l'objet s'il y en a
 	    		int id = map[i][j];
 	    		int param = 0;
 	    		

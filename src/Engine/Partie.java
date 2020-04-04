@@ -89,7 +89,7 @@ public class Partie extends JPanel {
 	
 	protected void perdu()
 	{
-		//time.cancel();
+		time.cancel();
 		this.removeAll();
 		this.add(new GameOver(score,this.getWidth(),this.getHeight()));
 		System.out.println("crash?");
