@@ -79,23 +79,21 @@ public class Partie extends JPanel {
 		fenetre=fene;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setLayout(null);
-
-	
+		
 		unlockedLevels = numlv;
 		
 		niveaux= new ArrayList<Niveau>();
 		try {	
-			niveaux.add( new Niveau("level"+numlv, this,false));
+			niveaux.add( new Niveau("level"+numlv, this, false));
 		}
-		 catch (IOException e) {
-				e.printStackTrace();
-			}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		niveaux.get(0).setFocusable(true);
-	
 		
 		this.add(niveaux.get(0));
 		
-		time=new Time(niveaux.get(0));
+		time = new Time(niveaux.get(0));
 		this.setVisible(true);
 		
 		this.validate();

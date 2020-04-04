@@ -19,6 +19,16 @@ public class Ballon extends AnimatedObject {
 		direc = _dir;
 		InitBallon();
 	}
+	
+	public Ballon(int _x, int _y, int _dir, boolean _selfMoved)
+	{
+		super(_x, _y, 3, 3, ObjectType.BALLON, true, false, _selfMoved, false);// x donné pas bon ? j'ai set la position de dépat
+		x += globalVar.tileWidth/2;
+		y += globalVar.tileWidth/2;
+		direc = _dir;
+		InitBallon();
+	}
+	
 	public Ballon(int _x, int _y, boolean _selfMoved)
 	{
 		super(_x, _y, 3, 3, ObjectType.BALLON, true, false, _selfMoved, false);// x donné pas bon ? j'ai set la position de dépat

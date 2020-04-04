@@ -72,8 +72,8 @@ public class Niveau extends JPanel {
 
 	{
 		this.setLayout(null);
-		this.setOpaque(false);
-		//this.setBackground(new Color(179, 134, 0));
+		this.setOpaque(true);
+		this.setBackground(new Color(213,210,204));
 		
 		partie = p;
 		name = _name;
@@ -175,7 +175,6 @@ public class Niveau extends JPanel {
 		this.validate();
 		
 	}
-	
 
 	public void timergestion()
 	{
@@ -188,12 +187,12 @@ public class Niveau extends JPanel {
 		}
 		
 	}
+	
 	private void vieloose()
 	{
 		vie-=1;
 		if (vie<=0)
 		{
-			// AFFICHER JPanel GameOver
 			movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
 			movementsTimer.stop();
 			
@@ -215,8 +214,6 @@ public class Niveau extends JPanel {
 			partie.perdu();
 		}
 	}
-	
-	
 	
 	private void pause()  // Timer to stop 
 	{
@@ -241,14 +238,8 @@ public class Niveau extends JPanel {
 		}
 	}
 	
-	private void resume()
-	{
-		
-	}
-	
 	void LoadObjects(int[][] _map) 
 	{
-		
 		map = _map;
 		
 		this.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally,  globalVar.tileHeight*globalVar.nbTilesVertically);
@@ -259,10 +250,16 @@ public class Niveau extends JPanel {
 	    {
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
 	    	{
-	    		switch(ObjectType.typeOfInt(map[i][j]))
+	    		int [] idParam = SeparateIdParam(map[i][j]);
+	    		map[i][j] = idParam[0];
+	    		
+	    		int id = idParam[0];
+	    		int param = idParam[1];
+	    		
+	    		switch(ObjectType.typeOfInt(id))
 	    		{
 	    		case BALLON:
-	    			AddBallon(new Ballon(i,j, !synchronizedMovements));
+	    			AddBallon(new Ballon(i,j, param, !synchronizedMovements));
 	    			map[i][j] = 0;
 	    			break;
 	    		case SNOOPY:
@@ -281,23 +278,13 @@ public class Niveau extends JPanel {
 	    {
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
 	    	{
-	    		//On r�cup�re les param�tres de l'objet s'il y en a
-	    		int id = map[i][j];
-	    		int param = 0;
+	    		//On recupere les parametres de l'objet s'il y en a
+
+	    		int [] idParam = SeparateIdParam(map[i][j]);
+	    		map[i][j] = idParam[0];
 	    		
-	    		if (id > 9)
-	    		{
-	    			int div = 10;
-	    			
-	    			while(id/div > 0)
-	    				div*=10;
-	    			div/=10;
-	    			
-	    			param = id - ((int)(id/div))*10;
-	    			id = (int)(id/div);
-	    			
-	    			map[i][j] = id;
-	    		}
+	    		int id = idParam[0];
+	    		int param = idParam[1];
 	    		
 	    		switch(ObjectType.typeOfInt(id))
 	    		{
@@ -339,6 +326,24 @@ public class Niveau extends JPanel {
 	    		}
 	    	}
 	    }		
+	}
+	
+	public int[] SeparateIdParam(int id)
+	{
+		int param = 0;
+		if (id > 9)
+		{
+			int div = 10;
+			
+			while(id/div > 0)
+				div*=10;
+			div/=10;
+			
+			param = id - ((int)(id/div))*10;
+			id = (int)(id/div);
+		}
+		int[] idParam = {id, param};
+		return idParam;
 	}
 	
 	public void AddBallon(Ballon b)
@@ -393,6 +398,8 @@ public class Niveau extends JPanel {
 	//returns true if the object is a movable object and can move and if there is nothing blocking the way
 	private boolean PossibleToMove(Objet o, Direction d)
 	{
+		if(o.NextCaseX(d) < 0 || o.NextCaseX(d) > globalVar.nbTilesHorizontally || o.NextCaseY(d) < 0 || o.NextCaseY(d) > globalVar.nbTilesVertically)
+			return false;
 		return (o.CanMove(d) && nonSolidObjects.contains(map[o.NextCaseX(d)][o.NextCaseY(d)]));
 	}
 	

@@ -9,9 +9,9 @@ public class AnimatedSolidBloc extends AnimatedObject {
 
 	public AnimatedSolidBloc(int _x, int _y)
 	{
-		super(_x, _y, 0, 0, ObjectType.SOLIDBLOC, false, true);
-		nbSpritesPerAnimationSequence = 2;
-		ChangeAnimationFrequency(2000);
+		super(_x, _y, 0, 0, ObjectType.SOLIDBLOC, false, false);
+		nbSpritesPerAnimationSequence = 1;
+		//ChangeAnimationFrequency(2000);
 		
 		try {
 			LoadSpriteSet();
