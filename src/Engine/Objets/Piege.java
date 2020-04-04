@@ -10,7 +10,7 @@ public class Piege  extends AnimatedObject {
 	public Piege(int _x, int _y)
 	{
 		super(_x, _y, 0, 0, ObjectType.PIEGE, false, true);
-		nbSpritesPerAnimationSequence = 7;
+		nbSpritesPerAnimationSequence = 1;
 		animationFrequency = 200;
 		animationTimer.setDelay(animationFrequency);
 		

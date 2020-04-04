@@ -73,6 +73,7 @@ public class Niveau extends JPanel {
 	{
 		this.setLayout(null);
 		this.setOpaque(false);
+		//this.setBackground(new Color(179, 134, 0));
 		
 		partie = p;
 		name = _name;

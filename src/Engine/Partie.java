@@ -17,6 +17,7 @@ import Engine.Objets.TapisRoulant;
 import Utilitaires.Direction;
 
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.Timer;
 
 public class Partie extends JPanel {
@@ -24,6 +25,7 @@ public class Partie extends JPanel {
 	
 	private String name;
 	
+
 	private Pause pause;
 	private Fenetre fenetre;
 	Time time;
@@ -32,6 +34,7 @@ public class Partie extends JPanel {
 	protected int vies = 5;
 	private int timeLeft = 0;
 	private int unlockedLevels = 1;
+	
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
 	public Partie(String partieToLoad, Fenetre _fenetre)
@@ -39,9 +42,7 @@ public class Partie extends JPanel {
 		name = partieToLoad;
 			
 		fenetre=_fenetre;
-		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
-		this.setLayout(null);
-
+	
 		
 		if (name.isEmpty())
 		{
@@ -61,6 +62,8 @@ public class Partie extends JPanel {
 		time = new Time(niveaux.get(0));
 		
 		niveaux.get(0).setFocusable(true);
+		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
+		this.setLayout(null);
 		
 		this.add((pause = new Pause(this)));
 		
@@ -76,7 +79,10 @@ public class Partie extends JPanel {
 		fenetre=fene;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setLayout(null);
+
 	
+		unlockedLevels = numlv;
+		
 		niveaux= new ArrayList<Niveau>();
 		try {	
 			niveaux.add( new Niveau("level"+numlv, this,false));
@@ -94,12 +100,6 @@ public class Partie extends JPanel {
 		
 		this.validate();
 		
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	protected void perdu()
@@ -108,8 +108,20 @@ public class Partie extends JPanel {
 		niveaux.removeAll(niveaux);
 		niveaux=null;
 		this.removeAll();
+		this.update(getGraphics());
+		this.add(new GameOver(score, this.getWidth(), this.getHeight(), unlockedLevels));
+		this.revalidate();
+		this.update(getGraphics());
+		try {
+			TimeUnit.SECONDS.sleep(3);
+		} catch (InterruptedException e) {
+						e.printStackTrace();
+		}
+		this.update(getGraphics());
 		niveaux=null;
-		this.add(new GameOver(score,this.getWidth(),this.getHeight()));
+	//	this.add(new GameOver(score,this.getWidth(),this.getHeight()));
+		
+	    this.removeAll();
 		this.update(this.getGraphics());
 		menu();
 	}
