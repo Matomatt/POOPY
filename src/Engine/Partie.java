@@ -31,10 +31,10 @@ public class Partie extends JPanel {
 	Time time;
 	
 	private int score = 0;
-	protected int vies = 5;
+	protected int vies = 3;
 	private int timeLeft = 0;
 	private int unlockedLevels = 1;
-	private int totallv=1;
+	private int totallv=1;// a init 
 	
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
@@ -82,7 +82,7 @@ public class Partie extends JPanel {
 	
 	private void Init()
 	{
-		time = new Time(niveaux.get(0));
+		time = new Time(niveaux.get(unlockedLevels-1));
 		
 		niveaux.get(0).setFocusable(true);
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
@@ -90,7 +90,7 @@ public class Partie extends JPanel {
 		
 		this.add((pause = new Pause(this)));
 		
-		this.add(niveaux.get(0));
+		this.add(niveaux.get(unlockedLevels-1));
 		
 		this.setVisible(true);
 		this.validate();
@@ -138,10 +138,31 @@ public class Partie extends JPanel {
 		}
 		else
 		{
+			time.cancel();
+			niveaux.removeAll(niveaux);
+			niveaux=null;
+			this.removeAll();
+			this.update(getGraphics());
+			this.add(new WinPage(score, this.getWidth(), this.getHeight(), unlockedLevels));
+			this.revalidate();
+			this.update(getGraphics());
+			try {
+				TimeUnit.SECONDS.sleep(3);
+			} catch (InterruptedException e) {
+							e.printStackTrace();
+			}
+			this.update(getGraphics());
+			niveaux=null;
+		//	this.add(new GameOver(score,this.getWidth(),this.getHeight()));
+			
+		    this.removeAll();
+			this.update(this.getGraphics());
+			menu();
+		}
 			System.out.println("gg tu as gagné voici ton score : "+score);
 			//you win 
-		}
 	}
+	
 	
 	protected void menu()
 	{
@@ -182,8 +203,7 @@ public class Partie extends JPanel {
 		
 		saveFile.println(_level);
 		saveFile.println(enCours);
-		saveFile.println(unlockedLevels + " " + score + " " + vies + " " + timeLeft);
-		
+		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(unlockedLevels-1).getvie() + " " + niveaux.get(unlockedLevels-1).getseconde());
 		saveFile.close();
 		
 		System.out.println("Saved !");

@@ -53,6 +53,7 @@ public class Niveau extends JPanel {
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 	
 	private int vie;
+	private JLabel vieDisplayer;
 //    private Java.util.Timer lvtimer;
 
     private int seconde=60;
@@ -87,8 +88,16 @@ public class Niveau extends JPanel {
 		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
 		temps.setVisible(true);
 		
+		vieDisplayer=new JLabel(new String("LIVE X "+vie));
+		vieDisplayer.setFont(new Font("DISPLAY",Font.PLAIN,30));
+		vieDisplayer.setSize(300, 35);
+		vieDisplayer.setForeground(Color.BLUE);
+		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
+		vieDisplayer.setVisible(true);
+		
+		
 		partie.add(temps);
-	
+		partie.add(vieDisplayer);
 		nonSolidObjects.add(0);
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
 		
@@ -191,6 +200,7 @@ public class Niveau extends JPanel {
 	private void vieloose()
 	{
 		vie-=1;
+		vieDisplayer.setText(new String("LIVE X "+vie));
 		if (vie<=0)
 		{
 			KillAll();
@@ -570,6 +580,19 @@ public class Niveau extends JPanel {
 		else if (o.SpeedModified()) o.ResetSpeed();
 	}
 	
+	public int getseconde()
+	{
+	
+		return seconde;
+		
+	}
+	public int getvie()
+	{
+	
+		return vie;
+		
+	}
+	
 	private void SaveThis() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		//ENTREZ NOM PARTIE SI NON EXISTANT
@@ -602,3 +625,4 @@ public class Niveau extends JPanel {
 	}
 }
 
+	
