@@ -8,7 +8,7 @@ import Utilitaires.ObjectType;
 public class TapisRoulant extends AnimatedObject {
 	private static final long serialVersionUID = -8880741442049111378L;
 	
-	Direction orientation = Direction.NORTH;
+	public Direction orientation = Direction.NORTH;
 	
 	public TapisRoulant(int _x, int _y, Direction _orientation)
 	{

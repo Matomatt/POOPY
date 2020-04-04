@@ -18,7 +18,9 @@ import javax.swing.*;
 //import Pause;
 import Settings.*;
 import Data.*;
+import Engine.Objets.AnimatedObject;
 import Engine.Objets.AnimatedSolidBloc;
+import Engine.Objets.Apparition;
 import Engine.Objets.Ballon;
 import Engine.Objets.BreakableBloc;
 import Engine.Objets.MovingBloc;
@@ -203,7 +205,24 @@ public class Niveau extends JPanel {
 	    {
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
 	    	{
-	    		switch(ObjectType.typeOfInt(map[i][j]))
+	    		int id = map[i][j];
+	    		int param = 0;
+	    		
+	    		if (id > 9)
+	    		{
+	    			int div = 10;
+	    			
+	    			while(id/div > 0)
+	    				div*=10;
+	    			div/=10;
+	    			
+	    			param = id - ((int)(id/div))*10;
+	    			id = (int)(id/div);
+	    			
+	    			map[i][j] = id;
+	    		}
+	    		
+	    		switch(ObjectType.typeOfInt(id))
 	    		{
 	    		case BREAKABLEBLOC:
 	    			breakableBlocs.add(new BreakableBloc(i,j));
@@ -211,8 +230,8 @@ public class Niveau extends JPanel {
 	    			break;
 	    		case PIEGE:
 	    			this.add(new Piege(i,j));
-	    			if(!nonSolidObjects.contains(map[i][j]))
-	    				nonSolidObjects.add(map[i][j]);
+	    			if(!nonSolidObjects.contains(id))
+	    				nonSolidObjects.add(id);
 	    			break;
 	    		case MOVINGBLOC:
 	    			movingBlocs.add(new MovingBloc(i, j, !synchronizedMovements));
@@ -223,18 +242,19 @@ public class Niveau extends JPanel {
 	    			this.add(blocs.get(blocs.size()-1));
 	    			break;
 	    		case APPARITION:
+	    			this.add(new Apparition(i,j));
 	    			break;
 	    		case TAPISROULANT:
-	    			tapisRoulants.add(new TapisRoulant(i, j, Direction.NORTH));
+	    			tapisRoulants.add(new TapisRoulant(i, j, ((param == 1)?Direction.NORTH:((param == 2)?Direction.SOUTH:((param == 3)?Direction.EAST:Direction.WEST)))));
 	    			this.add(tapisRoulants.get(tapisRoulants.size()-1));
-	    			if(!nonSolidObjects.contains(map[i][j]))
-	    				nonSolidObjects.add(map[i][j]);
+	    			if(!nonSolidObjects.contains(id))
+	    				nonSolidObjects.add(id);
 	    			break;
 	    		case OISEAU:
 	    			oiseaux.add(new Oiseau(i,j));
 	    			this.add(oiseaux.get(oiseaux.size()-1));
-	    			if(!nonSolidObjects.contains(map[i][j]))
-	    				nonSolidObjects.add(map[i][j]);
+	    			if(!nonSolidObjects.contains(id))
+	    				nonSolidObjects.add(id);
 	    			break;
 				default:
 					break;
@@ -252,6 +272,8 @@ public class Niveau extends JPanel {
 	//Calculs effectues sur la frequence globalVar.CalculusFrequency
 	private void movementsTimerTrigger() 
 	{
+		CollisionsSnoopy();
+		
 		ExecuteKeys(); //Si une touche a ete appuyee et est donc en attente on l'execute
 		
 		MouvementBallons(true); //Contient les collisions donc a lance meme si les mouvements ne sont pas synchronisees (que la balle bouge sur son propre timer)
@@ -262,12 +284,6 @@ public class Niveau extends JPanel {
 			for (MovingBloc movingBloc : movingBlocs) {
 				movingBloc.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
 			}
-		}
-			
-		CollisionsSnoopy();
-		
-		for (TapisRoulant tapisRoulant : tapisRoulants) {
-			CollisionsTapis(tapisRoulant);
 		}
 	}
 	
@@ -303,8 +319,7 @@ public class Niveau extends JPanel {
 	
 	private void CollisionsSnoopy()
 	{
-		//La seule collision de snoopy c'est avec les oiseaux et lesp pieges en dehors d'etre bloque par la map (gerer dans les MoveObject)
-		//Et snoopy n'attrape un oiseau ou on ne compte le piege que s'il est a l'arret (vient de passer par la case)
+		//Les collisions de snoopy ne sont triggered que quand il a finit son déplacement sur la case
 		if (POOPY.IsMoving())
 			return;
 		
@@ -351,6 +366,12 @@ public class Niveau extends JPanel {
 			*/
 			System.out.println("Et c'est la looooose");
 		}
+		
+		  /////////////////////
+		 //  TAPISROULANTS  //
+		/////////////////////
+		
+		CollisionsTapis(POOPY);
 			
 		
 	}
@@ -423,11 +444,22 @@ public class Niveau extends JPanel {
 			
 	}
 	
-	private void CollisionsTapis(TapisRoulant t)
+	private void CollisionsTapis(AnimatedObject o)
 	{
-		for (MovingBloc movingBloc : movingBlocs) {
-			
+		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified())
+		{
+			for (TapisRoulant tapisRoulant : tapisRoulants) {
+				if (tapisRoulant.xInMap == o.xInMap && tapisRoulant.yInMap == o.yInMap)
+				{
+					if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]))
+					{
+						o.Move(tapisRoulant.orientation);
+						o.IncreaseSpeed(tapisRoulant.orientation, 2.3);
+					}
+				}
+			}
 		}
+		else if (o.SpeedModified()) o.ResetSpeed();
 	}
 	
 	private void SaveThis() throws FileNotFoundException, UnsupportedEncodingException
