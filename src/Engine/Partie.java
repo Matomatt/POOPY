@@ -24,7 +24,7 @@ public class Partie extends JPanel {
 	
 	private int score = 0;
 	private int vies = 3;
-	private int timerLeft = 0;
+	private int timeLeft = 0;
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
 	public Partie(String partieToLoad, Fenetre _fenetre)
@@ -43,19 +43,15 @@ public class Partie extends JPanel {
 		}
 
 		
-		time=new Time(niveaux.get(0));
+		time = new Time(niveaux.get(0));
+		
 		niveaux.get(0).setFocusable(true);
 		
-		this.add(new Pause(this));
-		this.getComponent(0).setVisible(false);
-		
-		pause = new Pause(this);
-		this.add(pause);
+		this.add((pause = new Pause(this)));
 		
 		this.add(niveaux.get(0));
 		
 		this.setVisible(true);
-		
 		this.validate();
 	}
 	public Partie(Fenetre fene, int numlv )
@@ -137,9 +133,9 @@ public class Partie extends JPanel {
 	{
 		
 		//this.getComponent(0).setVisible(!this.getComponent(0).isVisible());
-		//pause.pPressed();
+		pause.pPressed();
 		System.out.println("OUI");
-		pause.setVisible(!pause.isVisible());
+		//pause.setVisible(!pause.isVisible());
 		time.pPressed();
 		this.revalidate();
 	}

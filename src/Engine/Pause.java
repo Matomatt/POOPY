@@ -75,7 +75,6 @@ public class Pause extends JPanel{
 		this.setVisible(true);
 		this.setEnabled(true);
 		this.revalidate();
-
 	}
 
 }

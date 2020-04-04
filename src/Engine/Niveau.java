@@ -217,7 +217,7 @@ public class Niveau extends JPanel {
 	private void pause()  // Timer to stop 
 	{
 		partie.pPressed();// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appelé 
-		
+		movementsTimer.stop();
 		
 		// Stop timer (va falloir foreach toutes les listes et trigger leur fonction pause, y'aurait pas plus simple que le faire � la mano ?)
 		
