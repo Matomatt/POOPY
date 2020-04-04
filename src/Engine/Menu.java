@@ -100,6 +100,8 @@ public class Menu extends JPanel{
 	}
 	private void start()
 	{
+		if (fenetre.getComponent(0)==this)
+			System.out.println("ui");
 		fenetre.remove(this);
 		fenetre.start();
 	}

@@ -93,6 +93,7 @@ public class Partie extends JPanel {
 		niveaux.removeAll(niveaux);
 		niveaux=null;
 		this.removeAll();
+		niveaux=null;
 		this.add(new GameOver(score,this.getWidth(),this.getHeight()));
 		this.update(this.getGraphics());
 		menu();
@@ -113,6 +114,9 @@ public class Partie extends JPanel {
 		pause=null;
 		time=null;
 		//save avant ? 
+		this.update(this.getGraphics());
+		fenetre.remove(this);
+		
 		fenetre.menu();
 
 	}
