@@ -31,32 +31,32 @@ import Utilitaires.*;
 
 public class Niveau extends JPanel {
 	private static final long serialVersionUID = 5093936493506272943L;
-	private static final String idPartie = "1";
-	private String name;
+	
+	private static String namePartie = "1";
+	private static String name;
 	//private Pause pause;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
 	private Snoopy POOPY;
-	private ArrayList<Ballon> ballons = new ArrayList<Ballon>();
-	private ArrayList<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
-	private ArrayList<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
-	private ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
-	private ArrayList<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
-	private ArrayList<Oiseau> oiseaux = new ArrayList<Oiseau>();
+	private List<Ballon> ballons = new ArrayList<Ballon>();
+	private List<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
+	private List<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
+	private List<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
+	private List<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
+	private List<Oiseau> oiseaux = new ArrayList<Oiseau>();
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
     
 	private Timer movementsTimer;
 	private boolean synchronizedMovements = true;
     
 	private KeysPressedList keysPressedList = new KeysPressedList();
-	private Timer keyTimer = new Timer(500, new ActionListener() { public void actionPerformed(ActionEvent arg0) { waitingKey=0; keyTimer.stop(); } });
-	private int waitingKey = 0;
     
 	@SuppressWarnings("serial")
-	public Niveau(String _name, boolean load) throws IOException  /// Rajouter partie au constructeur
+	public Niveau(String _name, String _namePartie, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
 	{
 		this.setLayout(null);
 		name = _name;
+		namePartie = _namePartie;
 		
 		//this.addKeyListener(new keylistener());
 		nonSolidObjects.add(0);
@@ -68,7 +68,7 @@ public class Niveau extends JPanel {
 			return;
 		}
 		
-		if (load)
+		if (loadEnCours)
 		{
 			List<Ballon> _ballons = SaveManager.LoadSaveNiveau(name);
 			for (Ballon b : _ballons) {
@@ -132,12 +132,12 @@ public class Niveau extends JPanel {
 			try {
 				SaveThis();
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, true),"Pause");
+		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 				
 		
 		
@@ -152,8 +152,15 @@ public class Niveau extends JPanel {
 		
 		//partie.pPressed();
 		
+		try {
+			//C'est qu'une 
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		// Stop timer ? 
+		// Stop timer (va falloir foreach toutes les listes et trigger leur fonction pause, y'aurait pas plus simple que le faire à la mano ?)
 		
 	}
 	private void resume()
@@ -270,7 +277,7 @@ public class Niveau extends JPanel {
 		if (keysPressedList.ActionReadyOf(KeyType.LEFT)) if (MoveObject(POOPY,Direction.WEST)) keysPressedList.FireKey(KeyType.LEFT);
 		if (keysPressedList.ActionReadyOf(KeyType.DOWN)) if (MoveObject(POOPY,Direction.SOUTH)) keysPressedList.FireKey(KeyType.DOWN);
 		if (keysPressedList.ActionReadyOf(KeyType.RIGHT)) if (MoveObject(POOPY,Direction.EAST)) keysPressedList.FireKey(KeyType.RIGHT);
-		if (keysPressedList.ActionReadyOf(KeyType.SPACE)) if ( SpacePressed()) keysPressedList.FireKey(KeyType.UP);
+		if (keysPressedList.ActionReadyOf(KeyType.SPACE)) if (SpacePressed()) keysPressedList.FireKey(KeyType.UP);
 	}
 	
 	//Move an object to the desired direction, returns true if the object moved or changed direction succesfully
@@ -420,7 +427,8 @@ public class Niveau extends JPanel {
 	
 	private void SaveThis() throws FileNotFoundException, UnsupportedEncodingException
 	{
-		PrintWriter saveFile = new PrintWriter("./Maps/" + name + "P" + idPartie + ".txt", "UTF-8");
+		//ENTREZ NOM PARTIE SI NON EXISTANT
+		PrintWriter saveFile = new PrintWriter("./Maps/" + name + "P" + namePartie + ".txt", "UTF-8");
 		
 		System.out.println("Saving...");
 		

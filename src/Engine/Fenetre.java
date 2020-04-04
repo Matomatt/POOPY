@@ -91,7 +91,7 @@ public class Fenetre extends JFrame
 	
 	public void start()
 	{
-		this.add(new Partie(this));
+		this.add(new Partie("", this));
 		this.revalidate();
 	}
 	

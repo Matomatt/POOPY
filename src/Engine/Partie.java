@@ -6,46 +6,40 @@ import javax.swing.*;
 public class Partie extends JPanel {
 	private static final long serialVersionUID = -1207758538944896774L;
 	
+	private String name;
+	
 	private Pause pause;
 	private Fenetre fenetre;
-	private int score;
-	protected ArrayList<Niveau> niveaux;
 	
-	public Partie(String fileToLoad,Fenetre fen)
+	private int score = 0;
+	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
+	
+	public Partie(String partieToLoad, Fenetre _fenetre)
 	{
-		fenetre=fen;
-		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
-		this.setLayout(null);
-	
+		name = partieToLoad;
 		
-		this.validate();
-	}
-	
-	// Start
-	public Partie(Fenetre fene)
-	{
-		fenetre=fene;
+		fenetre=_fenetre;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setLayout(null);
-		niveaux= new ArrayList<Niveau>();
-		try {	
-			niveaux.add( new Niveau("level2", false));
+	
+		if (name.isEmpty())
+		{
+			try { niveaux.add( new Niveau("level2", name, false)); }
+			catch (IOException e) { e.printStackTrace(); }
 		}
-		 catch (IOException e) {
-				e.printStackTrace();
-			}
+		
 		niveaux.get(0).setFocusable(true);
-
 		this.add(niveaux.get(0));
+		
 		this.setVisible(true);
 		this.validate();
-		
 	}
 	
 	public void next()
 	{
-		
+		niveaux.get(0).getName();
 	}
+	
 	protected void menu()
 	{
 		fenetre.add(new Menu(fenetre));
