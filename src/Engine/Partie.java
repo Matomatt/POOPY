@@ -20,12 +20,12 @@ public class Partie extends JPanel {
 	public Partie(String partieToLoad, Fenetre _fenetre)
 	{
 		name = partieToLoad;
-		
+			
 		fenetre=_fenetre;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setLayout(null);
 
-	
+		
 		if (name.isEmpty())
 		{
 			try { niveaux.add( new Niveau("level2", this, false)); }
@@ -35,10 +35,14 @@ public class Partie extends JPanel {
 		
 		time=new Time(niveaux.get(0));
 		niveaux.get(0).setFocusable(true);
-
+		this.add(pause);
+	
+		JLabel momo = new JLabel("COUCOU");
+        add(pause);
 		this.add(niveaux.get(0));
 		
 		this.setVisible(true);
+		
 		this.validate();
 	}
 	public Partie(Fenetre fene, int numlv )
@@ -48,6 +52,7 @@ public class Partie extends JPanel {
 		fenetre=fene;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setLayout(null);
+	
 		niveaux= new ArrayList<Niveau>();
 		try {	
 			niveaux.add( new Niveau("level"+numlv, this,false));
@@ -58,20 +63,22 @@ public class Partie extends JPanel {
 		niveaux.get(0).setFocusable(true);
 	
 		this.add(niveaux.get(0));
+		
 		time=new Time(niveaux.get(0));
 		this.setVisible(true);
+		
 		this.validate();
 		
 	}
 	
 	protected void perdu()
 	{
-		time.cancel();
+		//time.cancel();
 		this.removeAll();
 		this.add(new GameOver(score,this.getWidth(),this.getHeight()));
 		System.out.println("crash?");
 		niveaux=null;
-		time=null;
+		
 		menu();
 	}
 	protected void addscore(int lvscore)
@@ -88,6 +95,7 @@ public class Partie extends JPanel {
 	{
 		time.cancel();
 		pause=null;
+		time=null;
 		//save avant ? 
 		fenetre.menu();
 
@@ -99,7 +107,9 @@ public class Partie extends JPanel {
 	public void pPressed()
 	{
 		
+		
 		pause.pPressed();
 		time.pPressed();
+		this.revalidate();
 	}
 }

@@ -1,4 +1,6 @@
 package Engine;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -54,7 +56,7 @@ public class Niveau extends JPanel {
 //    private Java.util.Timer lvtimer;
 
     private int seconde=60;
-    
+    private JLabel temps;
     
     private int nbbird=0;
 	
@@ -69,14 +71,21 @@ public class Niveau extends JPanel {
 	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
 
 	{
+		
 		this.setLayout(null);
 		name = _name;
-
+		
+		
 		vie=3;
 		partie=p;
 
 		namePartie = p.getName();
 
+		temps=new JLabel("Timer"+seconde);
+		temps.setFont(new Font("DISPLAY",Font.PLAIN,18));
+		temps.setForeground(Color.DARK_GRAY);
+		temps.setLocation(50, 20);
+		add(temps);
 		
 //		lvtimer= buffertimer.timerzero();
 		//this.addKeyListener(new keylistener());
@@ -99,7 +108,7 @@ public class Niveau extends JPanel {
 		}
 		
 		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
-		this.requestFocus();
+	//	this.requestFocus();
 		this.setVisible(true);
 		this.validate();
 		
@@ -110,7 +119,7 @@ public class Niveau extends JPanel {
 		movementsTimer = new Timer(1000/globalVar.CalculusFrequency, movementsTaskPerformer);
 		movementsTimer.start();
 		
-		this.grabFocus();
+	//	this.grabFocus();
 		
 		//When key pressed add to list + timer, when key released take off list, when key action is done succesfully start timer, when wanting to do a key action, make sure timer for this key is out (avoid doing twice the same thing when only wanted once but key still pressed for a few ms)
 		/*
@@ -164,7 +173,6 @@ public class Niveau extends JPanel {
 		
 		
 		
-		
 		this.validate();
 		
 	}
@@ -198,13 +206,7 @@ public class Niveau extends JPanel {
 		
 		partie.pPressed();// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appelé 
 		
-		try {
-			//C'est qu'une 
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 		
 		// Stop timer (va falloir foreach toutes les listes et trigger leur fonction pause, y'aurait pas plus simple que le faire � la mano ?)
 		

@@ -30,29 +30,19 @@ public class Pause extends JPanel{
 		this.add(resume);
 		this.add(save);
 		this.setVisible(true);
+		this.setEnabled(true);
 		this.setSize(partie.getSize().width/2, partie.getSize().height/2);
 		this.setLocation(partie.getSize().width/4,partie.getSize().height/4);
 		this.validate();
 	}
 
 	
-//	private  class MenuListener implements ActionListener  // juste fermer la partie 
-//	{
-//		public void actionPerformed(ActionEvent e)
-//		{
-//			//fenetre.menu();
-//			//
-//		//	 SwingUtilities.getWindowAncestor(this).remove(this);
-//		}
-//	}
+
 
 	private  class SaveListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-				// Ajouter une fonction de sauvegarde dans fenetre 
-			
-			
 			partie.menu();
 		}
 	}
@@ -60,14 +50,13 @@ public class Pause extends JPanel{
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			// Resume la pause dans niveau 
-		//	 SwingUtilities.getWindowAncestor(this).remove(this);
 		     close();
 		}
 	}
 	public void pPressed()
 	{
-		if (active)
+		System.out.println("pPressed dans pause");
+		if (active==true)
 			close();
 		else
 			open();
@@ -77,12 +66,15 @@ public class Pause extends JPanel{
 		active=false;
 		this.setVisible(false);
 		this.setEnabled(false);
+		
 	}
 	private void open()
 	{
 		active=true;
 		this.setVisible(true);
-		this.setVisible(false);
+		this.setEnabled(true);
+		this.revalidate();
+
 	}
 
 }
