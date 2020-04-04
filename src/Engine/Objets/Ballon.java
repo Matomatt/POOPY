@@ -140,6 +140,7 @@ public class Ballon extends AnimatedObject {
 		{
 			if (Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y)*(tocheck.y-y))<=r)// Distance par rapport aux coins HG
 			{
+				
 				if (direc<2)
 					direc+=2;
 				else
