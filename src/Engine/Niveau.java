@@ -129,7 +129,7 @@ public class Niveau extends JPanel {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true),"SnoopyStop");
 		this.getActionMap().put("SnoopyStop", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.SPACE); } });
 		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, true),"Save");
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false),"Save");
 		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { 
 			try {
 				SaveThis();
@@ -138,7 +138,7 @@ public class Niveau extends JPanel {
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
 			} } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, true),"Pause");
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 				
 		
@@ -205,6 +205,7 @@ public class Niveau extends JPanel {
 	    {
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
 	    	{
+	    		//On récupère les paramètres de l'objet s'il y en a
 	    		int id = map[i][j];
 	    		int param = 0;
 	    		
