@@ -31,8 +31,8 @@ public class TapisRoulant extends AnimatedObject {
 	public boolean CollideWith(AnimatedObject o)
 	{
 		if (super.CollideWith(o) && 
-				((o.initSpeed[0]*2 == o.vitesse[0] && (orientation == Direction.WEST || orientation == Direction.EAST)) || 
-						(o.initSpeed[1]*2 == o.vitesse[1] && (orientation == Direction.NORTH || orientation == Direction.SOUTH))) )
+				((o.initSpeed[0]*1.5 == o.vitesse[0] && (orientation == Direction.WEST || orientation == Direction.EAST)) || 
+						(o.initSpeed[1]*1.5 == o.vitesse[1] && (orientation == Direction.NORTH || orientation == Direction.SOUTH))) )
 		{
 			return true;
 		}

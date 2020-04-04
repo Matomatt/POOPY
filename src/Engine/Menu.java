@@ -81,7 +81,6 @@ public class Menu extends JPanel{
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			
 			loadlv();
 		}
 	}
@@ -100,8 +99,6 @@ public class Menu extends JPanel{
 	}
 	private void start()
 	{
-		if (fenetre.getComponent(0)==this)
-			System.out.println("ui");
 		fenetre.remove(this);
 		fenetre.start();
 	}

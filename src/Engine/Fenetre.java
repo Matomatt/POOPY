@@ -20,7 +20,7 @@ public class Fenetre extends JFrame
 	public Fenetre ()
 	{
 		this.setTitle("Snoopy");
-		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+6, globalVar.tileHeight*globalVar.nbTilesVertically+32);
+		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+6, globalVar.tileHeight*(globalVar.nbTilesVertically+1)+32);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 		this.setResizable(false);
@@ -82,6 +82,12 @@ public class Fenetre extends JFrame
 //	}
 	public void loadgame(String a)
 	{
+		this.add(new Partie(a,this));
+		this.revalidate();
+	}
+	
+	public void loadlv (String a)
+	{
 		if (a.equals("level2")==true)
 		{
 			System.out.println("code ok ");
@@ -91,12 +97,7 @@ public class Fenetre extends JFrame
 		{
 			this.add(new Partie(this,3));
 		}
-	}
-	
-	public void loadlv (String a)
-	{
-		this.removeAll();
-		this.add(new Partie(a,this));
+		
 	}
 	
 	public void start()

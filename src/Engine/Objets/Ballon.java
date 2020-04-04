@@ -7,7 +7,7 @@ import Utilitaires.*;
 public class Ballon extends AnimatedObject {
 	private static final long serialVersionUID = -32406108732612528L;
 
-	double vit = 4;
+	double vit = 5;
 	int direc= 0;  // je mets un int de direction pour keep le dernier moove en mémoire 0 NE 1 NW 2 SW 3 SE  
 
 
@@ -225,7 +225,7 @@ public class Ballon extends AnimatedObject {
 			direc = tmpDirec;
 		if (test==true && bounce)
 		{
-			System.out.println(toPrintAtTheEnd);
+			//System.out.println(toPrintAtTheEnd);
 			vitesseUpdate();
 			MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
 		}

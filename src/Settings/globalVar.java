@@ -10,6 +10,6 @@ public class globalVar {
     public static int FPS = 120; // en Hz
     public static int CalculusFrequency = 240; //en Hz
     
-    public static int keyCooldownTime = 200; //en ms
+    public static int keyCooldownTime = 100; //en ms
     public static int immuneTime = 500; //en ms
 }

@@ -18,7 +18,7 @@ public class Snoopy extends AnimatedObject {
 	
 	public Snoopy(int _x, int _y, boolean _selfMoved)
 	{
-		super(_x, _y, 3, 3, ObjectType.SNOOPY, true, true, _selfMoved, true);
+		super(_x, _y, 4.5, 4.5, ObjectType.SNOOPY, true, true, _selfMoved, true);
 		
 		animateOnlyWhenMoving = true;
 		nbSpritesPerAnimationSequence = 4;

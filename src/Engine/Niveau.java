@@ -71,30 +71,23 @@ public class Niveau extends JPanel {
 	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
 
 	{
-		
 		this.setLayout(null);
 		this.setOpaque(false);
+		
+		partie = p;
 		name = _name;
+		namePartie = partie.getName();
+		vie = partie.vies;
 		
 		temps=new JLabel(new String("Remaining Time: " + seconde));
 		temps.setFont(new Font("DISPLAY",Font.PLAIN,30));
-		temps.setSize(300, 100);
+		temps.setSize(300, 35);
 		temps.setForeground(Color.BLUE);
-		temps.setLocation(50, 20);
+		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
 		temps.setVisible(true);
 		
-		this.add(temps);
+		partie.add(temps);
 	
-		
-		vie=3;
-		partie=p;
-
-		namePartie = p.getName();
-
-		
-		
-//		lvtimer= buffertimer.timerzero();
-		//this.addKeyListener(new keylistener());
 		nonSolidObjects.add(0);
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
 		
@@ -176,7 +169,7 @@ public class Niveau extends JPanel {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 		
-		
+		this.setLocation(0, globalVar.tileHeight);
 	
 		this.validate();
 		
@@ -187,7 +180,7 @@ public class Niveau extends JPanel {
 	{
 		seconde-=1;
 		temps.setText(new String("Remaining Time: " + seconde));
-		System.out.println("seconde"+seconde);
+		//System.out.println("seconde"+seconde);
 		if (seconde<=0)
 		{
 			vieloose();
@@ -550,7 +543,7 @@ public class Niveau extends JPanel {
 					if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]))
 					{
 						o.Move(tapisRoulant.orientation);
-						o.IncreaseSpeed(tapisRoulant.orientation, 2.3);
+						o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
 					}
 				}
 			}
@@ -561,7 +554,8 @@ public class Niveau extends JPanel {
 	private void SaveThis() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		//ENTREZ NOM PARTIE SI NON EXISTANT
-		PrintWriter saveFile = new PrintWriter("./Maps/" + name + "P" + namePartie + ".txt", "UTF-8");
+		String fileName = name + "P" + namePartie;
+		PrintWriter saveFile = new PrintWriter("./Maps/" + fileName + ".txt", "UTF-8");
 		
 		System.out.println("Saving...");
 		
@@ -583,8 +577,9 @@ public class Niveau extends JPanel {
 		    	saveFile.println(ballon.SavingInfo());
 	    }
 	    
-	    
 	    saveFile.close();
+	    
+	    ((Partie)this.getParent()).SavePartie(namePartie, fileName, true);
 	}
 }
 

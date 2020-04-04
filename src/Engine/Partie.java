@@ -1,12 +1,18 @@
 package Engine;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 
+import Data.StringManager;
+import Engine.Objets.Ballon;
 import Engine.Objets.TapisRoulant;
 import Utilitaires.Direction;
 
@@ -23,8 +29,9 @@ public class Partie extends JPanel {
 	Time time;
 	
 	private int score = 0;
-	private int vies = 3;
+	protected int vies = 5;
 	private int timeLeft = 0;
+	private int unlockedLevels = 1;
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
 	public Partie(String partieToLoad, Fenetre _fenetre)
@@ -40,6 +47,14 @@ public class Partie extends JPanel {
 		{
 			try { niveaux.add( new Niveau("level2", this, false)); }
 			catch (IOException e) { e.printStackTrace(); }
+		}
+		else {
+			try {
+				LoadPartie(name);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		
@@ -120,18 +135,38 @@ public class Partie extends JPanel {
 		fenetre.menu();
 
 	}
-	private void LoadPartie(String fileToLoad)
+	private void LoadPartie(String fileToLoad) throws IOException
 	{
+		File partieData = new File("./Saves/" + fileToLoad + ".txt");
 		
+		BufferedReader br = new BufferedReader(new FileReader(partieData));
+		
+		String niveauEnCours = br.readLine();
+		boolean enCours = Boolean.parseBoolean(br.readLine());
+		niveaux.add(new Niveau(niveauEnCours, this, enCours));
+		
+		List<Integer> parsedLine = StringManager.ParseLineToInt(br.readLine());
+		unlockedLevels = parsedLine.get(0);
+		score = parsedLine.get(1);
+		vies = parsedLine.get(2);
+		timeLeft = parsedLine.get(3);
+		
+		br.close();
 	}
 	
-	private void SavePartie(String _name, String _level, boolean EnCours) throws FileNotFoundException, UnsupportedEncodingException
+	protected void SavePartie(String _name, String _level, boolean enCours) throws FileNotFoundException, UnsupportedEncodingException
 	{
 		name = _name;
 		
 		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
 		
-		saveFile.println(name);
+		saveFile.println(_level);
+		saveFile.println(enCours);
+		saveFile.println(unlockedLevels + " " + score + " " + vies + " " + timeLeft);
+		
+		saveFile.close();
+		
+		System.out.println("Saved !");
 	}
 	public boolean pPressed()
 	{
