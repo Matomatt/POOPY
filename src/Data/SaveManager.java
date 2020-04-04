@@ -34,7 +34,10 @@ public class SaveManager {
 		
 		String st;
 		//On lit toutes les lignes du fichier texte
-		while ( !(st = br.readLine()).contains("Ballons") && st != null) System.out.println(st);
+		while ( (st = br.readLine()) != null)
+		{
+			if (st.contains("Ballons")) break;
+		}
 		
 		while ((st = br.readLine()) != null) 
 		{

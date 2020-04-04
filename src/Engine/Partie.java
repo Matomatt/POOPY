@@ -34,7 +34,6 @@ public class Partie extends JPanel {
 	protected int vies = 3;
 	private int timeLeft = 0;
 	private int unlockedLevels = 1;
-	private int totallv=1;// a init 
 	
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
@@ -49,6 +48,7 @@ public class Partie extends JPanel {
 		{
 			try { niveaux.add( new Niveau("level1", this, false)); }
 			catch (IOException e) { e.printStackTrace(); }
+			unlockedLevels = 1;
 		}
 		else {
 			try {
@@ -76,13 +76,14 @@ public class Partie extends JPanel {
 			e.printStackTrace();
 		}
 
+		unlockedLevels = numlv;
 		Init();
 		
 	}
 	
 	private void Init()
 	{
-		time = new Time(niveaux.get(unlockedLevels-1));
+		time = new Time(niveaux.get(0));
 		
 		niveaux.get(0).setFocusable(true);
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
@@ -90,10 +91,26 @@ public class Partie extends JPanel {
 		
 		this.add((pause = new Pause(this)));
 		
-		this.add(niveaux.get(unlockedLevels-1));
+		this.add(niveaux.get(0)); //Le premier c'est toujours le nievau a reprendre quand on charge une partie (nouvelle ou pas, mdp ou pas)
+		
+		int totallv = unlockedLevels;
+		File f = new File("./Maps/" + "level"+ (totallv+1) + ".txt");
+		
+		while(f.exists() && !f.isDirectory())
+		{
+			totallv += 1;
+			try { niveaux.add(new Niveau(new String("level"+ totallv), this, false)); } 
+			catch (IOException e) { e.printStackTrace(); }
+			
+			f = new File("./Maps/" + "level"+ (totallv+1) + ".txt");
+		}
+		
+		System.out.println("Nombre total de niveaux : " + totallv);
 		
 		this.setVisible(true);
 		this.validate();
+		
+		niveaux.get(0).Start();
 	}
 	
 	protected void perdu()
@@ -126,32 +143,53 @@ public class Partie extends JPanel {
 	
 	public void next()
 	{
-		if(totallv>unlockedLevels)
+		remove(niveaux.get(0));
+		niveaux.remove(0);
+		time.cancel();
+		
+		boolean troubleStarting = false;
+		
+		if(!niveaux.isEmpty())
 		{
-			remove(niveaux.get(unlockedLevels-1));
-			add(niveaux.get(unlockedLevels));
-			this.revalidate();
-			this.update(getGraphics());
-			time.cancel();
-			time=new Time(niveaux.get(unlockedLevels));
-			unlockedLevels+=1;
+			do {
+				add(niveaux.get(0));
+				
+				time=new Time(niveaux.get(0));
+				unlockedLevels+=1;
+				
+				this.revalidate();
+				this.update(getGraphics());
+				
+				troubleStarting = false;
+				if (!niveaux.get(0).Start())
+				{
+					niveaux.remove(0);
+					troubleStarting = true;
+				}
+				
+			} while (troubleStarting && !niveaux.isEmpty());
+			
 		}
-		else
+		
+		if (niveaux.isEmpty())
 		{
-			time.cancel();
-			niveaux.removeAll(niveaux);
 			niveaux=null;
 			this.removeAll();
 			this.update(getGraphics());
+			
 			this.add(new WinPage(score, this.getWidth(), this.getHeight(), unlockedLevels));
+			
 			this.revalidate();
 			this.update(getGraphics());
+			
 			try {
 				TimeUnit.SECONDS.sleep(3);
 			} catch (InterruptedException e) {
 							e.printStackTrace();
 			}
+			
 			this.update(getGraphics());
+			
 			niveaux=null;
 		//	this.add(new GameOver(score,this.getWidth(),this.getHeight()));
 			
@@ -159,6 +197,7 @@ public class Partie extends JPanel {
 			this.update(this.getGraphics());
 			menu();
 		}
+		
 			System.out.println("gg tu as gagné voici ton score : "+score);
 			//you win 
 	}
@@ -203,7 +242,7 @@ public class Partie extends JPanel {
 		
 		saveFile.println(_level);
 		saveFile.println(enCours);
-		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(unlockedLevels-1).getvie() + " " + niveaux.get(unlockedLevels-1).getseconde());
+		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(0).getvie() + " " + niveaux.get(0).getseconde());
 		saveFile.close();
 		
 		System.out.println("Saved !");
@@ -211,8 +250,12 @@ public class Partie extends JPanel {
 	public boolean pPressed()
 	{
 		pause.pPressed();
-		time.pPressed();
 		this.revalidate();
 		return pause.isVisible();
+	}
+	
+	private void LoadEveryLevel(int Starting_level)
+	{
+		
 	}
 }

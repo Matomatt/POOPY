@@ -12,4 +12,6 @@ public class globalVar {
     
     public static int keyCooldownTime = 100; //en ms
     public static int immuneTime = 500; //en ms
+    
+    public static boolean resetLevelWhenLosingLife = false;
 }

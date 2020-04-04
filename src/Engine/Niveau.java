@@ -38,8 +38,8 @@ import Utilitaires.*;
 public class Niveau extends JPanel {
 	private static final long serialVersionUID = 5093936493506272943L;
 	
-	private static String namePartie = "1";
-	private static String name;
+	private String namePartie = "1";
+	private String name;
 	//private Pause pause;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
@@ -58,8 +58,6 @@ public class Niveau extends JPanel {
 
     private int seconde=60;
     private JLabel temps;
-    
-    private int nbbird=0;
 	
 	private Timer movementsTimer;
 	private boolean synchronizedMovements = true;
@@ -67,10 +65,7 @@ public class Niveau extends JPanel {
 	private KeysPressedList keysPressedList = new KeysPressedList();
 	private Partie partie;
 
-	@SuppressWarnings("serial")
-
 	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
-
 	{
 		this.setLayout(null);
 		this.setOpaque(true);
@@ -81,66 +76,60 @@ public class Niveau extends JPanel {
 		namePartie = partie.getName();
 		vie = partie.vies;
 		
+		System.out.println("New level : " + name);
+		
 		temps=new JLabel(new String("Remaining Time: " + seconde));
-		temps.setFont(new Font("DISPLAY",Font.PLAIN,30));
-		temps.setSize(300, 35);
+		temps.setFont(new Font("DISPLAY",Font.PLAIN, globalVar.tileHeight/2));
+		temps.setSize(300, globalVar.tileHeight/2+3);
 		temps.setForeground(Color.BLUE);
-		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
 		temps.setVisible(true);
 		
-		vieDisplayer=new JLabel(new String("LIVE X "+vie));
-		vieDisplayer.setFont(new Font("DISPLAY",Font.PLAIN,30));
-		vieDisplayer.setSize(300, 35);
+		vieDisplayer=new JLabel(new String("Vies : "+vie));
+		vieDisplayer.setFont(new Font("DISPLAY",Font.PLAIN, globalVar.tileHeight/2));
+		vieDisplayer.setSize(300, globalVar.tileHeight/2+3);
 		vieDisplayer.setForeground(Color.BLUE);
-		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
 		vieDisplayer.setVisible(true);
 		
-		
-		partie.add(temps);
-		partie.add(vieDisplayer);
 		nonSolidObjects.add(0);
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
-		
-		
-		if (POOPY == null)
-		{
-			System.out.println("Ce niveau ne contient pas Snoopy, impossible d'y jouer, retour au menu...");
-			return;
-		}
 		
 		if (loadEnCours)
 		{
 			List<Ballon> _ballons = SaveManager.LoadSaveNiveau(name);
-			for (Ballon b : _ballons) {
-				AddBallon(b);
-			}
+			for (Ballon b : _ballons) AddBallon(b);
 		}
 		
+		if(this.name.contains("P")) name = name.split("P")[0];
+		
 		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
-	//	this.requestFocus();
-		this.setVisible(true);
-		this.validate();
 		
 		//Synchronized Movements, gardez if !synchronized pour les collisions
 		ActionListener movementsTaskPerformer = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { /*System.out.println("ah");*/ movementsTimerTrigger(); } };
+			public void actionPerformed(ActionEvent arg0)
+			{ 
+				if (movementsTimerTrigger())
+					if (POOPY != null)
+						System.out.println("Faudrait reset là si on a le time");
+			} };
 		
 		movementsTimer = new Timer(1000/globalVar.CalculusFrequency, movementsTaskPerformer);
+		
 		movementsTimer.start();
 		
-	//	this.grabFocus();
-		
-		//When key pressed add to list + timer, when key released take off list, when key action is done succesfully start timer, when wanting to do a key action, make sure timer for this key is out (avoid doing twice the same thing when only wanted once but key still pressed for a few ms)
-		/*
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("UP"),"MoveUp");
-		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 1; keyTimer.restart(); } });
-		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"),"MoveLeft");
-		this.getActionMap().put("MoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 2; keyTimer.restart(); } });
-		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"MoveDown");
-		this.getActionMap().put("MoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { waitingKey = 3; keyTimer.restart(); } });
-		*/
+		this.setVisible(false);
+		this.StopAll();
+	}
+	
+	@SuppressWarnings("serial")
+	public boolean Start()
+	{
+		System.out.println("Let's a go ! ("+name+")");
+		if (POOPY == null)
+		{
+			System.out.println("Ce niveau ne contient pas Snoopy, impossible d'y jouer, retour au menu...");
+			return false;
+		}
+		System.out.println("Let's a go !");
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
 		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.UP); } });
@@ -179,10 +168,18 @@ public class Niveau extends JPanel {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 		
+		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
+		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
+		partie.add(temps);
+		partie.add(vieDisplayer);
+		
 		this.setLocation(0, globalVar.tileHeight);
-	
+		this.setVisible(true);
 		this.validate();
 		
+		Resume();
+		
+		return true;
 	}
 
 	public void timergestion()
@@ -197,19 +194,24 @@ public class Niveau extends JPanel {
 		
 	}
 	
-	private void vieloose()
+	private boolean vieloose() //return true si plus de vie du tout
 	{
 		vie-=1;
-		vieDisplayer.setText(new String("LIVE X "+vie));
+		vieDisplayer.setText(new String("Vies : "+vie));
+		
 		if (vie<=0)
 		{
 			KillAll();
 			partie.perdu();
+			return true;
 		}
+		
+		return globalVar.resetLevelWhenLosingLife;
 	}
 	private void win()
 	{
 		KillAll();
+		partie.addscore(seconde*100);
 		partie.next();
 	}
 	
@@ -218,7 +220,8 @@ public class Niveau extends JPanel {
 		movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
 		movementsTimer.stop();
 		
-		POOPY.Kill();
+		if (POOPY != null)
+			POOPY.Kill();
 		POOPY = null;
 		for (Ballon ballon : ballons) { ballon.Kill(); }
 		for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Kill();}
@@ -228,6 +231,9 @@ public class Niveau extends JPanel {
 		keysPressedList.Kill();
 		
 		this.removeAll();
+		partie.remove(temps);
+		partie.remove(vieDisplayer);
+		
 		this.getInputMap().clear();
 		this.getActionMap().clear();
 		
@@ -238,23 +244,38 @@ public class Niveau extends JPanel {
 	{
 		if (partie.pPressed())// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appel
 		{
-			movementsTimer.stop();
-			POOPY.Pause();
-			for (Ballon ballon : ballons) { ballon.Pause(); }
-			for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Pause(); }
-			for (MovingBloc movingBloc : movingBlocs) { movingBloc.Pause(); }
-			for (AnimatedSolidBloc bloc : blocs) { bloc.Pause(); }
-			for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Pause(); }
+			StopAll();
 		}
 		else {
-			movementsTimer.start();
-			POOPY.Resume();
-			for (Ballon ballon : ballons) { ballon.Resume(); }
-			for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Resume(); }
-			for (MovingBloc movingBloc : movingBlocs) { movingBloc.Resume(); }
-			for (AnimatedSolidBloc bloc : blocs) { bloc.Resume(); }
-			for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Resume(); }
+			Resume();
 		}
+	}
+
+	public void StopAll()
+	{
+		if (partie.time != null)
+			partie.time.stop();
+		movementsTimer.stop();
+		if (POOPY != null)
+			POOPY.Pause();
+		for (Ballon ballon : ballons) { ballon.Pause(); }
+		for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Pause(); }
+		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Pause(); }
+		for (AnimatedSolidBloc bloc : blocs) { bloc.Pause(); }
+		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Pause(); }
+	}
+	
+	public void Resume()
+	{
+		partie.time.restart();
+		movementsTimer.start();
+		if (POOPY != null)
+			POOPY.Resume();
+		for (Ballon ballon : ballons) { ballon.Resume(); }
+		for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Resume(); }
+		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Resume(); }
+		for (AnimatedSolidBloc bloc : blocs) { bloc.Resume(); }
+		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Resume(); }
 	}
 	
 	void LoadObjects(int[][] _map) 
@@ -335,7 +356,6 @@ public class Niveau extends JPanel {
 	    			break;
 	    		case OISEAU:
 	    			oiseaux.add(new Oiseau(i,j));
-	    			nbbird+=1;
 	    			this.add(oiseaux.get(oiseaux.size()-1));
 	    			if(!nonSolidObjects.contains(id))
 	    				nonSolidObjects.add(id);
@@ -372,14 +392,18 @@ public class Niveau extends JPanel {
 	}
 	
 	//Calculs effectues sur la frequence globalVar.CalculusFrequency
-	private void movementsTimerTrigger() 
+	//Return true si on doit tout kill
+	private boolean movementsTimerTrigger() 
 	{
 		if (CollisionsSnoopy()) //Si return true ca veut dire c'est la mort
-			return;
+			return globalVar.resetLevelWhenLosingLife;
 		
 		ExecuteKeys(); //Si une touche a ete appuyee et est donc en attente on l'execute
 		
-		MouvementBallons(true); //Contient les collisions donc a lance meme si les mouvements ne sont pas synchronisees (que la balle bouge sur son propre timer)
+		//Contient les collisions donc a lance meme si les mouvements ne sont pas synchronisees (que la balle bouge sur son propre timer)
+		//return true si poopy touché donc vie perdu donc retour a 0
+		if (MouvementBallons(true))
+			return globalVar.resetLevelWhenLosingLife;
 		
 		if (synchronizedMovements)
 		{
@@ -388,6 +412,8 @@ public class Niveau extends JPanel {
 				movingBloc.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
 			}
 		}
+		
+		return false;
 	}
 	
 	private void ExecuteKeys()
@@ -435,17 +461,7 @@ public class Niveau extends JPanel {
 		Oiseau catchedOiseau = null;
 		//On regarde tous les oiseaux pour voir si snoopy ne se trouverai pas sur la case de l'un deux
 		for (Oiseau oiseau : oiseaux) {
-			if (((Objet) POOPY).SameTileAs((Objet)oiseau))
-			{
-				catchedOiseau = oiseau;
-				nbbird-=1;
-				if (nbbird<=0)
-				{
-					partie.addscore(seconde*100);
-					partie.next();
-				}
-				break;
-			}
+			if (((Objet) POOPY).SameTileAs((Objet)oiseau)) catchedOiseau = oiseau;
 		}
 		
 		//Si il en a attrape un, on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
@@ -483,8 +499,8 @@ public class Niveau extends JPanel {
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
 			*/
-			vieloose();
-			return true;
+			
+			return vieloose();
 		}
 		
 		return false;
@@ -530,7 +546,7 @@ public class Niveau extends JPanel {
 		return false;
 	}
 	
-	private void MouvementBallons(boolean checkCollisions) 
+	private boolean MouvementBallons(boolean checkCollisions) 
 	{
 		for(int i = 0; i < ballons.size(); i++)
 		{
@@ -539,11 +555,13 @@ public class Niveau extends JPanel {
 			
 			if (checkCollisions)
 				for(int y=0; y < blocs.size(); y++)
-					CollisionsBallon(ballons.get(i));
+					if (CollisionsBallon(ballons.get(i)))
+						return true;
 		}
+		return false;
 	}
 
-	private void CollisionsBallon(Ballon b) 
+	private boolean CollisionsBallon(Ballon b) 
 	{
 		for(int y = 0; y < blocs.size(); y++)
 			b.hitboxslow(blocs.get(y), true);
@@ -552,14 +570,14 @@ public class Niveau extends JPanel {
 
 		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
 		{
-
 			System.out.println("Et c'est la loooose");
-		vieloose();
-
+		
 			POOPY.StartImmunity();
-		}
 			
-
+			return vieloose();
+		}
+		
+		return false;
 	}
 	
 	private void CollisionsTapis(AnimatedObject o)
