@@ -30,10 +30,11 @@ public class GameOver extends JPanel
 		add(scoring);
 		this.setVisible(true);
 		this.validate();
+		/*
 		try {
 			TimeUnit.SECONDS.sleep(3);
 		} catch (InterruptedException e) {
 						e.printStackTrace();
-		}
+		}*/
 	}
 }

@@ -89,13 +89,14 @@ public class Partie extends JPanel {
 	
 	protected void perdu()
 	{
-		//time.cancel();
+		time.cancel();
+		niveaux.removeAll(niveaux);
 		this.removeAll();
 		this.add(new GameOver(score,this.getWidth(),this.getHeight()));
 		System.out.println("crash?");
-		niveaux=null;
 		
-		menu();
+		
+		//menu();
 	}
 	protected void addscore(int lvscore)
 	{
@@ -129,14 +130,11 @@ public class Partie extends JPanel {
 		
 		saveFile.println(name);
 	}
-	public void pPressed()
+	public boolean pPressed()
 	{
-		
-		//this.getComponent(0).setVisible(!this.getComponent(0).isVisible());
 		pause.pPressed();
-		System.out.println("OUI");
-		//pause.setVisible(!pause.isVisible());
 		time.pPressed();
 		this.revalidate();
+		return pause.isVisible();
 	}
 }

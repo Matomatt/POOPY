@@ -211,13 +211,25 @@ public class AnimatedObject extends Objet {
 		vitesse[1] = initSpeed[1];
 	}
 	
-	public void Kill()
+	public void Pause()
 	{
 		if (movementTimer != null)
 			movementTimer.stop();
 		if (animationTimer != null)
 			animationTimer.stop();
-		
+	}
+	
+	public void Resume()
+	{
+		if (movementTimer != null)
+			movementTimer.start();
+		if (animationTimer != null)
+			animationTimer.start();
+	}
+	
+	public void Kill()
+	{
+		this.Pause();
 		movementTimer = null;
 		animationTimer = null;
 	}

@@ -170,9 +170,6 @@ public class Niveau extends JPanel {
 			} } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
-				
-		
-		
 		
 		this.validate();
 		
@@ -197,18 +194,23 @@ public class Niveau extends JPanel {
 			// AFFICHER JPanel GameOver
 			movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
 			movementsTimer.stop();
-			movementsTimer = null;
+			
 			POOPY.Kill();
 			POOPY = null;
-			for (Ballon ballon : ballons) { ballon.Kill(); ballons.remove(ballon); }
-			for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Kill(); breakableBlocs.remove(breakableBloc); }
-			for (MovingBloc movingBloc : movingBlocs) { movingBloc.Kill(); movingBlocs.remove(movingBloc); }
-			for (AnimatedSolidBloc bloc : blocs) { bloc.Kill(); blocs.remove(bloc); }
-			for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Kill(); tapisRoulant.remove(tapisRoulant); }
+			for (Ballon ballon : ballons) { ballon.Kill(); }
+			for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Kill();}
+			for (MovingBloc movingBloc : movingBlocs) { movingBloc.Kill();  }
+			for (AnimatedSolidBloc bloc : blocs) { bloc.Kill(); }
+			for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Kill();}
 			keysPressedList.Kill();
-			System.gc();
-			partie.perdu();
 			
+			this.removeAll();
+			this.getInputMap().clear();
+			this.getActionMap().clear();
+			
+			System.gc();
+			
+			partie.perdu();
 		}
 	}
 	
@@ -216,12 +218,27 @@ public class Niveau extends JPanel {
 	
 	private void pause()  // Timer to stop 
 	{
-		partie.pPressed();// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appelé 
-		movementsTimer.stop();
-		
-		// Stop timer (va falloir foreach toutes les listes et trigger leur fonction pause, y'aurait pas plus simple que le faire � la mano ?)
-		
+		if (partie.pPressed())// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appel
+		{
+			movementsTimer.stop();
+			POOPY.Pause();
+			for (Ballon ballon : ballons) { ballon.Pause(); }
+			for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Pause(); }
+			for (MovingBloc movingBloc : movingBlocs) { movingBloc.Pause(); }
+			for (AnimatedSolidBloc bloc : blocs) { bloc.Pause(); }
+			for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Pause(); }
+		}
+		else {
+			movementsTimer.start();
+			POOPY.Resume();
+			for (Ballon ballon : ballons) { ballon.Resume(); }
+			for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Resume(); }
+			for (MovingBloc movingBloc : movingBlocs) { movingBloc.Resume(); }
+			for (AnimatedSolidBloc bloc : blocs) { bloc.Resume(); }
+			for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Resume(); }
+		}
 	}
+	
 	private void resume()
 	{
 		
@@ -331,7 +348,9 @@ public class Niveau extends JPanel {
 	//Calculs effectues sur la frequence globalVar.CalculusFrequency
 	private void movementsTimerTrigger() 
 	{
-		CollisionsSnoopy();
+		System.out.println("triggered");
+		if (CollisionsSnoopy()) //Si return true ca veut dire c'est la mort
+			return;
 		
 		ExecuteKeys(); //Si une touche a ete appuyee et est donc en attente on l'execute
 		
@@ -376,11 +395,11 @@ public class Niveau extends JPanel {
 		return (o.CanMove(d) && nonSolidObjects.contains(map[o.NextCaseX(d)][o.NextCaseY(d)]));
 	}
 	
-	private void CollisionsSnoopy()
+	private boolean CollisionsSnoopy()
 	{
 		//Les collisions de snoopy ne sont triggered que quand il a finit son d�placement sur la case
 		if (POOPY.IsMoving())
-			return;
+			return false;
 		
 		  ///////////////
 		 //  OISEAUX  //
@@ -417,6 +436,12 @@ public class Niveau extends JPanel {
 			System.out.println("Et c'est la wiiin");
 		}
 		
+		  /////////////////////
+		 //  TAPISROULANTS  //
+		/////////////////////
+		
+		CollisionsTapis(POOPY);
+		
 		  //////////////
 		 //  PIEGES  //
 		//////////////
@@ -430,15 +455,10 @@ public class Niveau extends JPanel {
 			mediaPlayer.play();
 			*/
 			vieloose();
+			return true;
 		}
 		
-		  /////////////////////
-		 //  TAPISROULANTS  //
-		/////////////////////
-		
-		CollisionsTapis(POOPY);
-			
-		
+		return false;
 	}
 	
 	private boolean SpacePressed()
