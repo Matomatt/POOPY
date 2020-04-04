@@ -20,7 +20,9 @@ import javax.swing.*;
 //import Pause;
 import Settings.*;
 import Data.*;
+import Engine.Objets.AnimatedObject;
 import Engine.Objets.AnimatedSolidBloc;
+import Engine.Objets.Apparition;
 import Engine.Objets.Ballon;
 import Engine.Objets.BreakableBloc;
 import Engine.Objets.MovingBloc;
@@ -33,26 +35,26 @@ import Utilitaires.*;
 
 public class Niveau extends JPanel {
 	private static final long serialVersionUID = 5093936493506272943L;
-	private static final String idPartie = "1";
-	private String name;
+	
+	private static String namePartie = "1";
+	private static String name;
 	//private Pause pause;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
 	private Snoopy POOPY;
-	private ArrayList<Ballon> ballons = new ArrayList<Ballon>();
-	private ArrayList<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
-	private ArrayList<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
-	private ArrayList<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
-	private ArrayList<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
-	private ArrayList<Oiseau> oiseaux = new ArrayList<Oiseau>();
+	private List<Ballon> ballons = new ArrayList<Ballon>();
+	private List<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
+	private List<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
+	private List<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
+	private List<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
+	private List<Oiseau> oiseaux = new ArrayList<Oiseau>();
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 	
 	private int vie;
 //    private Java.util.Timer lvtimer;
-    private int delay=1000;
-    private int period=1000;
+
     private int seconde=60;
-    Time buffertimer= new  Time (this);
+    
     
     private int nbbird=0;
 	
@@ -60,18 +62,21 @@ public class Niveau extends JPanel {
 	private boolean synchronizedMovements = true;
     
 	private KeysPressedList keysPressedList = new KeysPressedList();
-	private Timer keyTimer = new Timer(500, new ActionListener() { public void actionPerformed(ActionEvent arg0) { waitingKey=0; keyTimer.stop(); } });
-	private int waitingKey = 0;
 	private Partie partie;
-	
-    
+
 	@SuppressWarnings("serial")
-	public Niveau(String _name, boolean load,Partie p) throws IOException  /// Rajouter partie au constructeur
+
+	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
+
 	{
 		this.setLayout(null);
 		name = _name;
+
 		vie=3;
 		partie=p;
+
+		namePartie = p.getName();
+
 		
 //		lvtimer= buffertimer.timerzero();
 		//this.addKeyListener(new keylistener());
@@ -85,7 +90,7 @@ public class Niveau extends JPanel {
 			return;
 		}
 		
-		if (load)
+		if (loadEnCours)
 		{
 			List<Ballon> _ballons = SaveManager.LoadSaveNiveau(name);
 			for (Ballon b : _ballons) {
@@ -149,12 +154,12 @@ public class Niveau extends JPanel {
 			try {
 				SaveThis();
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, true),"Pause");
+		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 				
 		
 		
@@ -193,8 +198,15 @@ public class Niveau extends JPanel {
 		
 		partie.pPressed();// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appelé 
 		
+		try {
+			//C'est qu'une 
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		// Stop timer ? 
+		// Stop timer (va falloir foreach toutes les listes et trigger leur fonction pause, y'aurait pas plus simple que le faire � la mano ?)
 		
 	}
 	private void resume()
@@ -237,7 +249,24 @@ public class Niveau extends JPanel {
 	    {
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
 	    	{
-	    		switch(ObjectType.typeOfInt(map[i][j]))
+	    		int id = map[i][j];
+	    		int param = 0;
+	    		
+	    		if (id > 9)
+	    		{
+	    			int div = 10;
+	    			
+	    			while(id/div > 0)
+	    				div*=10;
+	    			div/=10;
+	    			
+	    			param = id - ((int)(id/div))*10;
+	    			id = (int)(id/div);
+	    			
+	    			map[i][j] = id;
+	    		}
+	    		
+	    		switch(ObjectType.typeOfInt(id))
 	    		{
 	    		case BREAKABLEBLOC:
 	    			breakableBlocs.add(new BreakableBloc(i,j));
@@ -245,8 +274,8 @@ public class Niveau extends JPanel {
 	    			break;
 	    		case PIEGE:
 	    			this.add(new Piege(i,j));
-	    			if(!nonSolidObjects.contains(map[i][j]))
-	    				nonSolidObjects.add(map[i][j]);
+	    			if(!nonSolidObjects.contains(id))
+	    				nonSolidObjects.add(id);
 	    			break;
 	    		case MOVINGBLOC:
 	    			movingBlocs.add(new MovingBloc(i, j, !synchronizedMovements));
@@ -257,19 +286,20 @@ public class Niveau extends JPanel {
 	    			this.add(blocs.get(blocs.size()-1));
 	    			break;
 	    		case APPARITION:
+	    			this.add(new Apparition(i,j));
 	    			break;
 	    		case TAPISROULANT:
-	    			tapisRoulants.add(new TapisRoulant(i, j, Direction.NORTH));
+	    			tapisRoulants.add(new TapisRoulant(i, j, ((param == 1)?Direction.NORTH:((param == 2)?Direction.SOUTH:((param == 3)?Direction.EAST:Direction.WEST)))));
 	    			this.add(tapisRoulants.get(tapisRoulants.size()-1));
-	    			if(!nonSolidObjects.contains(map[i][j]))
-	    				nonSolidObjects.add(map[i][j]);
+	    			if(!nonSolidObjects.contains(id))
+	    				nonSolidObjects.add(id);
 	    			break;
 	    		case OISEAU:
 	    			oiseaux.add(new Oiseau(i,j));
 	    			nbbird+=1;
 	    			this.add(oiseaux.get(oiseaux.size()-1));
-	    			if(!nonSolidObjects.contains(map[i][j]))
-	    				nonSolidObjects.add(map[i][j]);
+	    			if(!nonSolidObjects.contains(id))
+	    				nonSolidObjects.add(id);
 	    			break;
 				default:
 					break;
@@ -287,6 +317,8 @@ public class Niveau extends JPanel {
 	//Calculs effectues sur la frequence globalVar.CalculusFrequency
 	private void movementsTimerTrigger() 
 	{
+		CollisionsSnoopy();
+		
 		ExecuteKeys(); //Si une touche a ete appuyee et est donc en attente on l'execute
 		
 		MouvementBallons(true); //Contient les collisions donc a lance meme si les mouvements ne sont pas synchronisees (que la balle bouge sur son propre timer)
@@ -298,12 +330,6 @@ public class Niveau extends JPanel {
 				movingBloc.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
 			}
 		}
-			
-		CollisionsSnoopy();
-		
-		for (TapisRoulant tapisRoulant : tapisRoulants) {
-			CollisionsTapis(tapisRoulant);
-		}
 	}
 	
 	private void ExecuteKeys()
@@ -312,7 +338,7 @@ public class Niveau extends JPanel {
 		if (keysPressedList.ActionReadyOf(KeyType.LEFT)) if (MoveObject(POOPY,Direction.WEST)) keysPressedList.FireKey(KeyType.LEFT);
 		if (keysPressedList.ActionReadyOf(KeyType.DOWN)) if (MoveObject(POOPY,Direction.SOUTH)) keysPressedList.FireKey(KeyType.DOWN);
 		if (keysPressedList.ActionReadyOf(KeyType.RIGHT)) if (MoveObject(POOPY,Direction.EAST)) keysPressedList.FireKey(KeyType.RIGHT);
-		if (keysPressedList.ActionReadyOf(KeyType.SPACE)) if ( SpacePressed()) keysPressedList.FireKey(KeyType.UP);
+		if (keysPressedList.ActionReadyOf(KeyType.SPACE)) if (SpacePressed()) keysPressedList.FireKey(KeyType.UP);
 	}
 	
 	//Move an object to the desired direction, returns true if the object moved or changed direction succesfully
@@ -338,8 +364,7 @@ public class Niveau extends JPanel {
 	
 	private void CollisionsSnoopy()
 	{
-		//La seule collision de snoopy c'est avec les oiseaux et lesp pieges en dehors d'etre bloque par la map (gerer dans les MoveObject)
-		//Et snoopy n'attrape un oiseau ou on ne compte le piege que s'il est a l'arret (vient de passer par la case)
+		//Les collisions de snoopy ne sont triggered que quand il a finit son d�placement sur la case
 		if (POOPY.IsMoving())
 			return;
 		
@@ -390,8 +415,14 @@ public class Niveau extends JPanel {
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
 			*/
-			vie-=1;
+			vieloose();
 		}
+		
+		  /////////////////////
+		 //  TAPISROULANTS  //
+		/////////////////////
+		
+		CollisionsTapis(POOPY);
 			
 		
 	}
@@ -455,23 +486,41 @@ public class Niveau extends JPanel {
 			b.hitboxslow(blocs.get(y), true);
 		for(int y = 0; y < movingBlocs.size(); y++)
 			b.hitboxslow(movingBlocs.get(y), true);
-		if(b.hitboxslow(POOPY, false))
+
+		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
 		{
-			vieloose();
+
 			System.out.println("Et c'est la loooose");
+		vieloose();
+
+			POOPY.StartImmunity();
 		}
+			
+
 	}
 	
-	private void CollisionsTapis(TapisRoulant t)
+	private void CollisionsTapis(AnimatedObject o)
 	{
-		for (MovingBloc movingBloc : movingBlocs) {
-			
+		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified())
+		{
+			for (TapisRoulant tapisRoulant : tapisRoulants) {
+				if (tapisRoulant.xInMap == o.xInMap && tapisRoulant.yInMap == o.yInMap)
+				{
+					if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]))
+					{
+						o.Move(tapisRoulant.orientation);
+						o.IncreaseSpeed(tapisRoulant.orientation, 2.3);
+					}
+				}
+			}
 		}
+		else if (o.SpeedModified()) o.ResetSpeed();
 	}
 	
 	private void SaveThis() throws FileNotFoundException, UnsupportedEncodingException
 	{
-		PrintWriter saveFile = new PrintWriter("./Maps/" + name + "P" + idPartie + ".txt", "UTF-8");
+		//ENTREZ NOM PARTIE SI NON EXISTANT
+		PrintWriter saveFile = new PrintWriter("./Maps/" + name + "P" + namePartie + ".txt", "UTF-8");
 		
 		System.out.println("Saving...");
 		

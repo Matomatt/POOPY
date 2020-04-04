@@ -8,6 +8,7 @@ public class Time {
 		private Niveau niveau;
 		private int delay =1000;
 		private int period= 1000;
+		boolean active=true;
 		
 		public Time(Niveau niv)
 		{
@@ -28,5 +29,23 @@ public class Time {
 				niveau.timergestion();
 			}
 			
+		}
+		public void pPressed()
+		{
+			if(active==true)
+			{
+			timerz.cancel();
+			active=false;
+			}
+			else
+			{
+				active=true;
+				timerz= new Timer();
+				sched();
+			}
+		}
+		public void cancel()
+		{
+			timerz.cancel();
 		}
 }

@@ -63,6 +63,7 @@ public class KeysPressedList {
 	
 	public void FireKey(KeyType key)
 	{
-		GetKeyHolder(key).StartCooldown();
+		if (IsPressed(key))
+			GetKeyHolder(key).StartCooldown();
 	}
 }

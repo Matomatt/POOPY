@@ -189,5 +189,26 @@ public class AnimatedObject extends Objet {
 			return false;
 		return true;
 	}
+	
+	public boolean SpeedModified()
+	{
+		return !(vitesse[0] == initSpeed[0] && vitesse[1] == initSpeed[1]);
+	}
+	
+	public void IncreaseSpeed(Direction d, double coeff)
+	{
+		System.out.println("I am speed");
+		if (d == Direction.NORTH || d == Direction.SOUTH)
+			vitesse[1]*=coeff;
+		else if (d == Direction.WEST || d == Direction.EAST)
+			vitesse[0]*=coeff;
+	}
+	
+	public void ResetSpeed()
+	{
+		System.out.println("My time has come my friend");
+		vitesse[0] = initSpeed[0];
+		vitesse[1] = initSpeed[1];
+	}
 
 }

@@ -1,12 +1,20 @@
 package Engine.Objets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.Timer;
+
+import Settings.globalVar;
 import Utilitaires.*;
 
 public class Snoopy extends AnimatedObject {
 	private static final long serialVersionUID = -7782172256474576827L;
 	
 	public Direction orientation = null;
+	
+	public boolean immune = false;
+	Timer immuneTimer = new Timer( globalVar.immuneTime, new ActionListener() { public void actionPerformed(ActionEvent arg0) { EndImmunity(); } });
 	
 	public Snoopy(int _x, int _y, boolean _selfMoved)
 	{
@@ -60,5 +68,17 @@ public class Snoopy extends AnimatedObject {
 	public void RefreshSprite()
 	{
 		this.ChangeSpriteTo(spriteList[currentSprite]);
+	}
+	
+	public void EndImmunity()
+	{
+		immune = false;
+		immuneTimer.stop();
+	}
+	
+	public void StartImmunity()
+	{
+		immune = true;
+		immuneTimer.restart();
 	}
 }
