@@ -414,8 +414,13 @@ public class Niveau extends JPanel {
 			b.hitboxslow(blocs.get(y), true);
 		for(int y = 0; y < movingBlocs.size(); y++)
 			b.hitboxslow(movingBlocs.get(y), true);
-		if(b.hitboxslow(POOPY, false))
+		
+		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
+		{
 			System.out.println("Et c'est la loooose");
+			POOPY.StartImmunity();
+		}
+			
 	}
 	
 	private void CollisionsTapis(TapisRoulant t)
