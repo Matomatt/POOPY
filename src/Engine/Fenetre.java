@@ -81,7 +81,15 @@ public class Fenetre extends JFrame
 //	}
 	public void loadgame(String a)
 	{
-		
+		if (a.equals("lv2")==true)
+		{
+			System.out.println("code ok ");
+			this.add( new Partie(this,2));
+		}
+		if (a.equals("lv3")==true)
+		{
+			this.add(new Partie(this,3));
+		}
 	}
 	
 	public void loadlv (String a)

@@ -10,7 +10,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+//import java.util.Timer;
 import java.util.List;
+import java.util.TimerTask;
 import java.io.File;
 
 import javax.swing.*;
@@ -44,23 +46,38 @@ public class Niveau extends JPanel {
 	private ArrayList<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
 	private ArrayList<Oiseau> oiseaux = new ArrayList<Oiseau>();
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
+	
+	private int vie;
+//    private Java.util.Timer lvtimer;
+    private int delay=1000;
+    private int period=1000;
+    private int seconde=60;
+    Time buffertimer= new  Time (this);
     
+    private int nbbird=0;
+	
 	private Timer movementsTimer;
 	private boolean synchronizedMovements = true;
     
 	private KeysPressedList keysPressedList = new KeysPressedList();
 	private Timer keyTimer = new Timer(500, new ActionListener() { public void actionPerformed(ActionEvent arg0) { waitingKey=0; keyTimer.stop(); } });
 	private int waitingKey = 0;
+	private Partie partie;
+	
     
 	@SuppressWarnings("serial")
-	public Niveau(String _name, boolean load) throws IOException  /// Rajouter partie au constructeur
+	public Niveau(String _name, boolean load,Partie p) throws IOException  /// Rajouter partie au constructeur
 	{
 		this.setLayout(null);
 		name = _name;
+		vie=3;
+		partie=p;
 		
+//		lvtimer= buffertimer.timerzero();
 		//this.addKeyListener(new keylistener());
 		nonSolidObjects.add(0);
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
+		
 		
 		if (POOPY == null)
 		{
@@ -147,10 +164,34 @@ public class Niveau extends JPanel {
 		
 	}
 	
+
+	public void timergestion()
+	{
+		seconde-=1;
+		System.out.println("seconde"+seconde);
+		if (seconde<=0)
+		{
+			vieloose();
+		}
+		
+	}
+	private void vieloose()
+	{
+		vie-=1;
+		if (vie<=0)
+		{
+			// AFFICHER JPanel GameOver
+			partie.perdu();
+			
+		}
+	}
+	
+	
+	
 	private void pause()  // Timer to stop 
 	{
 		
-		//partie.pPressed();
+		partie.pPressed();// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appelé 
 		
 		
 		// Stop timer ? 
@@ -225,6 +266,7 @@ public class Niveau extends JPanel {
 	    			break;
 	    		case OISEAU:
 	    			oiseaux.add(new Oiseau(i,j));
+	    			nbbird+=1;
 	    			this.add(oiseaux.get(oiseaux.size()-1));
 	    			if(!nonSolidObjects.contains(map[i][j]))
 	    				nonSolidObjects.add(map[i][j]);
@@ -311,6 +353,12 @@ public class Niveau extends JPanel {
 			if (((Objet) POOPY).SameTileAs((Objet)oiseau))
 			{
 				catchedOiseau = oiseau;
+				nbbird-=1;
+				if (nbbird<=0)
+				{
+					partie.addscore(seconde*100);
+					partie.next();
+				}
 				break;
 			}
 		}
@@ -342,7 +390,7 @@ public class Niveau extends JPanel {
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
 			*/
-			System.out.println("Et c'est la looooose");
+			vie-=1;
 		}
 			
 		
@@ -408,7 +456,10 @@ public class Niveau extends JPanel {
 		for(int y = 0; y < movingBlocs.size(); y++)
 			b.hitboxslow(movingBlocs.get(y), true);
 		if(b.hitboxslow(POOPY, false))
+		{
+			vieloose();
 			System.out.println("Et c'est la loooose");
+		}
 	}
 	
 	private void CollisionsTapis(TapisRoulant t)

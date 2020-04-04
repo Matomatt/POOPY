@@ -37,6 +37,11 @@ public class Menu extends JPanel{
 		loadgamebutt.addActionListener(new LoadGameListener());
 		start.addActionListener(new StartListener());
 		
+		loadlv.setText("Code");
+		loadgame.setText("fichier.txt");
+		
+		
+		
 		this.add(loadlvlabel);
 		this.add(loadlv);
 		this.add(loadlvbutt);
