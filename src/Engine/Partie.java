@@ -90,13 +90,13 @@ public class Partie extends JPanel {
 	protected void perdu()
 	{
 		time.cancel();
-		niveaux.removeAll(niveaux);
 		this.removeAll();
+		niveaux=null;
 		this.add(new GameOver(score,this.getWidth(),this.getHeight()));
-		System.out.println("crash?");
+	//	System.out.println("crash?");
 		
 		
-		//menu();
+		menu();
 	}
 	protected void addscore(int lvscore)
 	{
@@ -114,6 +114,9 @@ public class Partie extends JPanel {
 		pause=null;
 		time=null;
 		//save avant ? 
+		this.update(this.getGraphics());
+		fenetre.remove(this);
+		
 		fenetre.menu();
 
 	}

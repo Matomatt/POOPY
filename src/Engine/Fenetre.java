@@ -106,7 +106,10 @@ public class Fenetre extends JFrame
 	}
 	public void menu()
 	{
-		this.removeAll();
+		System.out.println("yolo menu yo"+this.getComponentCount());
+		//this.removeAll();
+		this.revalidate();
+		
 		this.add(new Menu(this));
 		this.revalidate();
 	}
