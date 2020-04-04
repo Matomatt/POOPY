@@ -22,7 +22,6 @@ public class Time {
 		}
 		private class decrease extends TimerTask
 		{
-
 			@Override
 			public void run() {
 				
