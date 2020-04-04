@@ -23,6 +23,7 @@ public class Fenetre extends JFrame
 		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+18, globalVar.tileHeight*globalVar.nbTilesVertically+46);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
+		this.setResizable(false);
 //		pause=null;
 //		niveaux= new ArrayList<Niveau>();
 //		try {
@@ -81,17 +82,32 @@ public class Fenetre extends JFrame
 //	}
 	public void loadgame(String a)
 	{
-		
+		if (a.equals("level2")==true)
+		{
+			System.out.println("code ok ");
+			this.add( new Partie(this,2));
+		}
+		if (a.equals("level3")==true)
+		{
+			this.add(new Partie(this,3));
+		}
 	}
 	
 	public void loadlv (String a)
 	{
-		
+		this.removeAll();
+		this.add(new Partie(a,this));
 	}
 	
 	public void start()
 	{
 		this.add(new Partie("", this));
+		this.revalidate();
+	}
+	public void menu()
+	{
+		this.removeAll();
+		this.add(new Menu(this));
 		this.revalidate();
 	}
 	

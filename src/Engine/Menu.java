@@ -37,6 +37,11 @@ public class Menu extends JPanel{
 		loadgamebutt.addActionListener(new LoadGameListener());
 		start.addActionListener(new StartListener());
 		
+		loadlv.setText("Code");
+		loadgame.setText("fichier.txt");
+		
+		
+		
 		this.add(loadlvlabel);
 		this.add(loadlv);
 		this.add(loadlvbutt);
@@ -69,13 +74,14 @@ public class Menu extends JPanel{
 	{
 		fenetre.remove(this);
 		fenetre.loadgame(loadgame.getText());
-		fenetre.revalidate();
+	
 	}
 	//Gestion Load LV
 	private class LoadLvListener implements ActionListener  //?
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			
 			loadlv();
 		}
 	}
@@ -83,7 +89,6 @@ public class Menu extends JPanel{
 	{
 		fenetre.remove(this);
 		fenetre.loadlv(loadlv.getText());
-		fenetre.revalidate();
 	}
 	// Gestion start 
 	private class StartListener implements ActionListener  //?
@@ -95,9 +100,8 @@ public class Menu extends JPanel{
 	}
 	private void start()
 	{
-		fenetre.remove(this);;
+		fenetre.remove(this);
 		fenetre.start();
-		fenetre.revalidate();
 	}
 	
 	

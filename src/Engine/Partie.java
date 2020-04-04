@@ -6,13 +6,16 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import java.util.TimerTask;
+import java.util.Timer;
 public class Partie extends JPanel {
 	private static final long serialVersionUID = -1207758538944896774L;
 	
 	private String name;
 	
-	private Pause pause;
+	private Pause pause=new Pause(this);
 	private Fenetre fenetre;
+	Time time;
 	
 	private int score = 0;
 	private int vies = 3;
@@ -26,18 +29,59 @@ public class Partie extends JPanel {
 		fenetre=_fenetre;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setLayout(null);
+
 	
 		if (name.isEmpty())
 		{
-			try { niveaux.add( new Niveau("level2", name, false)); }
+			try { niveaux.add( new Niveau("level2", this, false)); }
 			catch (IOException e) { e.printStackTrace(); }
 		}
+
 		
+		time=new Time(niveaux.get(0));
 		niveaux.get(0).setFocusable(true);
+
 		this.add(niveaux.get(0));
 		
 		this.setVisible(true);
 		this.validate();
+	}
+	public Partie(Fenetre fene, int numlv )
+	{
+		
+		
+		fenetre=fene;
+		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
+		this.setLayout(null);
+		niveaux= new ArrayList<Niveau>();
+		try {	
+			niveaux.add( new Niveau("level"+numlv, this,false));
+		}
+		 catch (IOException e) {
+				e.printStackTrace();
+			}
+		niveaux.get(0).setFocusable(true);
+	
+		this.add(niveaux.get(0));
+		time=new Time(niveaux.get(0));
+		this.setVisible(true);
+		this.validate();
+		
+	}
+	
+	protected void perdu()
+	{
+		time.cancel();
+		this.removeAll();
+		this.add(new GameOver(score,this.getWidth(),this.getHeight()));
+		System.out.println("crash?");
+		niveaux=null;
+		time=null;
+		menu();
+	}
+	protected void addscore(int lvscore)
+	{
+		score+=lvscore;
 	}
 	
 	public void next()
@@ -47,8 +91,11 @@ public class Partie extends JPanel {
 	
 	protected void menu()
 	{
-		fenetre.add(new Menu(fenetre));
-		fenetre.remove(this);
+		time.cancel();
+		pause=null;
+		//save avant ? 
+		fenetre.menu();
+
 	}
 	private void LoadPartie(String fileToLoad)
 	{
@@ -65,6 +112,8 @@ public class Partie extends JPanel {
 	}
 	public void pPressed()
 	{
+		
 		pause.pPressed();
+		time.pPressed();
 	}
 }

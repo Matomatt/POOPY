@@ -10,7 +10,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+//import java.util.Timer;
 import java.util.List;
+import java.util.TimerTask;
 import java.io.File;
 
 import javax.swing.*;
@@ -47,22 +49,40 @@ public class Niveau extends JPanel {
 	private List<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
 	private List<Oiseau> oiseaux = new ArrayList<Oiseau>();
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
+	
+	private int vie;
+//    private Java.util.Timer lvtimer;
+
+    private int seconde=60;
     
+    
+    private int nbbird=0;
+	
 	private Timer movementsTimer;
 	private boolean synchronizedMovements = true;
     
 	private KeysPressedList keysPressedList = new KeysPressedList();
-    
+	private Partie partie;
+
 	@SuppressWarnings("serial")
-	public Niveau(String _name, String _namePartie, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
+
+	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
+
 	{
 		this.setLayout(null);
 		name = _name;
-		namePartie = _namePartie;
+
+		vie=3;
+		partie=p;
+
+		namePartie = p.getName();
+
 		
+//		lvtimer= buffertimer.timerzero();
 		//this.addKeyListener(new keylistener());
 		nonSolidObjects.add(0);
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
+		
 		
 		if (POOPY == null)
 		{
@@ -149,10 +169,34 @@ public class Niveau extends JPanel {
 		
 	}
 	
+
+	public void timergestion()
+	{
+		seconde-=1;
+		System.out.println("seconde"+seconde);
+		if (seconde<=0)
+		{
+			vieloose();
+		}
+		
+	}
+	private void vieloose()
+	{
+		vie-=1;
+		if (vie<=0)
+		{
+			// AFFICHER JPanel GameOver
+			partie.perdu();
+			
+		}
+	}
+	
+	
+	
 	private void pause()  // Timer to stop 
 	{
 		
-		//partie.pPressed();
+		partie.pPressed();// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appelÃ© 
 		
 		try {
 			//C'est qu'une 
@@ -162,7 +206,7 @@ public class Niveau extends JPanel {
 			e.printStackTrace();
 		}
 		
-		// Stop timer (va falloir foreach toutes les listes et trigger leur fonction pause, y'aurait pas plus simple que le faire à la mano ?)
+		// Stop timer (va falloir foreach toutes les listes et trigger leur fonction pause, y'aurait pas plus simple que le faire ï¿½ la mano ?)
 		
 	}
 	private void resume()
@@ -253,6 +297,7 @@ public class Niveau extends JPanel {
 	    			break;
 	    		case OISEAU:
 	    			oiseaux.add(new Oiseau(i,j));
+	    			nbbird+=1;
 	    			this.add(oiseaux.get(oiseaux.size()-1));
 	    			if(!nonSolidObjects.contains(id))
 	    				nonSolidObjects.add(id);
@@ -320,7 +365,7 @@ public class Niveau extends JPanel {
 	
 	private void CollisionsSnoopy()
 	{
-		//Les collisions de snoopy ne sont triggered que quand il a finit son déplacement sur la case
+		//Les collisions de snoopy ne sont triggered que quand il a finit son dï¿½placement sur la case
 		if (POOPY.IsMoving())
 			return;
 		
@@ -334,6 +379,12 @@ public class Niveau extends JPanel {
 			if (((Objet) POOPY).SameTileAs((Objet)oiseau))
 			{
 				catchedOiseau = oiseau;
+				nbbird-=1;
+				if (nbbird<=0)
+				{
+					partie.addscore(seconde*100);
+					partie.next();
+				}
 				break;
 			}
 		}
@@ -365,7 +416,7 @@ public class Niveau extends JPanel {
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
 			*/
-			System.out.println("Et c'est la looooose");
+			vieloose();
 		}
 		
 		  /////////////////////
@@ -436,13 +487,17 @@ public class Niveau extends JPanel {
 			b.hitboxslow(blocs.get(y), true);
 		for(int y = 0; y < movingBlocs.size(); y++)
 			b.hitboxslow(movingBlocs.get(y), true);
-		
+
 		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
 		{
+
 			System.out.println("Et c'est la loooose");
+		vieloose();
+
 			POOPY.StartImmunity();
 		}
 			
+
 	}
 	
 	private void CollisionsTapis(AnimatedObject o)
