@@ -87,6 +87,8 @@ public class Menu extends JPanel{
 		} catch (IOException e) {
 			e.printStackTrace();
 			new ErrorMessage();
+			fenetre.remove(this);
+			fenetre.menu();
 		}
 	}
 	
@@ -108,6 +110,8 @@ public class Menu extends JPanel{
 		} catch (IOException e) {
 			e.printStackTrace();
 			new ErrorMessage();
+			fenetre.remove(this);
+			fenetre.menu();
 		}
 	}
 	

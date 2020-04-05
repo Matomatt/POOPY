@@ -7,6 +7,9 @@ public class StringManager {
 	public static List<Integer> ParseLineToInt(String line) {
 		List<Integer> parsedIntList = new ArrayList<Integer>();
 		
+		if (line == null)
+			return parsedIntList;
+		
 		String numberToParse = "";
 		char ch[] = line.toCharArray();
 		

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class Partie extends JPanel {
 	private static final long serialVersionUID = -1207758538944896774L;
 	
-	private String name;
+	private String name = null;
 	
 
 	private Pause pause;
@@ -38,7 +38,6 @@ public class Partie extends JPanel {
 		name = partieToLoad;
 			
 		fenetre=_fenetre;
-	
 		
 		if (name.isEmpty())
 		{
@@ -271,6 +270,16 @@ public class Partie extends JPanel {
 		
 		
 		//this.update(this.getGraphics());
+	}
+	
+	public String getnom()
+	{
+		return name;
+	}
+	
+	public void setnom(String b)
+	{
+		name=b;
 	}
 	
 	public void pPressedNext()

@@ -217,7 +217,7 @@ public class Niveau extends JPanel {
 		partie.next();
 	}
 	
-	private void KillAll()
+	protected void KillAll()
 	{
 		movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
 		movementsTimer.stop();

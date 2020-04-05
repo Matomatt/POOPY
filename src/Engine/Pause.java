@@ -68,16 +68,7 @@ public class Pause extends JPanel{
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			try {
-				partie.SavePartie();
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
+		 new SaveFichier(partie);	
 		}
 	}
 	private  class ResumeListener implements ActionListener
