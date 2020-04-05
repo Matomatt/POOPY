@@ -21,7 +21,6 @@ public class Partie extends JPanel {
 	
 	private String name = null;
 	
-
 	private Pause pause;
 	private Fenetre fenetre;
 	Time time;

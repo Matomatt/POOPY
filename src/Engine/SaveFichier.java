@@ -1,10 +1,12 @@
 package Engine;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,6 +24,7 @@ public class SaveFichier extends JFrame
 		public SaveFichier(Partie part)
 		{
 			partie=part;
+			this.setLayout(new BorderLayout());
 			this.setTitle("Save");
 			partie.niveaux.get(0).StopAll();
 			messJLabel=new JLabel("Entrer le nom du fichier de sauvegarde");
@@ -30,12 +33,12 @@ public class SaveFichier extends JFrame
 			ok=new JButton("ok");
 			ok.addActionListener(new SaveListener());
 			
-			add(messJLabel);
-			add(chaine);
-			add(ok);
+			add(messJLabel,BorderLayout.NORTH);
+			add(chaine,BorderLayout.CENTER);
+			add(ok,BorderLayout.SOUTH);
 			
 			this.setAlwaysOnTop(true);
-			this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally/3,globalVar.nbTilesVertically*globalVar.nbTilesVertically/2);
+			this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally/3,(globalVar.nbTilesVertically*globalVar.tileHeight)/4);
 			this.setVisible(true);
 			
 			
@@ -58,7 +61,7 @@ public class SaveFichier extends JFrame
 		}
 		private void savegame() throws FileNotFoundException, UnsupportedEncodingException
 		{
-			if(partie.getName().isEmpty())
+			if(partie.getName()==null)
 			{
 				partie.setnom(chaine.getText());
 				partie.SavePartie();
