@@ -85,6 +85,7 @@ public class Menu extends JPanel{
 			fenetre.remove(this);
 			fenetre.loadgame(loadgame.getText());
 		} catch (IOException e) {
+			e.printStackTrace();
 			new ErrorMessage();
 		}
 	}
@@ -100,10 +101,12 @@ public class Menu extends JPanel{
 	
 	private void loadlv()
 	{
+		System.out.println("Load from password");
 		try {
 			fenetre.remove(this);
-			fenetre.loadgame(loadlv.getText());
+			fenetre.loadlv(loadlv.getText());
 		} catch (IOException e) {
+			e.printStackTrace();
 			new ErrorMessage();
 		}
 	}
