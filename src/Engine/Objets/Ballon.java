@@ -93,18 +93,19 @@ public class Ballon extends AnimatedObject {
 		boolean test=false;
 		String toPrintAtTheEnd = "";
 		int tmpDirec = direc;
-			
+		
 		if (x-r<=0)
 		{
 			test=true;
 			if(direc==1)
-				direc=2;
+				direc=0;
 			else {
-				direc=1;
+				direc=3;
 			}
 		}
 		if (x+r>=globalVar.tileWidth*globalVar.nbTilesHorizontally)
 		{
+			
 			test=true;
 			if(direc==0)
 				direc=1;

@@ -554,25 +554,25 @@ public class Niveau extends JPanel {
 	
 	private boolean MouvementBallons(boolean checkCollisions) 
 	{
-		for(int i = 0; i < ballons.size(); i++)
+		boolean PoopyTouched = false;
+		for (Ballon ballon : ballons)
 		{
 			if (synchronizedMovements)
-				ballons.get(i).MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
+				ballon.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
 			
 			if (checkCollisions)
-				for(int y=0; y < blocs.size(); y++)
-					if (CollisionsBallon(ballons.get(i)))
-						return true;
+				PoopyTouched = (CollisionsBallon(ballon) || PoopyTouched);
 		}
-		return false;
+		return PoopyTouched;
 	}
 
 	private boolean CollisionsBallon(Ballon b) 
 	{
-		for(int y = 0; y < blocs.size(); y++)
-			b.hitboxslow(blocs.get(y), true);
-		for(int y = 0; y < movingBlocs.size(); y++)
-			b.hitboxslow(movingBlocs.get(y), true);
+		for (AnimatedSolidBloc bloc : blocs)
+			b.hitboxslow(bloc, true);
+		
+		for(MovingBloc movingBloc : movingBlocs)
+			b.hitboxslow(movingBloc, true);
 
 		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
 		{
