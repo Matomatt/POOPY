@@ -57,7 +57,7 @@ public class Niveau extends JPanel {
 	private JLabel vieDisplayer;
 //    private Java.util.Timer lvtimer;
 
-    private int seconde=60;
+    private int seconde = 60;
     private JLabel temps;
 	
 	private Timer movementsTimer;
@@ -74,7 +74,6 @@ public class Niveau extends JPanel {
 		
 		partie = p;
 		name = _name;
-		vie = partie.vies;
 		
 		System.out.println("New level : " + name);
 		
@@ -120,11 +119,6 @@ public class Niveau extends JPanel {
 		this.StopAll();
 	}
 	
-	
-	
-	
-	
-	
 	@SuppressWarnings("serial")
 	public boolean Start()
 	{
@@ -134,7 +128,6 @@ public class Niveau extends JPanel {
 			System.out.println("Ce niveau ne contient pas Snoopy, impossible d'y jouer, retour au menu...");
 			return false;
 		}
-		System.out.println("Let's a go !");
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
 		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.UP); } });
@@ -166,7 +159,6 @@ public class Niveau extends JPanel {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 		
-		
 		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
 		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
 		
@@ -176,6 +168,8 @@ public class Niveau extends JPanel {
 		this.setLocation(0, globalVar.tileHeight);
 		this.setVisible(true);
 		this.validate();
+		
+		vie = partie.vies;
 		
 		this.Resume();
 		
@@ -286,15 +280,11 @@ public class Niveau extends JPanel {
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
 	    	{
 	    		int [] idParam = SeparateIdParam(map[i][j]);
-	    		map[i][j] = idParam[0];
 	    		
-	    		int id = idParam[0];
-	    		int param = idParam[1];
-	    		
-	    		switch(ObjectType.typeOfInt(id))
+	    		switch(ObjectType.typeOfInt(idParam[0]))
 	    		{
 	    		case BALLON:
-	    			AddBallon(new Ballon(i,j, param, !synchronizedMovements));
+	    			AddBallon(new Ballon(i,j, idParam[1], !synchronizedMovements));
 	    			map[i][j] = 0;
 	    			break;
 	    		case SNOOPY:
@@ -314,14 +304,9 @@ public class Niveau extends JPanel {
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
 	    	{
 	    		//On recupere les parametres de l'objet s'il y en a
-
 	    		int [] idParam = SeparateIdParam(map[i][j]);
-	    		map[i][j] = idParam[0];
 	    		
-	    		int id = idParam[0];
-	    		int param = idParam[1];
-	    		
-	    		switch(ObjectType.typeOfInt(id))
+	    		switch(ObjectType.typeOfInt(idParam[0]))
 	    		{
 	    		case BREAKABLEBLOC:
 	    			breakableBlocs.add(new BreakableBloc(i,j));
@@ -329,8 +314,8 @@ public class Niveau extends JPanel {
 	    			break;
 	    		case PIEGE:
 	    			this.add(new Piege(i,j));
-	    			if(!nonSolidObjects.contains(id))
-	    				nonSolidObjects.add(id);
+	    			if(!nonSolidObjects.contains(idParam[0]))
+	    				nonSolidObjects.add(idParam[0]);
 	    			break;
 	    		case MOVINGBLOC:
 	    			movingBlocs.add(new MovingBloc(i, j, !synchronizedMovements));
@@ -344,16 +329,18 @@ public class Niveau extends JPanel {
 	    			this.add(new Apparition(i,j));
 	    			break;
 	    		case TAPISROULANT:
-	    			tapisRoulants.add(new TapisRoulant(i, j, ((param == 1)?Direction.NORTH:((param == 2)?Direction.SOUTH:((param == 3)?Direction.EAST:Direction.WEST)))));
+	    			map[i][j] = idParam[0];
+	    			//System.out.println("{"+idParam[0]+", "+idParam[1]+"}");
+	    			tapisRoulants.add(new TapisRoulant(i, j, ((idParam[1] == 1)?Direction.NORTH:((idParam[1] == 2)?Direction.SOUTH:((idParam[1] == 3)?Direction.EAST:Direction.WEST)))));
 	    			this.add(tapisRoulants.get(tapisRoulants.size()-1));
-	    			if(!nonSolidObjects.contains(id))
-	    				nonSolidObjects.add(id);
+	    			if(!nonSolidObjects.contains(idParam[0]))
+	    				nonSolidObjects.add(idParam[0]);
 	    			break;
 	    		case OISEAU:
 	    			oiseaux.add(new Oiseau(i,j));
 	    			this.add(oiseaux.get(oiseaux.size()-1));
-	    			if(!nonSolidObjects.contains(id))
-	    				nonSolidObjects.add(id);
+	    			if(!nonSolidObjects.contains(idParam[0]))
+	    				nonSolidObjects.add(idParam[0]);
 	    			break;
 				default:
 					break;
@@ -364,7 +351,7 @@ public class Niveau extends JPanel {
 	
 	public int[] SeparateIdParam(int id)
 	{
-		int param = 0;
+		int[] idParam = {id, 0};
 		if (id > 9)
 		{
 			int div = 10;
@@ -373,10 +360,11 @@ public class Niveau extends JPanel {
 				div*=10;
 			div/=10;
 			
-			param = id - ((int)(id/div))*10;
-			id = (int)(id/div);
+			idParam[1] = id - ((int)(id/div))*10;
+			idParam[0] = (int)(id/div);
+			//System.out.println("{"+idParam[0]+", "+idParam[1]+"}");
 		}
-		int[] idParam = {id, param};
+		
 		return idParam;
 	}
 	
@@ -517,7 +505,7 @@ public class Niveau extends JPanel {
 			MediaPlayer mediaPlayer = new MediaPlayer(hit);
 			mediaPlayer.play();
 			*/
-			
+			POOPY.StartImmunity();
 			return vieloose();
 		}
 		

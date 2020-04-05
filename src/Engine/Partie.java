@@ -131,6 +131,7 @@ public class Partie extends JPanel {
 	
 	public void next()
 	{
+		vies = niveaux.get(0).getvie();
 		remove(niveaux.get(0));
 		niveaux.remove(0);
 		time.cancel();

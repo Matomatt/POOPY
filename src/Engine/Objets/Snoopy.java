@@ -1,4 +1,7 @@
 package Engine.Objets;
+import java.awt.AlphaComposite;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -14,7 +17,11 @@ public class Snoopy extends AnimatedObject {
 	public Direction orientation = null;
 	
 	public boolean immune = false;
-	Timer immuneTimer = new Timer( globalVar.immuneTime, new ActionListener() { public void actionPerformed(ActionEvent arg0) { EndImmunity(); } });
+	private int counterImmuneTimer = 0;
+	private float transparency = 1.0f;
+	
+	Timer immuneTimer = new Timer( 200, new ActionListener() { public void actionPerformed(ActionEvent arg0) { ToggleTransparency(); } });
+	Timer pwmTransparency = new Timer( 10, new ActionListener() { public void actionPerformed(ActionEvent arg0) { executePwmTransparency(); } });
 	
 	public Snoopy(int _x, int _y, boolean _selfMoved)
 	{
@@ -28,7 +35,7 @@ public class Snoopy extends AnimatedObject {
 		this.ChangeOrientationTo(Direction.SOUTH);
 		this.ChangeSpriteTo(spriteList[currentSprite]);
 	}
-	
+
 	//A ajouter que si il est deja en mvmt il peut pas rebouger d'une case, bah ouai sinon il va jamais s'arreter personne va capter
 	public boolean CanMove(Direction towards)
 	{
@@ -70,16 +77,39 @@ public class Snoopy extends AnimatedObject {
 		this.update(this.getGraphics());
 	}
 	
-	public void EndImmunity()
-	{
-		immune = false;
-		immuneTimer.stop();
-	}
-	
 	public void StartImmunity()
 	{
 		immune = true;
+		counterImmuneTimer = 0;
+		pwmTransparency.restart();
 		immuneTimer.restart();
+	}
+	
+	protected void executePwmTransparency() {
+		this.setVisible(!this.isVisible());
+	}
+	
+	protected void ToggleTransparency()
+	{
+		if (pwmTransparency.isRunning())
+		{
+			pwmTransparency.stop();
+			this.setVisible(true);
+		}
+		else
+			pwmTransparency.restart();
+		
+		if ((counterImmuneTimer+=1)*immuneTimer.getDelay() > globalVar.immuneTime)
+			EndImmunity();
+	}
+	
+	public void EndImmunity()
+	{
+		transparency = 1.0f;
+		immune = false;
+		this.setVisible(true);
+		pwmTransparency.stop();
+		immuneTimer.stop();
 	}
 	
 	public void Pause()
@@ -87,6 +117,8 @@ public class Snoopy extends AnimatedObject {
 		super.Pause();
 		if (immuneTimer != null)
 			immuneTimer.stop();
+		if (pwmTransparency != null)
+			pwmTransparency.stop();
 	}
 	
 	public void Resume()
@@ -94,6 +126,8 @@ public class Snoopy extends AnimatedObject {
 		super.Resume();
 		if (immuneTimer != null)
 			immuneTimer.start();
+		if (pwmTransparency != null)
+			pwmTransparency.start();
 	}
 	
 	public void Kill()
@@ -101,5 +135,6 @@ public class Snoopy extends AnimatedObject {
 		super.Pause();
 		super.Kill();
 		immuneTimer = null;
+		pwmTransparency = null;
 	}
 }

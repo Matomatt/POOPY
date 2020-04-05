@@ -1,3 +1,0 @@
-level3
-false
-3 0 2 35
