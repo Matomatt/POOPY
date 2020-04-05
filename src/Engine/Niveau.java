@@ -433,37 +433,27 @@ public class Niveau extends JPanel {
 		///////////////
 		
 		Oiseau catchedOiseau = null;
-		//On regarde tous les oiseaux pour voir si snoopy ne se trouverai pas sur la case de l'un deux
-		for (Oiseau oiseau : oiseaux) {
-			if (((Objet) POOPY).SameTileAs((Objet)oiseau))
-			{
-				catchedOiseau = oiseau;
-				nbbird-=1;
-				if (nbbird<=0)
-				{
-					partie.addscore(seconde*100);
-					partie.next();
-				}
-				break;
-			}
-		}
-		
-		//Si il en a attrape un, on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
-		if (catchedOiseau != null)
-		{
-			map[catchedOiseau.xInMap][catchedOiseau.yInMap] = 0;
-			this.remove(catchedOiseau);
-			oiseaux.remove(catchedOiseau);
-			POOPY.RefreshSprite();
-		}
-		
-		//Si la liste est vide ca veut dire que snoopy a attrape tous les oiseaux et qu'il a fini le niveau
-		if(oiseaux.isEmpty())
-		{
-			System.out.println("Et c'est la wiiin");
-			win();
-			return true;
-		}
+        //On regarde tous les oiseaux pour voir si snoopy ne se trouverai pas sur la case de l'un deux
+        for (Oiseau oiseau : oiseaux) {
+            if (((Objet) POOPY).SameTileAs((Objet)oiseau)) catchedOiseau = oiseau;
+        }
+
+        //Si il en a attrape un, on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
+        if (catchedOiseau != null)
+        {
+            map[catchedOiseau.xInMap][catchedOiseau.yInMap] = 0;
+            this.remove(catchedOiseau);
+            oiseaux.remove(catchedOiseau);
+            POOPY.RefreshSprite();
+
+            //Si la liste est vide ca veut dire que snoopy a attrape tous les oiseaux et qu'il a fini le niveau
+            if(oiseaux.isEmpty())
+            {
+                System.out.println("Et c'est la wiiin");
+                win();
+                return true;
+            }
+        }
 		
 		  /////////////////////
 		 //  TAPISROULANTS  //
@@ -620,7 +610,7 @@ public class Niveau extends JPanel {
 	    }
 	    
 	    saveFile.close();
-	    this.KillAll();
+	    
 	    ((Partie)this.getParent()).SavePartie(namePartie, fileName, true);
 	}
 }
