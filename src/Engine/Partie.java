@@ -246,6 +246,7 @@ public class Partie extends JPanel {
 	
 	protected void SavePartie() throws FileNotFoundException, UnsupportedEncodingException
 	{
+		
 		niveaux.get(0).SaveThis(name);
 		
 		
@@ -284,6 +285,16 @@ public class Partie extends JPanel {
 		
 		
 		//this.update(this.getGraphics());
+	}
+	
+	public String getnom()
+	{
+		return name;
+	}
+	
+	public void setnom(String b)
+	{
+		name=b;
 	}
 	
 	public void pPressedNext()

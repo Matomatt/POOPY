@@ -17,13 +17,34 @@ public class ErrorMessage extends JFrame{
 		bufferJLabel.setSize(200, 100);
 		this.setSize(400, 300);
 		this.setLocation(400,400);
+		 JButton buffer= new JButton("ok") ;
+		 buffer.addActionListener(new OkListener());
 		this.add(new JButton("ok"));
 	
 		
 		
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.validate();
 	}
+	public ErrorMessage(String a)
+	{
+		this.setVisible(true);
+		this.setAlwaysOnTop(true);
+		JLabel bufferJLabel =new JLabel("a");
+		bufferJLabel.setSize(200, 100);
+		this.setSize(400, 300);
+		this.setLocation(400,400);
+		 JButton buffer= new JButton("ok") ;
+		 buffer.addActionListener(new OkListener());
+
+		this.add(new JButton("ok"));
+	
+		
+		
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.validate();
+	}
+	
 	private class OkListener implements ActionListener  //?
 	{
 		public void actionPerformed(ActionEvent e)
