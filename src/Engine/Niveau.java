@@ -620,7 +620,7 @@ public class Niveau extends JPanel {
 	    }
 	    
 	    saveFile.close();
-	    
+	    this.KillAll();
 	    ((Partie)this.getParent()).SavePartie(namePartie, fileName, true);
 	}
 }

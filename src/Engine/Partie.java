@@ -206,13 +206,23 @@ public class Partie extends JPanel {
 		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(unlockedLevels-1).getvie() + " " + niveaux.get(unlockedLevels-1).getseconde());
 		saveFile.close();
 		
+		time.cancel();
+		niveaux.removeAll(niveaux);
+		niveaux=null;
+		this.removeAll();
+		
 		System.out.println("Saved !");
+		fenetre.dispose();
+		System.exit(0);
 	}
 	public boolean pPressed()
 	{
 		pause.pPressed();
+		
 		time.pPressed();
 		this.revalidate();
+		this.update(this.getGraphics());
 		return pause.isVisible();
+		
 	}
 }

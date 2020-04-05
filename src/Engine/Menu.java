@@ -7,6 +7,9 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import Data.ImageManager;
+import Settings.globalVar;
+
 public class Menu extends JPanel{
 
 	private Fenetre fenetre;
@@ -20,7 +23,7 @@ public class Menu extends JPanel{
 	
 	protected ArrayList<Niveau> niveaux;
 	int actuallv=0;
-	
+	private JLabel sprite;
 	
 	public Menu(Fenetre fen)
 	{
@@ -57,6 +60,11 @@ public class Menu extends JPanel{
 		fenetre=fen;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setVisible(true);
+		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Sprites/snoopytitile.png", globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically)) );
+	      sprite.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically);
+	      this.add(sprite);}
+
+	catch (IOException ex) { System.console().writer().println("Couldn't open snoopy title page "); }
 		this.validate();
 		
 		

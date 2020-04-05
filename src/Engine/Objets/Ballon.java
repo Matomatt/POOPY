@@ -56,40 +56,78 @@ public class Ballon extends AnimatedObject {
 
 		//stopMovements=true;
 	}
-	public boolean hitboxfast (Objet tocheck)// Non fini / fonctionel
-	{
-		boolean result=false;
-		double  i;
-		double bx,by;
-		for (i=0;i<3.14;i+=3.14/8)// A opti en finissant si colli ? 
-		{
-			bx=  x+Math.cos(i);
-			by=  y+Math.sin(i);
-
-			if (bx<= tocheck.x+tocheck.r)
-			{
-				if (by<= tocheck.y+tocheck.r)
-				{
-					if (bx>= tocheck.x)
-					{	
-						if (by>= tocheck.y)
-						{
-							direc+=1;// changement de direction pas encore intelligent 
-							result=true;
-						}
-					}
-				}
-			}
-		}
-
-		return result ;
-	}
+//	public boolean hitboxfast (Objet tocheck)// Non fini / fonctionel
+//	{
+//		boolean result=false;
+//		double  i;
+//		double bx,by;
+//		for (i=0;i<3.14;i+=3.14/8)// A opti en finissant si colli ? 
+//		{
+//			bx=  x+Math.cos(i);
+//			by=  y+Math.sin(i);
+//
+//			if (bx<= tocheck.x+tocheck.r)
+//			{
+//				if (by<= tocheck.y+tocheck.r)
+//				{
+//					if (bx>= tocheck.x)
+//					{	
+//						if (by>= tocheck.y)
+//						{
+//							direc+=1;// changement de direction pas encore intelligent 
+//							result=true;
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		return result ;
+//	}
 	public boolean hitboxslow (Objet tocheck, boolean bounce)// ATTENTION il faut que ballon ait ses coord sur son centre et que x y de l'objet carré soit en haut a gauche
 	{
 		//System.out.println("hitboxslow " + tocheck.x + " " + tocheck.y+" vitesse x "+vitesse [0]+ " vitesse y "+ vitesse[1] +" direction " +direc ) ;
 		boolean test=false;
 		String toPrintAtTheEnd = "";
 		int tmpDirec = direc;
+			
+		if (x-r<=0)
+		{
+			test=true;
+			if(direc==1)
+				direc=2;
+			else {
+				direc=1;
+			}
+		}
+		if (x+r>=globalVar.tileWidth*globalVar.nbTilesHorizontally)
+		{
+			test=true;
+			if(direc==0)
+				direc=3;
+			else {
+				direc=0;
+			}
+		}
+		if (y-r<=0)
+		{
+			test=true;
+			if(direc==0)
+				direc=1;
+			else {
+				direc=0;
+			}
+		}
+		if (y+r>=globalVar.nbTilesVertically*globalVar.tileHeight)
+		{
+			test=true;
+			if(direc==2)
+				direc=3;
+			else {
+				direc=2;
+			}
+		}
+		
 		if(y>=tocheck.y) // Collision bord droit ou gauche du carré 
 		{
 			if(y<=tocheck.y+tocheck.r)
@@ -150,41 +188,111 @@ public class Ballon extends AnimatedObject {
 		{
 			if (Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y)*(tocheck.y-y))<=r)// Distance par rapport aux coins HG
 			{
+				// si plus proche de sud ballon plutot que de east ballon 
+				if (Math.sqrt((tocheck.x-x+r)*(tocheck.x-x+r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y+r)*(tocheck.y-y+r)))
+						{
+							direc+=1;
+							if(direc==4)
+								direc=3;
+						}
+				// si plus proche de East 
+				else if (Math.sqrt((tocheck.x-x+r)*(tocheck.x-x+r) + (tocheck.y-y)*(tocheck.y-y)) < Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y+r)*(tocheck.y-y+r)))
 				
-				if (direc<2)
-					direc+=2;
-				else
-					direc-=2;
+				{
+					direc-=1;
+					if(direc==-1)
+						direc=3;
+				}
+				else 
+				{
+					if (direc<2)
+						direc+=2;
+					else
+						direc-=2;
+				}
+			
 				test=true;
 				//vitesseUpdate();
-				toPrintAtTheEnd = "BallonCollisionG"+direc + "  / x ballon "+x+" y ballon"+y;
+				//toPrintAtTheEnd = "BallonCollisionG"+direc + "  / x ballon "+x+" y ballon"+y;
 			}
 			else if (Math.sqrt(((tocheck.x+tocheck.r)-x)*((tocheck.x+tocheck.r)-x) + (tocheck.y-y)*(tocheck.y-y))<=r)//HD
 			{
-				if (direc<2)
-					direc+=2;
-				else
-					direc-=2;
+				// si plus proche de south ballon plutot que de WEST ballon 
+				if (Math.sqrt((tocheck.x-x-r)*(tocheck.x-x-r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y+r)*(tocheck.y-y+r)))
+						{
+							direc+=1;
+							if(direc==4)
+								direc=3;
+						}
+				// si plus proche de West 
+				else if (Math.sqrt((tocheck.x-x-r)*(tocheck.x-x-r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y+r)*(tocheck.y-y+r)))
+				
+				{
+					direc-=1;
+					if(direc==-1)
+						direc=3;
+				}
+				else 
+				{
+					if (direc<2)
+						direc+=2;
+					else
+						direc-=2;
+				}
 				test=true;
 				//vitesseUpdate();
 				toPrintAtTheEnd = "BallonCollisionHD"+direc + "  / x ballon "+x+" y ballon"+y;
 			}
 			else if (Math.sqrt((tocheck.x-x)*(tocheck.x-x) + ((tocheck.y+tocheck.r)-y)*((tocheck.y+tocheck.r)-y))<r)//BG
 			{
-				if (direc<2)
-					direc+=2;
-				else
-					direc-=2;
+				if (Math.sqrt((tocheck.x-x+r)*(tocheck.x-x+r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y-r)*(tocheck.y-y-r)))
+				{
+					direc+=1;
+					if(direc==4)
+						direc=3;
+				}
+		// si plus proche de East 
+				else if (Math.sqrt((tocheck.x-x+r)*(tocheck.x-x+r) + (tocheck.y-y)*(tocheck.y-y)) < Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y-r)*(tocheck.y-y-r)))
+		
+				{
+					direc-=1;
+					if(direc==-1)
+						direc=3;
+				}
+					else 
+					{
+						if (direc<2)
+							direc+=2;
+						else
+							direc-=2;
+					}
 				test=true;
 				//vitesseUpdate();
 				toPrintAtTheEnd = "BallonCollisionBG"+direc + "  / x ballon "+x+" y ballon"+y;
 			}
 			else if (Math.sqrt(((tocheck.x+tocheck.r)-x)*((tocheck.x+tocheck.r)-x) + ((tocheck.y+tocheck.r)-y)*((tocheck.y+tocheck.r)-y))<r)//BD
 			{
-				if (direc<2)
-					direc+=2;// changement de direction pas encore intelligent 
-				else
-					direc-=2;
+				if (Math.sqrt((tocheck.x-x-r)*(tocheck.x-x-r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y-r)*(tocheck.y-y-r)))
+				{
+					direc+=1;
+					if(direc==4)
+						direc=3;
+				}
+		// si plus proche de East 
+				else if (Math.sqrt((tocheck.x-x-r)*(tocheck.x-x-r) + (tocheck.y-y)*(tocheck.y-y)) < Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y-r)*(tocheck.y-y-r)))
+		
+				{
+					direc-=1;
+					if(direc==-1)
+						direc=3;
+				}
+					else 
+					{
+						if (direc<2)
+							direc+=2;
+						else
+							direc-=2;
+					}
 				test=true;
 				//vitesseUpdate();
 				toPrintAtTheEnd = "BallonCollisionBD"+direc + "  / x ballon "+x+" y ballon"+y;
