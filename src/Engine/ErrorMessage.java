@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class ErrorMessage extends JFrame{
+	private static final long serialVersionUID = 5590355131193810368L;
+	
 	public ErrorMessage()
 	{
 		this.setVisible(true);
@@ -19,11 +21,10 @@ public class ErrorMessage extends JFrame{
 		this.setLocation(400,400);
 		this.add(new JButton("ok"));
 	
-		
-		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.validate();
 	}
+	
 	private class OkListener implements ActionListener  //?
 	{
 		public void actionPerformed(ActionEvent e)
@@ -31,6 +32,7 @@ public class ErrorMessage extends JFrame{
 			close();
 		}
 	}
+	
 	private void close()
 	{
 		this.dispose();

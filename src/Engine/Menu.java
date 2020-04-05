@@ -10,8 +10,10 @@ import javax.swing.*;
 import Data.ImageManager;
 import Settings.globalVar;
 
-public class Menu extends JPanel{
 
+public class Menu extends JPanel{
+	private static final long serialVersionUID = 4533597996297148103L;
+	
 	private Fenetre fenetre;
 	private JTextField loadlv;
 	private JTextField loadgame;
@@ -20,11 +22,11 @@ public class Menu extends JPanel{
 	private JButton loadlvbutt;
 	private JButton loadgamebutt;
 	private JButton start;
-	
+
 	protected ArrayList<Niveau> niveaux;
 	int actuallv=0;
 	private JLabel sprite;
-	
+
 	public Menu(Fenetre fen)
 	{
 		// Partie Graphique
@@ -35,41 +37,39 @@ public class Menu extends JPanel{
 		loadlvbutt=new JButton("Validé");
 		loadgamebutt=new JButton("Validé");
 		start=new JButton("Nouvelle Partie");
-		
+
 		loadlvbutt.addActionListener(new LoadLvListener());
 		loadgamebutt.addActionListener(new LoadGameListener());
 		start.addActionListener(new StartListener());
-		
+
 		loadlv.setText("Code");
 		loadgame.setText("fichier.txt");
-		
-		
+
 		
 		this.add(loadlvlabel);
 		this.add(loadlv);
 		this.add(loadlvbutt);
-		
+
 		this.add(loadgamelabel);
 		this.add(loadgame);
 		this.add(loadgamebutt);
-		
+
 		this.add(start);
-		
-		
+
 		
 		fenetre=fen;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setVisible(true);
 		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Sprites/snoopytitile.png", globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically)) );
-	      sprite.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically);
-	      this.add(sprite);}
+		sprite.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically);
+		this.add(sprite);}
 
-	catch (IOException ex) { System.console().writer().println("Couldn't open snoopy title page "); }
+		catch (IOException ex) { System.console().writer().println("Couldn't open snoopy title page "); }
 		this.validate();
-		
-		
+
+
 	}
-	
+
 	// Gestion Load game;
 	private  class LoadGameListener implements ActionListener  //?
 	{
@@ -78,18 +78,17 @@ public class Menu extends JPanel{
 			loadg();
 		}
 	}
+	
 	private void loadg()
 	{
-		
-		if(true)//file condition
-		{
+		try {
 			fenetre.remove(this);
 			fenetre.loadgame(loadgame.getText());
-		}
-		else {
+		} catch (IOException e) {
 			new ErrorMessage();
 		}
 	}
+	
 	//Gestion Load LV
 	private class LoadLvListener implements ActionListener  //?
 	{
@@ -98,17 +97,17 @@ public class Menu extends JPanel{
 			loadlv();
 		}
 	}
+	
 	private void loadlv()
 	{
-		if(true)
-		{
+		try {
 			fenetre.remove(this);
-			fenetre.loadlv(loadlv.getText());
-		}
-		else {
+			fenetre.loadgame(loadlv.getText());
+		} catch (IOException e) {
 			new ErrorMessage();
 		}
 	}
+	
 	// Gestion start 
 	private class StartListener implements ActionListener  //?
 	{
@@ -120,8 +119,13 @@ public class Menu extends JPanel{
 	private void start()
 	{
 		fenetre.remove(this);
-		fenetre.start();
+		try {
+			fenetre.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
-	
+
+
 }

@@ -14,14 +14,7 @@ import java.util.List;
 import javax.swing.*;
 
 import Data.StringManager;
-import Engine.Objets.Ballon;
-import Engine.Objets.TapisRoulant;
-import Settings.globalVar;
-import Utilitaires.Direction;
-
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.Timer;
 
 public class Partie extends JPanel {
 	private static final long serialVersionUID = -1207758538944896774L;
@@ -40,7 +33,7 @@ public class Partie extends JPanel {
 	
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
-	public Partie(String partieToLoad, Fenetre _fenetre)
+	public Partie(String partieToLoad, Fenetre _fenetre) throws IOException
 	{
 		name = partieToLoad;
 			
@@ -49,35 +42,23 @@ public class Partie extends JPanel {
 		
 		if (name.isEmpty())
 		{
-			try { niveaux.add( new Niveau("level1", this, false)); }
-			catch (IOException e) { e.printStackTrace(); }
+			niveaux.add( new Niveau("level1", this, false));
 			unlockedLevels = 1;
 		}
-		else {
-			try {
-				LoadPartie(name);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		else LoadPartie(name);
 
 		Init();
 	}
 	
-	public Partie(Fenetre fene, int numlv )
+	public Partie(Fenetre fene, int numlv ) throws IOException
 	{
 		fenetre=fene;
 		
 		unlockedLevels = numlv;
 		
 		niveaux= new ArrayList<Niveau>();
-		try {	
-			niveaux.add( new Niveau("level"+numlv, this, false));
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
+		
+		niveaux.add( new Niveau("level"+numlv, this, false));
 
 		unlockedLevels = numlv;
 		Init();
@@ -233,7 +214,7 @@ public class Partie extends JPanel {
 		
 		String niveauEnCours = br.readLine();
 		boolean enCours = Boolean.parseBoolean(br.readLine());
-		niveaux.add(new Niveau(niveauEnCours, this, enCours));
+		Niveau n = new Niveau(niveauEnCours, this, enCours);
 		
 		List<Integer> parsedLine = StringManager.ParseLineToInt(br.readLine());
 		unlockedLevels = parsedLine.get(0);
@@ -241,13 +222,16 @@ public class Partie extends JPanel {
 		vies = parsedLine.get(2);
 		timeLeft = parsedLine.get(3);
 		
+		n.setSeconde(timeLeft);
+		n.setVies(vies);
+		niveaux.add(n);
+		
 		br.close();
 	}
 	
 	protected void SavePartie() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		niveaux.get(0).SaveThis(name);
-		
 		
 		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
 		

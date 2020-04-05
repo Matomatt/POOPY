@@ -80,13 +80,13 @@ public class Fenetre extends JFrame
 //		}
 //		 
 //	}
-	public void loadgame(String a)
+	public void loadgame(String a) throws IOException
 	{
 		this.add(new Partie(a,this));
 		this.revalidate();
 	}
 	
-	public void loadlv (String a)
+	public void loadlv (String a) throws IOException
 	{
 		if (a.equals("level2")==true)
 		{
@@ -100,7 +100,7 @@ public class Fenetre extends JFrame
 		
 	}
 	
-	public void start()
+	public void start() throws IOException
 	{
 		this.add(new Partie("", this));
 		this.revalidate();

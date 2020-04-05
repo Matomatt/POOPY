@@ -162,14 +162,7 @@ public class Niveau extends JPanel {
 		this.getActionMap().put("SnoopyStop", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.SPACE); } });
 		
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false),"Save");
-		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { 
-			try {
-				partie.SavePartie();
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-			} } });
+		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { CallSavePartie(); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 		
@@ -415,6 +408,28 @@ public class Niveau extends JPanel {
 			}
 		}
 		
+		if (globalVar.movingBlocMoveOnce)
+		{
+			//Passage d'un movingbloc en solidbloc après son déplacement
+			MovingBloc m = null;
+			for (MovingBloc movingBloc : movingBlocs)
+			{
+				if (movingBloc.moved && !movingBloc.IsMoving())
+				{
+					map[movingBloc.xInMap][movingBloc.yInMap] = ObjectType.mapIdOf(ObjectType.SOLIDBLOC);
+					blocs.add(new AnimatedSolidBloc(movingBloc.xInMap, movingBloc.yInMap));
+					this.add(blocs.get(blocs.size()-1));
+					m = movingBloc;
+				}
+			}
+			if (m!=null) {
+				this.remove(m);
+				movingBlocs.remove(m);
+			}
+		}
+		
+			
+		
 		return false;
 	}
 	
@@ -445,7 +460,7 @@ public class Niveau extends JPanel {
 	//returns true if the object is a movable object and can move and if there is nothing blocking the way
 	private boolean PossibleToMove(Objet o, Direction d)
 	{
-		if(o.NextCaseX(d) < 0 || o.NextCaseX(d) > globalVar.nbTilesHorizontally || o.NextCaseY(d) < 0 || o.NextCaseY(d) > globalVar.nbTilesVertically)
+		if(o.NextCaseX(d) < 0 || o.NextCaseX(d) >= globalVar.nbTilesHorizontally || o.NextCaseY(d) < 0 || o.NextCaseY(d) >= globalVar.nbTilesVertically)
 			return false;
 		return (o.CanMove(d) && nonSolidObjects.contains(map[o.NextCaseX(d)][o.NextCaseY(d)]));
 	}
@@ -611,6 +626,20 @@ public class Niveau extends JPanel {
 		return vie;
 	}
 	
+	protected void CallSavePartie() {
+		StopAll();
+		try {
+			partie.SavePartie();
+			KillAll();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	protected void SaveThis(String _namePartie) throws FileNotFoundException, UnsupportedEncodingException
 	{
 		//ENTREZ NOM PARTIE SI NON EXISTANT
@@ -638,6 +667,14 @@ public class Niveau extends JPanel {
 	    }
 	    
 	    saveFile.close();
+	}
+
+	public void setSeconde(int timeLeft) {
+		seconde = timeLeft;
+	}
+
+	public void setVies(int vies) {
+		vie = vies;
 	}
 }
 

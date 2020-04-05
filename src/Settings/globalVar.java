@@ -14,4 +14,5 @@ public class globalVar {
     public static int immuneTime = 500; //en ms
     
     public static boolean resetLevelWhenLosingLife = false;
+    public static boolean movingBlocMoveOnce = true;
 }
