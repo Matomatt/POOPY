@@ -2,14 +2,20 @@ package Engine;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.CloseAction;
 
 import Data.SaveManager;
+import Data.StringManager;
+import Engine.Objets.Ballon;
 import Settings.globalVar;
 
 
@@ -80,27 +86,35 @@ public class Fenetre extends JFrame
 //		}
 //		 
 //	}
-	public void loadgame(String a)
+	public void loadgame(String a) throws IOException
 	{
 		this.add(new Partie(a,this));
 		this.revalidate();
 	}
 	
-	public void loadlv (String a)
+	public void loadlv (String mdp) throws IOException
 	{
-		if (a.equals("level2")==true)
+		File pwData = new File("./Saves/passwordListDontOpenVerySecret.txt");
+		
+		BufferedReader br = new BufferedReader(new FileReader(pwData));
+		
+		String st;
+		//On lit toutes les lignes du fichier texte
+		while ( (st = br.readLine()) != null)
 		{
-			System.out.println("code ok ");
-			this.add( new Partie(this,2));
+			System.out.println(st);
+			if (st.contains(mdp)) break;
 		}
-		if (a.equals("level3")==true)
-		{
-			this.add(new Partie(this,3));
-		}
+	
+		int lv = StringManager.ParseLineToInt(br.readLine()).get(0);
+		System.out.println(lv);
+		this.add( new Partie(this, lv));
+		
+		br.close();
 		
 	}
 	
-	public void start()
+	public void start() throws IOException
 	{
 		this.add(new Partie("", this));
 		this.revalidate();

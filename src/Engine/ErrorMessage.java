@@ -1,5 +1,6 @@
 package Engine;
 
+import java.awt.desktop.SystemEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Closeable;
@@ -9,6 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class ErrorMessage extends JFrame{
+	private static final long serialVersionUID = 5590355131193810368L;
+	
 	public ErrorMessage()
 	{
 		this.setVisible(true);
@@ -21,11 +24,13 @@ public class ErrorMessage extends JFrame{
 		 buffer.addActionListener(new OkListener());
 		this.add(new JButton("ok"));
 	
-		
+
 		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
 		this.validate();
 	}
+
 	public ErrorMessage(String a)
 	{
 		this.setVisible(true);
@@ -52,8 +57,10 @@ public class ErrorMessage extends JFrame{
 			close();
 		}
 	}
+	
 	private void close()
 	{
+		System.out.println("jmiaogjonjbmanù");
 		this.dispose();
 	}
 }

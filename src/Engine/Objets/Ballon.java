@@ -114,7 +114,7 @@ public class Ballon extends AnimatedObject {
 		}
 		if (y-r<=0)
 		{
-			System.out.println("y : " + (y-r));
+			//System.out.println("y : " + (y-r));
 			test=true;
 			if(direc==0)
 				direc=3;
