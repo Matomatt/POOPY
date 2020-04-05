@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.TimerTask;
 import java.io.File;
 
+import javax.naming.InitialContext;
 import javax.swing.*;
 
 //import Pause;
@@ -108,7 +109,7 @@ public class Niveau extends JPanel {
 			{ 
 				if (movementsTimerTrigger())
 					if (POOPY != null)
-						System.out.println("Faudrait reset là si on a le time");
+						System.out.println("Faudrait reset lï¿½ si on a le time");
 			} };
 		
 		movementsTimer = new Timer(1000/globalVar.CalculusFrequency, movementsTaskPerformer);
@@ -118,6 +119,11 @@ public class Niveau extends JPanel {
 		this.setVisible(false);
 		this.StopAll();
 	}
+	
+	
+	
+	
+	
 	
 	@SuppressWarnings("serial")
 	public boolean Start()
@@ -397,7 +403,7 @@ public class Niveau extends JPanel {
 		ExecuteKeys(); //Si une touche a ete appuyee et est donc en attente on l'execute
 		
 		//Contient les collisions donc a lance meme si les mouvements ne sont pas synchronisees (que la balle bouge sur son propre timer)
-		//return true si poopy touché donc vie perdu donc retour a 0
+		//return true si poopy touchï¿½ donc vie perdu donc retour a 0
 		if (MouvementBallons(true))
 			return globalVar.resetLevelWhenLosingLife;
 		

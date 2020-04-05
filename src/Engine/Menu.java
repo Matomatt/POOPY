@@ -80,9 +80,15 @@ public class Menu extends JPanel{
 	}
 	private void loadg()
 	{
-		fenetre.remove(this);
-		fenetre.loadgame(loadgame.getText());
-	
+		
+		if(true)//file condition
+		{
+			fenetre.remove(this);
+			fenetre.loadgame(loadgame.getText());
+		}
+		else {
+			new ErrorMessage();
+		}
 	}
 	//Gestion Load LV
 	private class LoadLvListener implements ActionListener  //?
@@ -94,8 +100,14 @@ public class Menu extends JPanel{
 	}
 	private void loadlv()
 	{
-		fenetre.remove(this);
-		fenetre.loadlv(loadlv.getText());
+		if(true)
+		{
+			fenetre.remove(this);
+			fenetre.loadlv(loadlv.getText());
+		}
+		else {
+			new ErrorMessage();
+		}
 	}
 	// Gestion start 
 	private class StartListener implements ActionListener  //?
