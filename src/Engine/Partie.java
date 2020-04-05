@@ -110,6 +110,7 @@ public class Partie extends JPanel {
 		this.setVisible(true);
 		this.validate();
 		
+		time.pPressed();
 		niveaux.get(0).Start();
 	}
 	
@@ -161,6 +162,7 @@ public class Partie extends JPanel {
 				this.update(getGraphics());
 				
 				troubleStarting = false;
+				time.pPressed();
 				if (!niveaux.get(0).Start())
 				{
 					niveaux.remove(0);
@@ -245,17 +247,30 @@ public class Partie extends JPanel {
 		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(0).getvie() + " " + niveaux.get(0).getseconde());
 		saveFile.close();
 		
+		time.cancel();
+		niveaux.removeAll(niveaux);
+		niveaux=null;
+		this.removeAll();
+		
 		System.out.println("Saved !");
+		fenetre.dispose();
+		System.exit(0);
 	}
-	public boolean pPressed()
+	public void pPressed()
 	{
+		if (!pause.isVisible())
+			niveaux.get(0).StopAll();
+		else
+			niveaux.get(0).Resume();
+		
 		pause.pPressed();
+		time.pPressed();
+		
+		pause.grabFocus();
 		this.revalidate();
-		return pause.isVisible();
-	}
-	
-	private void LoadEveryLevel(int Starting_level)
-	{
+		//this.update(this.getGraphics());
+
+		
 		
 	}
 }

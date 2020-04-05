@@ -168,16 +168,19 @@ public class Niveau extends JPanel {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, true),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 		
+		
 		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
 		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
 		partie.add(temps);
 		partie.add(vieDisplayer);
+		vieDisplayer.setText(new String("Vies : "+vie));
+		temps.setText(new String("Remaining Time: " + seconde));
 		
 		this.setLocation(0, globalVar.tileHeight);
 		this.setVisible(true);
 		this.validate();
 		
-		Resume();
+		this.Resume();
 		
 		return true;
 	}
@@ -242,19 +245,11 @@ public class Niveau extends JPanel {
 	
 	private void pause()  // Timer to stop 
 	{
-		if (partie.pPressed())// Gere l'affichage de la pause c'est swhitch on off a chaque fois qu'il est appel
-		{
-			StopAll();
-		}
-		else {
-			Resume();
-		}
+		partie.pPressed();
 	}
 
 	public void StopAll()
 	{
-		if (partie.time != null)
-			partie.time.stop();
 		movementsTimer.stop();
 		if (POOPY != null)
 			POOPY.Pause();
@@ -267,7 +262,6 @@ public class Niveau extends JPanel {
 	
 	public void Resume()
 	{
-		partie.time.restart();
 		movementsTimer.start();
 		if (POOPY != null)
 			POOPY.Resume();
@@ -459,6 +453,7 @@ public class Niveau extends JPanel {
 		///////////////
 		
 		Oiseau catchedOiseau = null;
+
 		//On regarde tous les oiseaux pour voir si snoopy ne se trouverai pas sur la case de l'un deux
 		for (Oiseau oiseau : oiseaux) {
 			if (((Objet) POOPY).SameTileAs((Objet)oiseau)) catchedOiseau = oiseau;
@@ -480,8 +475,6 @@ public class Niveau extends JPanel {
 				return true;
 			}
 		}
-		
-		
 		
 		  /////////////////////
 		 //  TAPISROULANTS  //
