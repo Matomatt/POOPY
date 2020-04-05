@@ -165,7 +165,7 @@ public class Niveau extends JPanel {
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
 			} } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, true),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 		
 		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
@@ -471,15 +471,17 @@ public class Niveau extends JPanel {
 			this.remove(catchedOiseau);
 			oiseaux.remove(catchedOiseau);
 			POOPY.RefreshSprite();
+			
+			//Si la liste est vide ca veut dire que snoopy a attrape tous les oiseaux et qu'il a fini le niveau
+			if(oiseaux.isEmpty())
+			{
+				System.out.println("Et c'est la wiiin");
+				win();
+				return true;
+			}
 		}
 		
-		//Si la liste est vide ca veut dire que snoopy a attrape tous les oiseaux et qu'il a fini le niveau
-		if(oiseaux.isEmpty())
-		{
-			System.out.println("Et c'est la wiiin");
-			win();
-			return true;
-		}
+		
 		
 		  /////////////////////
 		 //  TAPISROULANTS  //
