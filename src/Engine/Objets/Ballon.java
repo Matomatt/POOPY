@@ -1,6 +1,9 @@
 package Engine.Objets;
 import java.io.IOException;
 
+import javax.swing.ImageIcon;
+
+import Data.ImageManager;
 import Settings.globalVar;
 import Utilitaires.*;
 
@@ -41,7 +44,7 @@ public class Ballon extends AnimatedObject {
 	{
 		vitesseUpdate();
 		try {
-			this.ChangeSpriteTo("/ballon/ballon.png");
+			this.setIcon(new ImageIcon(ImageManager.LoadImage("./Images/Sprites/ballon/ballon.png", globalVar.tileWidth/2, globalVar.tileHeight/2)));
 		} catch (IOException e) {
 			System.out.println("Couldn't load ballon.png ");
 			e.printStackTrace();
@@ -50,8 +53,8 @@ public class Ballon extends AnimatedObject {
 		r = globalVar.tileWidth/4;
 		coordType = CoordType.CENTER;
 		alwaysMoving=true;
-		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
-
+		//this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
+		Draw();
 		//System.out.println("Init speed : " + vitesse[0] + ", " + vitesse[1]+"direction initial" + direc);
 
 		//stopMovements=true;
@@ -104,27 +107,28 @@ public class Ballon extends AnimatedObject {
 		{
 			test=true;
 			if(direc==0)
-				direc=3;
+				direc=1;
 			else {
-				direc=0;
+				direc=2;
 			}
 		}
 		if (y-r<=0)
 		{
+			System.out.println("y : " + (y-r));
 			test=true;
 			if(direc==0)
-				direc=1;
+				direc=3;
 			else {
-				direc=0;
+				direc=2;
 			}
 		}
 		if (y+r>=globalVar.nbTilesVertically*globalVar.tileHeight)
 		{
 			test=true;
 			if(direc==2)
-				direc=3;
+				direc=1;
 			else {
-				direc=2;
+				direc=0;
 			}
 		}
 		

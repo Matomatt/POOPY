@@ -1,4 +1,6 @@
 package Engine;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +16,7 @@ import javax.swing.*;
 import Data.StringManager;
 import Engine.Objets.Ballon;
 import Engine.Objets.TapisRoulant;
+import Settings.globalVar;
 import Utilitaires.Direction;
 
 import java.util.TimerTask;
@@ -236,14 +239,15 @@ public class Partie extends JPanel {
 		br.close();
 	}
 	
-	protected void SavePartie(String _name, String _level, boolean enCours) throws FileNotFoundException, UnsupportedEncodingException
+	protected void SavePartie() throws FileNotFoundException, UnsupportedEncodingException
 	{
-		name = _name;
+		niveaux.get(0).SaveThis(name);
+		
 		
 		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
 		
-		saveFile.println(_level);
-		saveFile.println(enCours);
+		saveFile.println(niveaux.get(0).name);
+		saveFile.println(niveaux.get(0).ended);
 		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(0).getvie() + " " + niveaux.get(0).getseconde());
 		saveFile.close();
 		
@@ -257,19 +261,33 @@ public class Partie extends JPanel {
 		System.exit(0);
 	}
 	
+	javax.swing.Timer cooldownTimer = new javax.swing.Timer( 50, new ActionListener() { public void actionPerformed(ActionEvent arg0) { pPressedNext(); } });
+	
 	public void pPressed()
 	{
 		if (!pause.isVisible())
+		{
 			niveaux.get(0).StopAll();
+			cooldownTimer.restart();
+		}
 		else
+		{
+			pPressedNext();
 			niveaux.get(0).Resume();
+		}
+			
 		
+		
+		//this.update(this.getGraphics());
+	}
+	
+	public void pPressedNext()
+	{
+		cooldownTimer.stop();
 		pause.pPressed();
 		time.pPressed();
 		
 		pause.grabFocus();
 		this.revalidate();
-		
-		//this.update(this.getGraphics());
 	}
 }

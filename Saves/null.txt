@@ -1,3 +1,3 @@
-level1Pnull
-true
-1 0 3 59
+level3
+false
+3 0 3 60

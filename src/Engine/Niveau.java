@@ -38,12 +38,11 @@ import Utilitaires.*;
 public class Niveau extends JPanel {
 	private static final long serialVersionUID = 5093936493506272943L;
 	
-	private String namePartie = "1";
-	private String name;
-	//private Pause pause;
+	protected String name;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
 	private Snoopy POOPY;
+	private List<Apparition> apparitions = new ArrayList<Apparition>();
 	private List<Ballon> ballons = new ArrayList<Ballon>();
 	private List<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
 	private List<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
@@ -52,6 +51,7 @@ public class Niveau extends JPanel {
 	private List<Oiseau> oiseaux = new ArrayList<Oiseau>();
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 	
+	protected boolean ended = false;
 	private int vie;
 	private JLabel vieDisplayer;
 //    private Java.util.Timer lvtimer;
@@ -73,7 +73,6 @@ public class Niveau extends JPanel {
 		
 		partie = p;
 		name = _name;
-		namePartie = partie.getName();
 		vie = partie.vies;
 		
 		System.out.println("New level : " + name);
@@ -159,13 +158,13 @@ public class Niveau extends JPanel {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false),"Save");
 		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { 
 			try {
-				SaveThis();
+				partie.SavePartie();
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
 			} } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, true),"Pause");
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 		
 		
@@ -204,6 +203,7 @@ public class Niveau extends JPanel {
 		if (vie<=0)
 		{
 			KillAll();
+			ended = true;
 			partie.perdu();
 			return true;
 		}
@@ -213,6 +213,7 @@ public class Niveau extends JPanel {
 	private void win()
 	{
 		KillAll();
+		ended = true;
 		partie.addscore(seconde*100);
 		partie.next();
 	}
@@ -596,21 +597,18 @@ public class Niveau extends JPanel {
 	
 	public int getseconde()
 	{
-	
 		return seconde;
-		
 	}
+	
 	public int getvie()
 	{
-	
 		return vie;
-		
 	}
 	
-	private void SaveThis() throws FileNotFoundException, UnsupportedEncodingException
+	protected void SaveThis(String _namePartie) throws FileNotFoundException, UnsupportedEncodingException
 	{
 		//ENTREZ NOM PARTIE SI NON EXISTANT
-		String fileName = name + "P" + namePartie;
+		String fileName = name + "P" + _namePartie;
 		PrintWriter saveFile = new PrintWriter("./Maps/" + fileName + ".txt", "UTF-8");
 		
 		System.out.println("Saving...");
@@ -634,8 +632,6 @@ public class Niveau extends JPanel {
 	    }
 	    
 	    saveFile.close();
-	    
-	    ((Partie)this.getParent()).SavePartie(namePartie, fileName, true);
 	}
 }
 

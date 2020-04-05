@@ -13,7 +13,7 @@ import javax.swing.Timer;
 
 import Utilitaires.*;
 
-public class Objet extends JPanel implements EventListener{
+public class Objet extends JLabel implements EventListener{
 	private static final long serialVersionUID = 1L;
 	
 	protected double r;
@@ -24,11 +24,11 @@ public class Objet extends JPanel implements EventListener{
 	protected double x=0,y=0;
 	protected double targetX = 0, targetY = 0; // target ???
 	
-	protected  JPanel img;
+	//protected  JPanel img;
 	protected  int hitbox;
 	protected  ObjectType type;
 	
-	protected JLabel sprite;
+	protected ImageIcon sprite;
 	
 	//Si on donne la position en case
 	public Objet(int _x, int _y, ObjectType _type)
@@ -61,10 +61,7 @@ public class Objet extends JPanel implements EventListener{
 		r = globalVar.tileWidth;
 		
 		//Chargement de sprite par defaut
-		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Sprites/solidbloc1.png", globalVar.tileWidth, globalVar.tileHeight)) );
-		      sprite.setBounds(0, 0, globalVar.tileWidth, globalVar.tileHeight);
-		      this.add(sprite);}
-	
+		try { sprite = new ImageIcon(ImageManager.LoadImage("./Images/Sprites/solidbloc1.png", globalVar.tileWidth, globalVar.tileHeight) ); }
 		catch (IOException ex) { System.console().writer().println("Couldn't open default sprite..."); }
 
 		//Les parametres de base tu connais
@@ -76,18 +73,18 @@ public class Objet extends JPanel implements EventListener{
 	
 	protected void Draw()
 	{
-		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
+		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r*2:0));
 		
 	}
 	
 	protected void ChangeSpriteTo(String fileName) throws IOException
 	{
-		sprite.setIcon(new ImageIcon(ImageManager.LoadImage("./Images/Sprites/" + fileName, globalVar.tileWidth, globalVar.tileHeight)));
+		this.setIcon(new ImageIcon(ImageManager.LoadImage("./Images/Sprites/" + fileName, globalVar.tileWidth, globalVar.tileHeight)));
 	}
 	
 	protected void ChangeSpriteTo(ImageIcon newSprite)
 	{
-		sprite.setIcon(newSprite);
+		this.setIcon(newSprite);
 	}
  
 	public int Hitbox (Objet tocheck)
