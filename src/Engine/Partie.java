@@ -231,6 +231,9 @@ public class Partie extends JPanel {
 	
 	protected void SavePartie() throws FileNotFoundException, UnsupportedEncodingException
 	{
+		if (name == null)
+			name = "default";
+		
 		niveaux.get(0).SaveThis(name);
 		
 		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
