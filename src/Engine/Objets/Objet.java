@@ -77,6 +77,7 @@ public class Objet extends JPanel implements EventListener{
 	protected void Draw()
 	{
 		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
+		
 	}
 	
 	protected void ChangeSpriteTo(String fileName) throws IOException

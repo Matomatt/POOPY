@@ -256,6 +256,7 @@ public class Partie extends JPanel {
 		fenetre.dispose();
 		System.exit(0);
 	}
+	
 	public void pPressed()
 	{
 		if (!pause.isVisible())
@@ -268,9 +269,7 @@ public class Partie extends JPanel {
 		
 		pause.grabFocus();
 		this.revalidate();
+		
 		//this.update(this.getGraphics());
-
-		
-		
 	}
 }

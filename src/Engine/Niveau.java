@@ -68,7 +68,7 @@ public class Niveau extends JPanel {
 	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
 	{
 		this.setLayout(null);
-		this.setOpaque(true);
+		//this.setOpaque(true);
 		this.setBackground(new Color(213,210,204));
 		
 		partie = p;
@@ -171,10 +171,9 @@ public class Niveau extends JPanel {
 		
 		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
 		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
+		
 		partie.add(temps);
 		partie.add(vieDisplayer);
-		vieDisplayer.setText(new String("Vies : "+vie));
-		temps.setText(new String("Remaining Time: " + seconde));
 		
 		this.setLocation(0, globalVar.tileHeight);
 		this.setVisible(true);
@@ -270,6 +269,8 @@ public class Niveau extends JPanel {
 		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Resume(); }
 		for (AnimatedSolidBloc bloc : blocs) { bloc.Resume(); }
 		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Resume(); }
+		vieDisplayer.setText(new String("Vies : "+vie));
+		temps.setText(new String("Remaining Time: " + seconde));
 	}
 	
 	void LoadObjects(int[][] _map) 
