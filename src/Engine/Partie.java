@@ -84,6 +84,11 @@ public class Partie extends JPanel {
 		
 	}
 	
+	private void resetNiveau()
+	{
+		
+	}
+	
 	private void Init()
 	{
 		time = new Time(niveaux.get(0));
