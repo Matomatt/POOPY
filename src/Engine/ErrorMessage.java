@@ -1,5 +1,6 @@
 package Engine;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -11,15 +12,19 @@ public class ErrorMessage extends JFrame{
 	
 	public ErrorMessage()
 	{
+		this.setTitle("Wrong Input");
 		this.setVisible(true);
 		this.setAlwaysOnTop(true);
 		JLabel bufferJLabel =new JLabel("Wrong Input");
 		bufferJLabel.setSize(200, 100);
-		this.setSize(400, 300);
+		this.setSize(300, 100);
 		this.setLocation(400,400);
 		 JButton buffer= new JButton("ok") ;
 		 buffer.addActionListener(new OkListener());
-		this.add(new JButton("ok"));
+		this.setLayout(new BorderLayout());
+		 this.add(bufferJLabel,BorderLayout.NORTH);
+			this.add(buffer,BorderLayout.SOUTH);
+		
 	
 
 		
@@ -30,17 +35,19 @@ public class ErrorMessage extends JFrame{
 
 	public ErrorMessage(String a)
 	{
+		this.setTitle(a);
 		this.setVisible(true);
 		this.setAlwaysOnTop(true);
+		this.setLayout(new BorderLayout());
 		JLabel bufferJLabel =new JLabel("a");
 		bufferJLabel.setSize(200, 100);
-		this.setSize(400, 300);
+		this.setSize(300, 100);
 		this.setLocation(400,400);
 		 JButton buffer= new JButton("ok") ;
 		 buffer.addActionListener(new OkListener());
-
-		this.add(new JButton("ok"));
-	
+		 this.add(bufferJLabel,BorderLayout.NORTH);
+			this.add(buffer,BorderLayout.SOUTH);
+		
 		
 		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

@@ -17,7 +17,7 @@ import Settings.globalVar;
 
 public class Pause extends JPanel{
 	//private Fenetre fenetre;
-		private JButton menu;
+	private JButton menu;
 	private JButton resume;
 	private JButton save;
 	private Partie partie;
@@ -36,7 +36,7 @@ public class Pause extends JPanel{
 		menu.addActionListener(new MenuListener());
 		save.addActionListener(new SaveListener());
 		resume.addActionListener(new ResumeListener());
-			this.add(menu);
+		this.add(menu);
 		this.add(resume);
 		this.add(save);
 
