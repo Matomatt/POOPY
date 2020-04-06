@@ -108,10 +108,12 @@ public class Fenetre extends JFrame
 	
 		int lv = StringManager.ParseLineToInt(br.readLine()).get(0);
 		System.out.println(lv);
+		
 		this.add( new Partie(this, lv));
 		
 		br.close();
 		
+		this.revalidate();
 	}
 	
 	public void start() throws IOException
@@ -119,6 +121,7 @@ public class Fenetre extends JFrame
 		this.add(new Partie("", this));
 		this.revalidate();
 	}
+	
 	public void menu()
 	{
 		System.out.println("yolo menu yo"+this.getComponentCount());
