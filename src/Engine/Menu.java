@@ -13,7 +13,7 @@ import Settings.globalVar;
 
 public class Menu extends JPanel{
 	private static final long serialVersionUID = 4533597996297148103L;
-	
+
 	private Fenetre fenetre;
 	private JTextField loadlv;
 	private JTextField loadgame;
@@ -45,7 +45,7 @@ public class Menu extends JPanel{
 		loadlv.setText("Code");
 		loadgame.setText("fichier.txt");
 
-		
+
 		this.add(loadlvlabel);
 		this.add(loadlv);
 		this.add(loadlvbutt);
@@ -56,18 +56,20 @@ public class Menu extends JPanel{
 
 		this.add(start);
 
-		
+
 		fenetre=fen;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setVisible(true);
-		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Sprites/snoopytitile.png", globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically)) );
-		sprite.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically);
-		this.add(sprite);}
-
-		catch (IOException ex) { System.console().writer().println("Couldn't open snoopy title page "); }
-		this.validate();
-
-
+		
+		try {
+			sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Menus/snoopytitile.png", globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically)) );
+			sprite.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically);
+			this.add(sprite);
+		} catch (IOException e) {
+			System.out.println("Couldn't open snoopy title page ");
+			e.printStackTrace();
+		}
+		
 	}
 
 	// Gestion Load game;
@@ -78,7 +80,7 @@ public class Menu extends JPanel{
 			loadg();
 		}
 	}
-	
+
 	private void loadg()
 	{
 		try {
@@ -91,7 +93,7 @@ public class Menu extends JPanel{
 			fenetre.menu();
 		}
 	}
-	
+
 	//Gestion Load LV
 	private class LoadLvListener implements ActionListener  //?
 	{
@@ -100,7 +102,7 @@ public class Menu extends JPanel{
 			loadlv();
 		}
 	}
-	
+
 	private void loadlv()
 	{
 		System.out.println("Load from password");
@@ -114,7 +116,7 @@ public class Menu extends JPanel{
 			fenetre.menu();
 		}
 	}
-	
+
 	// Gestion start 
 	private class StartListener implements ActionListener  //?
 	{

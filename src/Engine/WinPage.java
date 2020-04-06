@@ -37,11 +37,11 @@ public class WinPage extends JPanel
 		scoring.setSize(300,100);
 		add(game);
 		add(scoring);
-		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Sprites/poupywin.png", globalVar.nbTilesHorizontally*globalVar.tileWidth, this.getHeight())) );
+		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Menus/poupywin.png", globalVar.nbTilesHorizontally*globalVar.tileWidth, this.getHeight())) );
 	      sprite.setBounds(0, globalVar.nbTilesHorizontally*globalVar.tileWidth, 0, globalVar.nbTilesVertically*globalVar.tileHeight);
 	      this.add(sprite);}
 		
-		catch (IOException ex) { System.console().writer().println("Couldn't open win page "); }
+		catch (IOException ex) { System.out.println("Couldn't open win page "); }
 		this.setVisible(true);	
 		
 		this.validate();

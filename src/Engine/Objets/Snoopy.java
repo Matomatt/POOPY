@@ -18,10 +18,9 @@ public class Snoopy extends AnimatedObject {
 	
 	public boolean immune = false;
 	private int counterImmuneTimer = 0;
-	private float transparency = 1.0f;
 	
 	Timer immuneTimer = new Timer( 200, new ActionListener() { public void actionPerformed(ActionEvent arg0) { ToggleTransparency(); } });
-	Timer pwmTransparency = new Timer( 10, new ActionListener() { public void actionPerformed(ActionEvent arg0) { executePwmTransparency(); } });
+	Timer pwmTransparency = new Timer( 1, new ActionListener() { public void actionPerformed(ActionEvent arg0) { executePwmTransparency(); } });
 	
 	public Snoopy(int _x, int _y, boolean _selfMoved)
 	{
@@ -105,7 +104,6 @@ public class Snoopy extends AnimatedObject {
 	
 	public void EndImmunity()
 	{
-		transparency = 1.0f;
 		immune = false;
 		this.setVisible(true);
 		pwmTransparency.stop();

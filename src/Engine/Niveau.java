@@ -1,39 +1,22 @@
 package Engine;
+
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Arrays;
-//import java.util.Timer;
 import java.util.List;
-import java.util.TimerTask;
-import java.io.File;
 
-import javax.naming.InitialContext;
 import javax.swing.*;
 
 //import Pause;
 import Settings.*;
 import Data.*;
-import Engine.Objets.AnimatedObject;
-import Engine.Objets.AnimatedSolidBloc;
-import Engine.Objets.Apparition;
-import Engine.Objets.Ballon;
-import Engine.Objets.BreakableBloc;
-import Engine.Objets.MovingBloc;
-import Engine.Objets.Objet;
-import Engine.Objets.Oiseau;
-import Engine.Objets.Piege;
-import Engine.Objets.Snoopy;
-import Engine.Objets.TapisRoulant;
+import Engine.Objets.*;
 import Utilitaires.*;
 
 public class Niveau extends JPanel {
@@ -53,12 +36,14 @@ public class Niveau extends JPanel {
 	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 	
 	protected boolean ended = false;
+	
+	private JLabelText pressSpaceLabel = new JLabelText("Press space to start...", 600, (int)(globalVar.tileHeight/1.5), Color.WHITE);
+	
 	private int vie;
-	private JLabel vieDisplayer;
-//    private Java.util.Timer lvtimer;
-
+	private JLabelText vieDisplayer;
+	
     private int seconde = 60;
-    private JLabel temps;
+    private JLabelText temps;
 	
 	private Timer movementsTimer;
 	private boolean synchronizedMovements = true;
@@ -77,17 +62,12 @@ public class Niveau extends JPanel {
 		
 		System.out.println("New level : " + name);
 		
-		temps=new JLabel(new String("Remaining Time: " + seconde));
-		temps.setFont(new Font("DISPLAY",Font.PLAIN, globalVar.tileHeight/2));
-		temps.setSize(300, globalVar.tileHeight/2+3);
-		temps.setForeground(Color.BLUE);
-		temps.setVisible(true);
+		pressSpaceLabel.setVisible(false);
+		add(pressSpaceLabel);
 		
-		vieDisplayer=new JLabel(new String("Vies : "+vie));
-		vieDisplayer.setFont(new Font("DISPLAY",Font.PLAIN, globalVar.tileHeight/2));
-		vieDisplayer.setSize(300, globalVar.tileHeight/2+3);
-		vieDisplayer.setForeground(Color.BLUE);
-		vieDisplayer.setVisible(true);
+		temps = new JLabelText("Remaining Time: " + seconde, 300, globalVar.tileHeight/2, Color.BLUE);
+		
+		vieDisplayer=new JLabelText("Vies : "+vie, 300, globalVar.tileHeight/2, Color.BLUE);
 		
 		nonSolidObjects.add(0);
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
@@ -120,7 +100,7 @@ public class Niveau extends JPanel {
 	}
 	
 	@SuppressWarnings("serial")
-	public boolean Start()
+	public boolean Start(final boolean waitForIt)
 	{
 		System.out.println("Let's a go ! ("+name+")");
 		if (POOPY == null)
@@ -129,6 +109,56 @@ public class Niveau extends JPanel {
 			return false;
 		}
 		
+		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
+		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
+		
+		if (temps.getText() == null)
+			temps.setText(new String("Remaining Time: " + seconde));
+		partie.add(temps);
+		partie.add(vieDisplayer);
+		
+		this.setLocation(0, globalVar.tileHeight);
+		this.setVisible(true);
+		
+		vie = partie.vies;
+		
+		if (waitForIt)
+		{
+			partie.time.pPressed();
+			this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),"Start");
+			this.getActionMap().put("Start", new AbstractAction() { public void actionPerformed(ActionEvent e) { StartAfterWait(waitForIt); } });
+			
+			pressSpaceLabel.setLocation(this.getWidth()/3, this.getHeight()/2-pressSpaceLabel.getHeight()/2);
+			pressSpaceLabel.setVisible(true);
+		}
+		else
+			StartAfterWait(waitForIt);
+		
+		this.validate();
+		return true;
+	}
+	
+	public void StartAfterWait(boolean waitedForIt)
+	{
+		System.out.println("Start after wait");
+		if (waitedForIt)
+		{
+			pressSpaceLabel.setVisible(false);
+			this.remove(pressSpaceLabel);
+			pressSpaceLabel=null;
+			this.getInputMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false));
+			//this.getActionMap().remove;
+			partie.time.pPressed();
+		}
+			
+		
+		AddKeyBindings();
+		this.Resume();
+		POOPY.StartImmunity();
+	}
+	
+	public void AddKeyBindings()
+	{
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
 		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.UP); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true),"StopMoveUp");
@@ -158,22 +188,6 @@ public class Niveau extends JPanel {
 		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { CallSavePartie(); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
-		
-		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
-		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
-		
-		partie.add(temps);
-		partie.add(vieDisplayer);
-		
-		this.setLocation(0, globalVar.tileHeight);
-		this.setVisible(true);
-		this.validate();
-		
-		vie = partie.vies;
-		
-		this.Resume();
-		
-		return true;
 	}
 
 	public void timergestion()
@@ -211,7 +225,7 @@ public class Niveau extends JPanel {
 		KillAll();
 		ended = true;
 		partie.addscore(seconde*100);
-		partie.next();
+		partie.next(false);//false because is not reset
 	}
 	
 	protected void KillAll()
@@ -675,10 +689,12 @@ public class Niveau extends JPanel {
 
 	public void setSeconde(int timeLeft) {
 		seconde = timeLeft;
+		temps.setText(new String("Remaining Time: " + seconde));
 	}
 
 	public void setVies(int vies) {
 		vie = vies;
+		vieDisplayer.setText(new String("Vies : "+vie));
 	}
 }
 

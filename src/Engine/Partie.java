@@ -14,6 +14,8 @@ import java.util.List;
 import javax.swing.*;
 
 import Data.StringManager;
+import Settings.globalVar;
+
 import java.util.concurrent.TimeUnit;
 
 public class Partie extends JPanel {
@@ -26,9 +28,9 @@ public class Partie extends JPanel {
 	Time time;
 	
 	private int score = 0;
-	protected int vies = 3;
-	private int timeLeft = 0;
-	private int unlockedLevels = 1;
+	protected int vies = globalVar.vieAuDepart;
+	private int timeLeft = globalVar.timerAuDepart;
+	private int unlockedLevels = globalVar.niveauAuDepart;
 	
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
@@ -39,41 +41,29 @@ public class Partie extends JPanel {
 		fenetre=_fenetre;
 		
 		if (name.isEmpty())
-		{
-			niveaux.add( new Niveau("level1", this, false));
-			unlockedLevels = 1;
-		}
-		else LoadPartie(name);
+			AddFirstLevel(globalVar.niveauAuDepart);
+		else 
+			LoadPartie(name);
 
 		Init();
 	}
 	
-	public Partie(Fenetre fene, int numlv ) throws IOException
+	public Partie(Fenetre _fenetre, int numlv) throws IOException
 	{
-		fenetre=fene;
+		fenetre = _fenetre;
 		
-		unlockedLevels = numlv;
+		AddFirstLevel(numlv);
 		
-		niveaux= new ArrayList<Niveau>();
-		
-		niveaux.add( new Niveau("level"+numlv, this, false));
-
-		unlockedLevels = numlv;
 		Init();
-		
 	}
 	
-	void resetNiveau()
+	//Ajoute le premier niveau a lancer pour une nouvelle partie (depuis mdp ou depuis "nouvelle partie")
+	private void AddFirstLevel(int n) throws IOException
 	{
-		String levelToRestartName = niveaux.get(0).name;
-		niveaux.get(0).KillAll();
-		try {
-			niveaux.add(1, new Niveau(levelToRestartName, this, false));
-		} catch (IOException e) {
-			e.printStackTrace();
-			new ErrorMessage("Erreur ! Impossible de recommencer le niveau...\n"+ e.getLocalizedMessage());
-		}
-		next();
+		niveaux.add( new Niveau("level"+n, this, false));
+		unlockedLevels = n;
+		vies = globalVar.vieAuDepart;
+		timeLeft = globalVar.timerAuDepart;
 	}
 	
 	private void Init()
@@ -88,6 +78,20 @@ public class Partie extends JPanel {
 		
 		this.add(niveaux.get(0)); //Le premier c'est toujours le nievau a reprendre quand on charge une partie (nouvelle ou pas, mdp ou pas)
 		
+		RemplirNiveau();
+		
+		this.setVisible(true);
+		this.validate();
+		
+		niveaux.get(0).setSeconde(timeLeft);
+		niveaux.get(0).setVies(vies);
+		
+		if (niveaux.get(0).Start(globalVar.waitForSpaceWhenStartingLevel))
+			time.pPressed();
+	}
+	
+	private void RemplirNiveau()
+	{
 		int totallv = unlockedLevels;
 		File f = new File("./Maps/" + "level"+ (totallv+1) + ".txt");
 		
@@ -101,45 +105,28 @@ public class Partie extends JPanel {
 		}
 		
 		System.out.println("Nombre total de niveaux : " + totallv);
-		
-		this.setVisible(true);
-		this.validate();
-		
-		time.pPressed();
-		niveaux.get(0).Start();
 	}
 	
-	protected void perdu()
+	void resetNiveau()
 	{
-		time.cancel();
-		niveaux.removeAll(niveaux);
-		niveaux=null;
-		this.removeAll();
-		this.update(getGraphics());
-		this.add(new GameOver(score, this.getWidth(), this.getHeight(), unlockedLevels));
-		this.revalidate();
-		this.update(getGraphics());
+		String levelToRestartName = niveaux.get(0).name;
+		niveaux.get(0).KillAll();
+		
 		try {
-			TimeUnit.SECONDS.sleep(3);
-		} catch (InterruptedException e) {
-						e.printStackTrace();
+			niveaux.add(1, new Niveau(levelToRestartName, this, false));
+		} catch (IOException e) {
+			e.printStackTrace();
+			new ErrorMessage("Erreur ! Impossible de recommencer le niveau...\n"+ e.getLocalizedMessage());
 		}
-		this.update(getGraphics());
-		niveaux=null;
-	//	this.add(new GameOver(score,this.getWidth(),this.getHeight()));
 		
-	    this.removeAll();
-		this.update(this.getGraphics());
-		menu();
-	}
-	protected void addscore(int lvscore)
-	{
-		score+=lvscore;
+		next(true);
 	}
 	
-	public void next()
+	//Passe au niveau suivant dans la liste des niveaux
+	//isReset indique si on appelle cette fonction pour relancer le meme niveau après une mort ou si on passe a un nouveau niveau suivant
+	public void next(boolean isReset) 
 	{
-		vies = niveaux.get(0).getvie();
+		vies = niveaux.get(0).getvie() + ((isReset)?0:1);
 		remove(niveaux.get(0));
 		niveaux.remove(0);
 		time.cancel();
@@ -152,18 +139,20 @@ public class Partie extends JPanel {
 				add(niveaux.get(0));
 				
 				time=new Time(niveaux.get(0));
-				unlockedLevels+=1;
-				
-				this.revalidate();
-				this.update(getGraphics());
+				unlockedLevels += ((isReset)?0:1);
+				niveaux.get(0).setVies(vies);
+				niveaux.get(0).setSeconde(globalVar.timerAuDepart);
 				
 				troubleStarting = false;
 				time.pPressed();
-				if (!niveaux.get(0).Start())
+				if (!niveaux.get(0).Start(globalVar.waitForSpaceWhenStartingLevel))
 				{
 					niveaux.remove(0);
 					troubleStarting = true;
 				}
+				
+				this.revalidate();
+				this.update(getGraphics());
 				
 			} while (troubleStarting && !niveaux.isEmpty());
 			
@@ -173,7 +162,6 @@ public class Partie extends JPanel {
 		{
 			niveaux=null;
 			this.removeAll();
-			this.update(getGraphics());
 			
 			this.add(new WinPage(score, this.getWidth(), this.getHeight(), unlockedLevels));
 			
@@ -186,33 +174,78 @@ public class Partie extends JPanel {
 							e.printStackTrace();
 			}
 			
-			this.update(getGraphics());
-			
-			niveaux=null;
-		//	this.add(new GameOver(score,this.getWidth(),this.getHeight()));
-			
 		    this.removeAll();
-			this.update(this.getGraphics());
 			menu();
 		}
-		
-			System.out.println("gg tu as gagnÃ© voici ton score : "+score);
-			//you win 
 	}
-	
 	
 	protected void menu()
 	{
 		time.cancel();
 		pause=null;
 		time=null;
-		//save avant ? 
+		
 		this.update(this.getGraphics());
+		
 		fenetre.remove(this);
 		
 		fenetre.menu();
-
 	}
+	
+	protected void perdu()
+	{
+		time.cancel();
+		niveaux.removeAll(niveaux);
+		niveaux=null;
+		this.removeAll();
+		
+		this.add(new GameOver(score, this.getWidth(), this.getHeight(), unlockedLevels));
+		
+		this.revalidate();
+		this.update(getGraphics());
+		try {
+			TimeUnit.SECONDS.sleep(3);
+		} catch (InterruptedException e) {
+						e.printStackTrace();
+		}
+		
+	    this.removeAll();
+	    
+		menu();
+	}
+	
+	protected void addscore(int lvscore)
+	{
+		score+=lvscore;
+	}
+	
+	javax.swing.Timer cooldownTimer = new javax.swing.Timer( 50, new ActionListener() { public void actionPerformed(ActionEvent arg0) { pPressedNext(); } });
+	
+	public void pPressed()
+	{
+		if (!pause.isVisible())
+		{
+			niveaux.get(0).StopAll();
+			cooldownTimer.restart();
+		}
+		else
+		{
+			pPressedNext();
+			niveaux.get(0).Resume();
+		}
+		//this.update(this.getGraphics());
+	}
+	
+	public void pPressedNext()
+	{
+		cooldownTimer.stop();
+		pause.pPressed();
+		time.pPressed();
+		
+		pause.grabFocus();
+		this.revalidate();
+	}
+	
 	private void LoadPartie(String fileToLoad) throws IOException
 	{
 		File partieData = new File("./Saves/" + fileToLoad + ".txt");
@@ -229,8 +262,6 @@ public class Partie extends JPanel {
 		vies = parsedLine.get(2);
 		timeLeft = parsedLine.get(3);
 		
-		n.setSeconde(timeLeft);
-		n.setVies(vies);
 		niveaux.add(n);
 		
 		br.close();
@@ -260,26 +291,6 @@ public class Partie extends JPanel {
 		System.exit(0);
 	}
 	
-	javax.swing.Timer cooldownTimer = new javax.swing.Timer( 50, new ActionListener() { public void actionPerformed(ActionEvent arg0) { pPressedNext(); } });
-	
-	public void pPressed()
-	{
-		if (!pause.isVisible())
-		{
-			niveaux.get(0).StopAll();
-			cooldownTimer.restart();
-		}
-		else
-		{
-			pPressedNext();
-			niveaux.get(0).Resume();
-		}
-			
-		
-		
-		//this.update(this.getGraphics());
-	}
-	
 	public String getnom()
 	{
 		return name;
@@ -288,15 +299,5 @@ public class Partie extends JPanel {
 	public void setnom(String b)
 	{
 		name=b;
-	}
-	
-	public void pPressedNext()
-	{
-		cooldownTimer.stop();
-		pause.pPressed();
-		time.pPressed();
-		
-		pause.grabFocus();
-		this.revalidate();
 	}
 }

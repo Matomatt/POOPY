@@ -46,11 +46,11 @@ public class Pause extends JPanel{
 		this.setSize(partie.getSize().width/2, partie.getSize().height/2);
 		this.setLocation(partie.getSize().width/4,partie.getSize().height/4);
 		
-		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Sprites/pause.png", this.getWidth(), this.getHeight())) );
+		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/menus/pause.png", this.getWidth(), this.getHeight())) );
 	      sprite.setBounds(this.getWidth()/4, this.getHeight()/4, this.getWidth()/2, this.getHeight()/2);
 	      this.add(sprite);}
 
-		catch (IOException ex) { System.console().writer().println("Couldn't open snoopy title page "); }
+		catch (IOException ex) { System.out.println("Couldn't open snoopy title page "); }
 
 		this.validate();
 	}

@@ -13,7 +13,7 @@ import javax.swing.Timer;
 
 import Utilitaires.*;
 
-public class Objet extends JLabel implements EventListener{
+public class Objet extends JLabel{
 	private static final long serialVersionUID = 1L;
 	
 	protected double r;
@@ -61,8 +61,8 @@ public class Objet extends JLabel implements EventListener{
 		r = globalVar.tileWidth;
 		
 		//Chargement de sprite par defaut
-		try { sprite = new ImageIcon(ImageManager.LoadImage("./Images/Sprites/solidbloc1.png", globalVar.tileWidth, globalVar.tileHeight) ); }
-		catch (IOException ex) { System.console().writer().println("Couldn't open default sprite..."); }
+		try { sprite = new ImageIcon(ImageManager.LoadImage("./Images/Sprites/default.png", globalVar.tileWidth, globalVar.tileHeight) ); }
+		catch (IOException ex) { System.out.println("Couldn't open default sprite..."); }
 
 		//Les parametres de base tu connais
 		this.setVisible(true);
@@ -143,25 +143,5 @@ public class Objet extends JLabel implements EventListener{
 	{
 		return (xInMap == i && yInMap == j);
 	}
-//	private class keylistener implements KeyListener
-//	{
-//
-//		public void keyTyped(KeyEvent e) {
-//			// TODO Auto-generated method stub
-//			System.out.println("touche"+e.getKeyCode());
-//			
-//		}
-//
-//		public void keyPressed(KeyEvent e) {
-//			// TODO Auto-generated method stub
-//			System.out.println("touche"+e.getKeyCode());
-//		}
-//
-//		public void keyReleased(KeyEvent e) {
-//			// TODO Auto-generated method stub
-//			System.out.println("touche"+e.getKeyCode());
-//		}
-//		
-//	}
 	
 }
