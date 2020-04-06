@@ -200,6 +200,9 @@ public class Niveau extends JPanel {
 			partie.perdu();
 			return true;
 		}
+		else if (globalVar.resetLevelWhenLosingLife) {
+			partie.resetNiveau();
+		}
 		
 		return globalVar.resetLevelWhenLosingLife;
 	}
@@ -554,16 +557,19 @@ public class Niveau extends JPanel {
 	
 	private boolean MouvementBallons(boolean checkCollisions) 
 	{
-		boolean PoopyTouched = false;
+		boolean needReset = false;
 		for (Ballon ballon : ballons)
 		{
 			if (synchronizedMovements)
 				ballon.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
 			
 			if (checkCollisions)
-				PoopyTouched = (CollisionsBallon(ballon) || PoopyTouched);
+				needReset = CollisionsBallon(ballon);
+			
+			if (needReset)
+				break;
 		}
-		return PoopyTouched;
+		return needReset;
 	}
 
 	private boolean CollisionsBallon(Ballon b) 
@@ -573,6 +579,16 @@ public class Niveau extends JPanel {
 		
 		for(MovingBloc movingBloc : movingBlocs)
 			b.hitboxslow(movingBloc, true);
+		
+		for(BreakableBloc breakableBloc : breakableBlocs)
+			b.hitboxslow(breakableBloc, true);
+		
+		//Les collisions pour les blocs apparition, si tu veux pas faire comme ça, pas de souc'
+		//J'ai juste fait sur le meme modele que les autres en prenant en compte si il est visible ou pas
+		/*
+		for(Apparition apparition : apparitions)
+			b.hitboxslow(apparition, apparition.visible);
+			*/
 
 		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
 		{

@@ -63,9 +63,17 @@ public class Partie extends JPanel {
 		
 	}
 	
-	private void resetNiveau()
+	void resetNiveau()
 	{
-		
+		String levelToRestartName = niveaux.get(0).name;
+		niveaux.get(0).KillAll();
+		try {
+			niveaux.add(1, new Niveau(levelToRestartName, this, false));
+		} catch (IOException e) {
+			e.printStackTrace();
+			new ErrorMessage("Erreur ! Impossible de recommencer le niveau...\n"+ e.getLocalizedMessage());
+		}
+		next();
 	}
 	
 	private void Init()

@@ -13,6 +13,6 @@ public class globalVar {
     public static int keyCooldownTime = 100; //en ms
     public static int immuneTime = 1000; //en ms
     
-    public static boolean resetLevelWhenLosingLife = false;
+    public static boolean resetLevelWhenLosingLife = true;
     public static boolean movingBlocMoveOnce = true;
 }
