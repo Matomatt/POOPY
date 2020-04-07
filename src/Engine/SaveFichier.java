@@ -29,7 +29,7 @@ public class SaveFichier extends JFrame
 			partie.niveaux.get(0).StopAll();
 			messJLabel=new JLabel("Entrer le nom du fichier de sauvegarde");
 			this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally/4,globalVar.nbTilesVertically*globalVar.nbTilesVertically/3);
-			chaine=new JTextField(20);
+			chaine=new JTextField(30);
 			ok=new JButton("ok");
 			ok.addActionListener(new SaveListener());
 			
@@ -41,7 +41,8 @@ public class SaveFichier extends JFrame
 			this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally/3,(globalVar.nbTilesVertically*globalVar.tileHeight)/4);
 			this.setVisible(true);
 			
-			
+			if (partie.getnom() != null)
+				chaine.setText(partie.getnom());
 		}
 			
 		private class SaveListener implements ActionListener  //?
@@ -61,14 +62,8 @@ public class SaveFichier extends JFrame
 		}
 		private void savegame() throws FileNotFoundException, UnsupportedEncodingException
 		{
-			if(partie.getName()==null)
-			{
-				partie.setnom(chaine.getText());
-				partie.SavePartie();
-			}
-			else {
-					partie.SavePartie();
-				}
+			partie.setnom(chaine.getText());
+			partie.SavePartie();
 			partie.niveaux.get(0).KillAll();
 			partie.menu();
 			this.dispose();
