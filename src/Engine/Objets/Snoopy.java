@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import javax.swing.Timer;
 
+import Engine.ErrorMessage;
 import Settings.globalVar;
 import Utilitaires.*;
 
@@ -64,8 +65,7 @@ public class Snoopy extends AnimatedObject {
 			try {
 				LoadSpriteSet(orientation);
 			} catch (IOException e) {
-				System.out.println("Couldn't load snoopy " + Direction.nameOf(d) + " sprite set");
-				e.printStackTrace();
+				new ErrorMessage("Couldn't load snoopy " + Direction.nameOf(d) + " sprite set...\n" + e.getLocalizedMessage());
 			}
 			return true;
 		}

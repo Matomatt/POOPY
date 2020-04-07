@@ -41,7 +41,7 @@ public class WinPage extends JPanel
 	      sprite.setBounds(0, globalVar.nbTilesHorizontally*globalVar.tileWidth, 0, globalVar.nbTilesVertically*globalVar.tileHeight);
 	      this.add(sprite);}
 		
-		catch (IOException ex) { System.out.println("Couldn't open win page "); }
+		catch (IOException e) { new ErrorMessage("Couldn't open win page...\n" + e.getLocalizedMessage()); }
 		this.setVisible(true);	
 		
 		this.validate();

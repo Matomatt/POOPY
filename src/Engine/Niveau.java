@@ -660,13 +660,8 @@ public class Niveau extends JPanel {
 		try {
 			partie.SavePartie();
 			KillAll();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (FileNotFoundException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); } 
+		  catch (UnsupportedEncodingException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); }
 	}
 	
 	protected void SaveThis(String _namePartie) throws FileNotFoundException, UnsupportedEncodingException

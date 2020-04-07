@@ -52,11 +52,9 @@ public class SaveFichier extends JFrame
 				try {
 					savegame();
 				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					new ErrorMessage("Erreur lors de la sauvegarde...\n" + e1.getLocalizedMessage());
+				} catch (UnsupportedEncodingException e2) {
+					new ErrorMessage("Erreur lors de la sauvegarde...\n" + e2.getLocalizedMessage());
 				}
 			}
 		}

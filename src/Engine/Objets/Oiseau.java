@@ -2,6 +2,7 @@ package Engine.Objets;
 
 import java.io.IOException;
 
+import Engine.ErrorMessage;
 import Utilitaires.ObjectType;
 
 public class Oiseau extends Objet {
@@ -12,7 +13,7 @@ public class Oiseau extends Objet {
 		try {
 			this.ChangeSpriteTo("oiseau/oiseau1.png");
 		} catch (IOException e) {
-			e.printStackTrace();
+			new ErrorMessage("Couldn't load oiseau's sprite...\n" + e.getLocalizedMessage());
 		}
 	}
 }

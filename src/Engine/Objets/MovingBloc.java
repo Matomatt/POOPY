@@ -2,6 +2,7 @@ package Engine.Objets;
 
 import java.io.IOException;
 
+import Engine.ErrorMessage;
 import Utilitaires.Direction;
 import Utilitaires.ObjectType;
 
@@ -20,8 +21,7 @@ public class MovingBloc extends AnimatedObject {
 		try {
 			LoadSpriteSet();
 		} catch (IOException e) {
-			System.out.println("Couldn't load movingbloc sprite set");
-			e.printStackTrace();
+			new ErrorMessage("Couldn't load movingbloc sprite set...\n" + e.getLocalizedMessage());
 		}
 		
 		this.ChangeSpriteTo(spriteList[currentSprite]);
