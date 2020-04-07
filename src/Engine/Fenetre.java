@@ -17,7 +17,7 @@ public class Fenetre extends JFrame
 	{
 		// Initialisation de la fenetre.
 		this.setTitle("Snoopy");
-		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+6, globalVar.tileHeight*(globalVar.nbTilesVertically+1)+32); // Se refere aux settings
+		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+6, globalVar.tileHeight*(globalVar.nbTilesVertically+1)+35); // Se refere aux settings
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 		this.setResizable(false);

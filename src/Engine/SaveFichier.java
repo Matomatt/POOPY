@@ -62,7 +62,7 @@ public class SaveFichier extends JFrame
 		{
 			partie.setnom(chaine.getText());
 			partie.SavePartie();
-			partie.niveaux.get(0).KillAll();
+			//partie.niveaux.get(0).KillAll();
 			partie.menu();
 			this.dispose();
 		}

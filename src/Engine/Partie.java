@@ -89,7 +89,15 @@ public class Partie extends JPanel {
 		niveaux.get(0).setVies(vies);
 		
 		if (niveaux.get(0).Start(globalVar.waitForSpaceWhenStartingLevel))
+		{
 			time.pPressed();
+			this.revalidate();
+		}
+			
+		else {
+			this.remove(niveaux.get(0));
+			menu();
+		}
 	}
 	//Initialis l'attribut niveau de la classe éponyme 
 	private void RemplirNiveau()
@@ -185,8 +193,6 @@ public class Partie extends JPanel {
 		time.cancel();
 		pause=null;
 		time=null;
-		
-		this.update(this.getGraphics());
 		
 		fenetre.remove(this);
 		
@@ -284,13 +290,14 @@ public class Partie extends JPanel {
 		saveFile.close();
 		
 		time.cancel();
+		niveaux.get(0).KillAll();
 		niveaux.removeAll(niveaux);
 		niveaux=null;
 		this.removeAll();
 		
 		System.out.println("Saved !");
-		fenetre.dispose();
-		System.exit(0);
+		//fenetre.dispose();
+		//System.exit(0);
 	}
 	
 	public String getnom()

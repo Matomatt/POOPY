@@ -24,6 +24,7 @@ public class Niveau extends JPanel {
 	
 	protected String name;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
+	private Objet[][] mapObjets = new Objet[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
 	private Snoopy POOPY;
 	private List<Apparition> apparitions = new ArrayList<Apparition>();
@@ -104,7 +105,7 @@ public class Niveau extends JPanel {
 		System.out.println("Let's a go ! ("+name+")");
 		if (POOPY == null)
 		{
-			System.out.println("Ce niveau ne contient pas Snoopy, impossible d'y jouer, retour au menu...");
+			new ErrorMessage("Ce niveau ne contient pas Snoopy, impossible d'y jouer, retour au menu...");
 			return false;
 		}
 		
@@ -347,36 +348,47 @@ public class Niveau extends JPanel {
 	    		switch(ObjectType.typeOfInt(idParam[0]))
 	    		{
 	    		case BREAKABLEBLOC:
-	    			breakableBlocs.add(new BreakableBloc(i,j));
-	    			this.add(breakableBlocs.get(breakableBlocs.size()-1));
+	    			mapObjets[i][j] = new BreakableBloc(i,j);
+	    			breakableBlocs.add((BreakableBloc) mapObjets[i][j]);
+	    			this.add(mapObjets[i][j]);
+	    			
 	    			break;
 	    		case PIEGE:
-	    			this.add(new Piege(i,j));
+	    			mapObjets[i][j] = new Piege(i,j);
+	    			this.add(mapObjets[i][j]);
+	    			
 	    			if(!nonSolidObjects.contains(idParam[0]))
 	    				nonSolidObjects.add(idParam[0]);
 	    			break;
 	    		case MOVINGBLOC:
-	    			movingBlocs.add(new MovingBloc(i, j, !synchronizedMovements));
-	    			this.add(movingBlocs.get(movingBlocs.size()-1));
+	    			mapObjets[i][j] = new MovingBloc(i, j, !synchronizedMovements);
+	    			movingBlocs.add((MovingBloc) mapObjets[i][j]);
+	    			this.add(mapObjets[i][j]);
 	    			break;
 	    		case SOLIDBLOC:
-	    			blocs.add(new AnimatedSolidBloc(i,j));
-	    			this.add(blocs.get(blocs.size()-1));
+	    			mapObjets[i][j] = new AnimatedSolidBloc(i,j);
+	    			blocs.add((AnimatedSolidBloc) mapObjets[i][j]);
+	    			this.add(mapObjets[i][j]);
 	    			break;
 	    		case APPARITION:
-	    			this.add(new Apparition(i,j));
+	    			mapObjets[i][j] = new Apparition(i,j);
+	    			apparitions.add((Apparition) mapObjets[i][j]);
+	    			this.add(mapObjets[i][j]);
+	    			if(!nonSolidObjects.contains(idParam[0]))
+	    				nonSolidObjects.add(idParam[0]);
 	    			break;
 	    		case TAPISROULANT:
 	    			map[i][j] = idParam[0];
-	    			//System.out.println("{"+idParam[0]+", "+idParam[1]+"}");
-	    			tapisRoulants.add(new TapisRoulant(i, j, ((idParam[1] == 1)?Direction.NORTH:((idParam[1] == 2)?Direction.SOUTH:((idParam[1] == 3)?Direction.EAST:Direction.WEST)))));
-	    			this.add(tapisRoulants.get(tapisRoulants.size()-1));
+	    			mapObjets[i][j] = new TapisRoulant(i, j, ((idParam[1] == 1)?Direction.NORTH:((idParam[1] == 2)?Direction.SOUTH:((idParam[1] == 3)?Direction.EAST:Direction.WEST))));
+	    			tapisRoulants.add((TapisRoulant) mapObjets[i][j]);
+	    			this.add(mapObjets[i][j]);
 	    			if(!nonSolidObjects.contains(idParam[0]))
 	    				nonSolidObjects.add(idParam[0]);
 	    			break;
 	    		case OISEAU:
-	    			oiseaux.add(new Oiseau(i,j));
-	    			this.add(oiseaux.get(oiseaux.size()-1));
+	    			mapObjets[i][j] = new Oiseau(i,j);
+	    			oiseaux.add((Oiseau) mapObjets[i][j]);
+	    			this.add(mapObjets[i][j]);
 	    			if(!nonSolidObjects.contains(idParam[0]))
 	    				nonSolidObjects.add(idParam[0]);
 	    			break;
@@ -453,6 +465,7 @@ public class Niveau extends JPanel {
 				movingBlocs.remove(m);
 			}
 		}
+		
 		return false;
 	}
 	
@@ -490,7 +503,7 @@ public class Niveau extends JPanel {
 	
 	private boolean CollisionsSnoopy()
 	{
-		//Les collisions de snoopy ne sont triggered que quand il a finit son d�placement sur la case
+		//Les collisions de snoopy ne sont triggered que quand il a finit son deplacement sur la case
 		if (POOPY.IsMoving())
 			return false;
 		
@@ -498,16 +511,11 @@ public class Niveau extends JPanel {
 		 //  OISEAUX  //
 		///////////////
 		
-		Oiseau catchedOiseau = null;
-
-		//On regarde tous les oiseaux pour voir si snoopy ne se trouverai pas sur la case de l'un deux
-		for (Oiseau oiseau : oiseaux) {
-			if (((Objet) POOPY).SameTileAs((Objet)oiseau)) catchedOiseau = oiseau;
-		}
-		
-		//Si il en a attrape un, on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
-		if (catchedOiseau != null)
+		//Si snoopy est sur une case oiseau on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
+		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.OISEAU))
 		{
+			Oiseau catchedOiseau = (Oiseau) mapObjets[POOPY.xInMap][POOPY.yInMap];
+			
 			map[catchedOiseau.xInMap][catchedOiseau.yInMap] = 0;
 			this.remove(catchedOiseau);
 			oiseaux.remove(catchedOiseau);
@@ -522,6 +530,7 @@ public class Niveau extends JPanel {
 			}
 		}
 		
+		
 		  /////////////////////
 		 //  TAPISROULANTS  //
 		/////////////////////
@@ -532,7 +541,7 @@ public class Niveau extends JPanel {
 		 //  PIEGES  //
 		//////////////
 		
-		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE))
+		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE) && !POOPY.IsMoving())
 		{
 			/*
 			String bip = "bip.mp3";
@@ -634,20 +643,18 @@ public class Niveau extends JPanel {
 		
 		return false;
 	}
-	// Gére les tapis 
+	
+	// Gere les tapis 
 	private void CollisionsTapis(AnimatedObject o)
 	{
 		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified())
 		{
-			for (TapisRoulant tapisRoulant : tapisRoulants) {
-				if (tapisRoulant.xInMap == o.xInMap && tapisRoulant.yInMap == o.yInMap)
-				{
-					if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]) && !POOPY.IsMoving())
-					{
-						o.Move(tapisRoulant.orientation);
-						o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
-					}
-				}
+			TapisRoulant tapisRoulant = (TapisRoulant) mapObjets[o.xInMap][o.yInMap];
+			System.out.println("Le bon tapis");
+			if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]) && !POOPY.IsMoving())
+			{
+				o.Move(tapisRoulant.orientation);
+				o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
 			}
 		}
 		else if (o.SpeedModified()) o.ResetSpeed();
@@ -666,8 +673,10 @@ public class Niveau extends JPanel {
 	protected void CallSavePartie() {
 		StopAll();
 		try {
-			partie.SavePartie();
-			KillAll();
+			if (globalVar.enterNameWhenSavingWithS)
+				new SaveFichier(partie);
+			else
+				partie.SavePartie();
 		} catch (FileNotFoundException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); } 
 		  catch (UnsupportedEncodingException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); }
 	}
@@ -686,7 +695,7 @@ public class Niveau extends JPanel {
 	    {
 	    	String lineToPrint = "";
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
-	    		lineToPrint+= (((((Objet)POOPY).IsHere(i, j))?8:map[i][j]) + ((i >= globalVar.nbTilesHorizontally - 1)?"":" "));
+	    		lineToPrint+= map[i][j] + ((i >= globalVar.nbTilesHorizontally - 1)?"":" ");
 	    	
 	    	saveFile.println(lineToPrint);
 	    }
@@ -711,5 +720,3 @@ public class Niveau extends JPanel {
 		vieDisplayer.setText(new String("Vies : "+vie));
 	}
 }
-
-	

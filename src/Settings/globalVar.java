@@ -20,4 +20,5 @@ public class globalVar {
     public static boolean waitForSpaceWhenStartingLevel = true;
     public static boolean resetLevelWhenLosingLife = true;
     public static boolean movingBlocMoveOnce = true;
+    public static boolean enterNameWhenSavingWithS = true;
 }

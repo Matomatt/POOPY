@@ -26,28 +26,23 @@ public class BreakableBloc extends AnimatedObject {
 		
 		this.ChangeSpriteTo(spriteList[currentSprite]);
 		StopAnimating();
-		
-		ActionListener endOfCycleDetecter = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) { BreakingCycle(); } };
-		
-		animationTimer.removeActionListener(animationTimer.getActionListeners()[0]);
-		animationTimer.addActionListener(endOfCycleDetecter);
 			
 	}
 	
-	public void Break()
+	public void SwitchToNextSprite()
 	{
-		ResumeAnimating();
-		SwitchToNextSprite();
-	}
-	
-	public void BreakingCycle()
-	{
-		SwitchToNextSprite();
+		super.SwitchToNextSprite();
 		if (currentSprite >= nbSpritesPerAnimationSequence-1)
 		{
 			broken = true;
 			StopAnimating();
 		}
+	}
+	
+	
+	public void Break()
+	{
+		ResumeAnimating();
+		SwitchToNextSprite();
 	}
 }
