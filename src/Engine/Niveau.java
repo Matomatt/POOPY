@@ -165,6 +165,7 @@ public class Niveau extends JPanel {
 		POOPY.StartImmunity();
 	}
 	
+	@SuppressWarnings("serial")
 	public void AddKeyBindings()
 	{
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
@@ -196,6 +197,8 @@ public class Niveau extends JPanel {
 		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { CallSavePartie(); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false),"AutoWin");
+		this.getActionMap().put("AutoWin", new AbstractAction() { public void actionPerformed(ActionEvent e) { win(); } });
 	}
 
 	public void timergestion()

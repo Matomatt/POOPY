@@ -20,6 +20,7 @@ public class Ballon extends AnimatedObject {
 		x = _x;
 		y = _y;
 		direc = _dir;
+		System.out.println("Ballon loaded");
 		InitBallon();
 	}
 	

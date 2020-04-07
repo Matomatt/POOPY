@@ -107,8 +107,8 @@ public class Menu extends JPanel{
 	{
 		System.out.println("Load from password");
 		try {
-			fenetre.remove(this);
-			fenetre.loadlv(loadlv.getText());
+			if (fenetre.loadlv(loadlv.getText()))
+				fenetre.remove(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 			new ErrorMessage();

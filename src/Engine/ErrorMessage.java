@@ -39,7 +39,7 @@ public class ErrorMessage extends JFrame{
 		this.setVisible(true);
 		this.setAlwaysOnTop(true);
 		this.setLayout(new BorderLayout());
-		JLabel bufferJLabel =new JLabel("a");
+		JLabel bufferJLabel =new JLabel(a);
 		bufferJLabel.setSize(200, 100);
 		this.setSize(300, 100);
 		this.setLocation(400,400);

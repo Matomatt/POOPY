@@ -2,27 +2,14 @@ package Data;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Engine.Niveau;
 import Engine.Objets.Ballon;
-import Settings.globalVar;
-import Utilitaires.ParametresPartie;
 
 public class SaveManager {
-
-	public static ParametresPartie LoadPartie(String fileName) 
-	{
-		ParametresPartie params = new ParametresPartie(0, 0, "");
-		
-		return params;
-	}
 	
 	public static List<Ballon> LoadSaveNiveau(String fileName) throws IOException
 	{

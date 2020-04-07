@@ -92,7 +92,8 @@ public class Fenetre extends JFrame
 		this.revalidate();
 	}
 	
-	public void loadlv (String mdp) throws IOException
+	//returns true if the pw exists
+	public boolean loadlv (String mdp) throws IOException
 	{
 		File pwData = new File("./Saves/passwordListDontOpenVerySecret.txt");
 		
@@ -106,6 +107,14 @@ public class Fenetre extends JFrame
 			if (st.contains(mdp)) break;
 		}
 	
+		if (st==null)
+		{
+			br.close();
+			new ErrorMessage("Ce mot de passe n'existe pas");
+			return false;
+		}
+			
+		
 		int lv = StringManager.ParseLineToInt(br.readLine()).get(0);
 		System.out.println(lv);
 		
@@ -114,6 +123,8 @@ public class Fenetre extends JFrame
 		br.close();
 		
 		this.revalidate();
+		
+		return true;
 	}
 	
 	public void start() throws IOException

@@ -271,13 +271,14 @@ public class Partie extends JPanel {
 	{
 		if (name == null)
 			name = "default";
-		
+		else if (name.isEmpty())
+			name = "default";
 		niveaux.get(0).SaveThis(name);
 		
 		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
 		
-		saveFile.println(niveaux.get(0).name);
-		saveFile.println(niveaux.get(0).ended);
+		saveFile.println(niveaux.get(0).name+"P"+name);
+		saveFile.println(!niveaux.get(0).ended);
 		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(0).getvie() + " " + niveaux.get(0).getseconde());
 		saveFile.close();
 		
