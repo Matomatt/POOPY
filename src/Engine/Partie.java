@@ -18,6 +18,7 @@ import Settings.globalVar;
 
 import java.util.concurrent.TimeUnit;
 
+// La classe partie contient le niveau et la pause. 
 public class Partie extends JPanel {
 	private static final long serialVersionUID = -1207758538944896774L;
 	
@@ -34,6 +35,7 @@ public class Partie extends JPanel {
 	
 	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
+	// Chargement d'une Partie Sauvegardé
 	public Partie(String partieToLoad, Fenetre _fenetre) throws IOException
 	{
 		name = partieToLoad;
@@ -45,9 +47,9 @@ public class Partie extends JPanel {
 		else 
 			LoadPartie(name);
 
-		Init();
+		Init();// charge les caractéristique graphique et initialise les variable autre que niveau 
 	}
-	
+	// Chargement d'une parite au niveau indiqué 
 	public Partie(Fenetre _fenetre, int numlv) throws IOException
 	{
 		fenetre = _fenetre;
@@ -65,7 +67,7 @@ public class Partie extends JPanel {
 		vies = globalVar.vieAuDepart;
 		timeLeft = globalVar.timerAuDepart;
 	}
-	
+	// charge les caractéristique graphique et initialise les variable autre que niveau 
 	private void Init()
 	{
 		time = new Time(niveaux.get(0));
@@ -89,7 +91,7 @@ public class Partie extends JPanel {
 		if (niveaux.get(0).Start(globalVar.waitForSpaceWhenStartingLevel))
 			time.pPressed();
 	}
-	
+	//Initialis l'attribut niveau de la classe éponyme 
 	private void RemplirNiveau()
 	{
 		int totallv = unlockedLevels;
@@ -106,7 +108,7 @@ public class Partie extends JPanel {
 		
 		System.out.println("Nombre total de niveaux : " + totallv);
 	}
-	
+	// est utilisé pour consérvé le nombre de vie et relancé le niveau quand snoopy perd un PV 
 	void resetNiveau()
 	{
 		String levelToRestartName = niveaux.get(0).name;
@@ -123,7 +125,7 @@ public class Partie extends JPanel {
 	}
 	
 	//Passe au niveau suivant dans la liste des niveaux
-	//isReset indique si on appelle cette fonction pour relancer le meme niveau apr�s une mort ou si on passe a un nouveau niveau suivant
+	//isReset indique si on appelle cette fonction pour relancer le meme niveau apr�s une mort ou si on passe a un nouveau niveau suivant
 	public void next(boolean isReset) 
 	{
 		vies = niveaux.get(0).getvie() + ((isReset)?0:1);
@@ -178,7 +180,7 @@ public class Partie extends JPanel {
 			menu();
 		}
 	}
-	
+	// Deconstruit la classe ses descendants ainsi que les timer, appel la fonction menu de fenetre
 	protected void menu()
 	{
 		time.cancel();
@@ -191,7 +193,7 @@ public class Partie extends JPanel {
 		
 		fenetre.menu();
 	}
-	
+	// Affiche le game Over en cas de défaite
 	protected void perdu()
 	{
 		time.cancel();
@@ -213,14 +215,14 @@ public class Partie extends JPanel {
 	    
 		menu();
 	}
-	
+	//Garde le score a jour a la fin de chaque niveau en cas de victoire
 	protected void addscore(int lvscore)
 	{
 		score+=lvscore;
 	}
 	
 	javax.swing.Timer cooldownTimer = new javax.swing.Timer( 50, new ActionListener() { public void actionPerformed(ActionEvent arg0) { pPressedNext(); } });
-	
+	// Gere la pause
 	public void pPressed()
 	{
 		if (!pause.isVisible())
@@ -233,9 +235,9 @@ public class Partie extends JPanel {
 			pPressedNext();
 			niveaux.get(0).Resume();
 		}
-		//this.update(this.getGraphics());
+		
 	}
-	
+	// est utilisé pour arreté le timer dans pause lors du premier appuie
 	public void pPressedNext()
 	{
 		cooldownTimer.stop();
@@ -245,7 +247,7 @@ public class Partie extends JPanel {
 		pause.grabFocus();
 		this.revalidate();
 	}
-	
+	// Est utilisé dans le constructeur pour chargé une partie
 	private void LoadPartie(String fileToLoad) throws IOException
 	{
 		File partieData = new File("./Saves/" + fileToLoad + ".txt");
@@ -266,7 +268,7 @@ public class Partie extends JPanel {
 		
 		br.close();
 	}
-	
+	// Permet la sauvegarde d'un fichier  
 	protected void SavePartie() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		if (name == null)

@@ -25,73 +25,31 @@ public class Fenetre extends JFrame
 	private static final long serialVersionUID = 8164118974463460991L;
 	public Fenetre ()
 	{
+		// Initialisation de la fenetre.
 		this.setTitle("Snoopy");
-		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+6, globalVar.tileHeight*(globalVar.nbTilesVertically+1)+32);
+		this.setSize(globalVar.tileWidth*globalVar.nbTilesHorizontally+6, globalVar.tileHeight*(globalVar.nbTilesVertically+1)+32); // Se refere aux settings
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
 		this.setResizable(false);
-//		pause=null;
-//		niveaux= new ArrayList<Niveau>();
-//		try {
-//			//niveaux.add( new Niveau("level1", false));
-//			//niveaux.add(new Niveau("level1P1", true));
-//			niveaux.add( new Niveau("level2", false));
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	//	niveaux.get(0).addKeyListener(niveaux.get(0));
-//		niveaux.get(0).setFocusable(true);
-//		this.add(niveaux.get(0));
-		//niveau.get(0).MainLoop();
-	//	niveau.add(new Niveau("level1.txt"));
-//		try {
-//			LaunchDefaultLevel();
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//			System.out.println("Moi teuteu, moi pas trouver la map du niveau par d�faut");
-//		}
-		this.add(new Menu(this));
-		//this.addKeyListener();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-		this.validate();// sert a valider l'incorporation du nouveau jpanel
+
+		this.add(new Menu(this));
 		
-		//setDefaultCloseOperation(DISPOSE_ON_CLOSE); /// SALLE MECHANT PLUS JAMAIS MA RAM OSCOUR
 		
+		this.validate();		
 	}
 	
-	public void launch()
-	{
-		//niveaux.get(0).MainLoop();
-	}
-//	public Pause getpause()
-//	{
-//		return pause;
-//	}
-//	public void addPause()
-//	{
-//		pause=new Pause(this);
-//		add(pause);
-//	}
-//	public void suppPause()
-//	{
-//		remove(pause);
-//		pause=null;
-//	}
-//	void keyTyped(KeyEvent e)
-//	{
-//		if (e.getKeyCode()==34)
-//		{
-//			System.out.println("YOLO");
-//		}
-//		 
-//	}
+	
+	
+	
+	// Correspond au chargement d'une sauvergarde, est appelé par menu
 	public void loadgame(String a) throws IOException
 	{
 		this.add(new Partie(a,this));
 		this.revalidate();
 	}
 	
+	// Correspond au chargement d'un niveau , est appelé par menu
 	public void loadlv (String mdp) throws IOException
 	{
 		File pwData = new File("./Saves/passwordListDontOpenVerySecret.txt");
@@ -116,12 +74,14 @@ public class Fenetre extends JFrame
 		this.revalidate();
 	}
 	
+	// correspond au lancement d'une nouvelle partie, est appelé par menu
 	public void start() throws IOException
 	{
 		this.add(new Partie("", this));
 		this.revalidate();
 	}
 	
+	// renvoi la classe menu, est appelé par partie. 
 	public void menu()
 	{
 		System.out.println("yolo menu yo"+this.getComponentCount());

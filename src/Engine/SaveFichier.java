@@ -68,4 +68,8 @@ public class SaveFichier extends JFrame
 			partie.menu();
 			this.dispose();
 		}
+		public void close()
+		{
+			this.dispose();
+		}
 	}

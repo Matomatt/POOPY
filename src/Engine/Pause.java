@@ -23,12 +23,13 @@ public class Pause extends JPanel{
 	private Partie partie;
 	private JLabel sprite;
 	private boolean active=false;
+	private SaveFichier saveFichier=null;
+	
 
-
+ // Cette classe créer une fenetre pour gerer les collisions 
 	public Pause(Partie part)
 	{
-		//		Image background = Toolkit.getDefaultToolkit().createImage("Background.png");
-		//	    this.drawImage(background, 0, 0, null);
+	// Initialisation graphique
 		partie=part;
 		menu= new JButton("Menu");
 		save= new JButton ("Save & Quit");
@@ -61,6 +62,7 @@ public class Pause extends JPanel{
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			close();
 			partie.menu();
 		}
 	}
@@ -68,7 +70,7 @@ public class Pause extends JPanel{
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-		 new SaveFichier(partie);	
+		saveFichier= new SaveFichier(partie);	
 		}
 	}
 	private  class ResumeListener implements ActionListener
@@ -89,22 +91,20 @@ public class Pause extends JPanel{
 	}
 	private void close()
 	{
+		if(saveFichier!=null)
+			saveFichier.close();
 		active=false;
-		//this.update(getGraphics());
 		this.setVisible(false);
 		this.setEnabled(false);
 		this.revalidate();
-		//this.update(this.getGraphics());
 	}
 	private void open()
 	{
 		active=true;
-		//this.update(getGraphics());
 		this.paint(getGraphics());
 		this.setVisible(true);
 		this.setEnabled(true);
 		this.revalidate();
-		//this.update(this.getGraphics());
 	}
 
 }

@@ -10,7 +10,7 @@ import javax.swing.*;
 import Data.ImageManager;
 import Settings.globalVar;
 
-
+// La classe menu est un panneaux n'ayant pour but que de servir d'interface pour trigger les fonctions approprié dans Fenetre
 public class Menu extends JPanel{
 	private static final long serialVersionUID = 4533597996297148103L;
 
@@ -26,7 +26,7 @@ public class Menu extends JPanel{
 	protected ArrayList<Niveau> niveaux;
 	int actuallv=0;
 	private JLabel sprite;
-
+	
 	public Menu(Fenetre fen)
 	{
 		// Partie Graphique
@@ -72,7 +72,7 @@ public class Menu extends JPanel{
 		
 	}
 
-	// Gestion Load game;
+	// Gestion chargement d'une partie, appel la fonction analogue dans fenetre
 	private  class LoadGameListener implements ActionListener  //?
 	{
 		public void actionPerformed(ActionEvent e)
@@ -94,7 +94,7 @@ public class Menu extends JPanel{
 		}
 	}
 
-	//Gestion Load LV
+	// Gestion chargement d'un niveau, appel la fonction analogue dans fenetre
 	private class LoadLvListener implements ActionListener  //?
 	{
 		public void actionPerformed(ActionEvent e)
@@ -117,7 +117,7 @@ public class Menu extends JPanel{
 		}
 	}
 
-	// Gestion start 
+	// Gestion du lancement d'une partie, appel la fonction analogue dans fenetre
 	private class StartListener implements ActionListener  //?
 	{
 		public void actionPerformed(ActionEvent e)

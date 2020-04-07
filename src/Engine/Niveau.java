@@ -51,10 +51,10 @@ public class Niveau extends JPanel {
 	private KeysPressedList keysPressedList = new KeysPressedList();
 	private Partie partie;
 
+	// Initialisation du niveau 
 	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
 	{
 		this.setLayout(null);
-		//this.setOpaque(true);
 		this.setBackground(new Color(213,210,204));
 		
 		partie = p;
@@ -98,7 +98,7 @@ public class Niveau extends JPanel {
 		this.setVisible(false);
 		this.StopAll();
 	}
-	
+	// Est appelé a l'initialisation avant le start press
 	private boolean PreStart() 
 	{
 		System.out.println("Let's a go ! ("+name+")");
@@ -146,6 +146,7 @@ public class Niveau extends JPanel {
 		return true;
 	}
 	
+	// est appelé lors du press de la barre espace, permet au niveau de commencé 
 	public void StartAfterWait(boolean waitedForIt)
 	{
 		System.out.println("Start after wait");
@@ -165,6 +166,7 @@ public class Niveau extends JPanel {
 		POOPY.StartImmunity();
 	}
 	
+	// Sers a l'initialisation de la classe Niveau 
 	public void AddKeyBindings()
 	{
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
@@ -197,7 +199,7 @@ public class Niveau extends JPanel {
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
 	}
-
+	// Sers a actualisé le timer et a enlevé une vie a snoopy si celui ci descend en dessous de 0
 	public void timergestion()
 	{
 		seconde-=1;
@@ -210,6 +212,7 @@ public class Niveau extends JPanel {
 		
 	}
 	
+	// Sers a terminer le niveau en cas de game over
 	private boolean vieloose() //return true si plus de vie du tout
 	{
 		vie-=1;
@@ -228,6 +231,7 @@ public class Niveau extends JPanel {
 		
 		return globalVar.resetLevelWhenLosingLife;
 	}
+	//change de niveau et modifie le score
 	private void win()
 	{
 		KillAll();
@@ -236,6 +240,7 @@ public class Niveau extends JPanel {
 		partie.next(false);//false because is not reset
 	}
 	
+	// Permet d'arreter les timers 
 	protected void KillAll()
 	{
 		movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
@@ -261,11 +266,13 @@ public class Niveau extends JPanel {
 		System.gc();
 	}
 	
+	// lance la pause
 	private void pause()  // Timer to stop 
 	{
 		partie.pPressed();
 	}
 
+	// Arrette temporairement les timer est appeler dans partie ppressed 
 	public void StopAll()
 	{
 		movementsTimer.stop();
@@ -277,7 +284,7 @@ public class Niveau extends JPanel {
 		for (AnimatedSolidBloc bloc : blocs) { bloc.Pause(); }
 		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Pause(); }
 	}
-	
+	// Relance les timers est aussi apelé dans partie ppressed
 	public void Resume()
 	{
 		movementsTimer.start();
@@ -292,6 +299,7 @@ public class Niveau extends JPanel {
 		temps.setText(new String("Remaining Time: " + seconde));
 	}
 	
+	// Est appelé dans l'initialisation 
 	void LoadObjects(int[][] _map) 
 	{
 		map = _map;
@@ -374,6 +382,7 @@ public class Niveau extends JPanel {
 	    }		
 	}
 	
+	// Lit les setting 
 	public int[] SeparateIdParam(int id)
 	{
 		int[] idParam = {id, 0};
@@ -423,7 +432,7 @@ public class Niveau extends JPanel {
 		
 		if (globalVar.movingBlocMoveOnce)
 		{
-			//Passage d'un movingbloc en solidbloc apr�s son d�placement
+			//Passage d'un movingbloc en solidbloc apr�s son d�placement
 			MovingBloc m = null;
 			for (MovingBloc movingBloc : movingBlocs)
 			{
@@ -536,7 +545,7 @@ public class Niveau extends JPanel {
 		
 		return false;
 	}
-	
+	// Gère la barre Espace
 	private boolean SpacePressed()
 	{
 		System.out.println("Space pressed");
@@ -577,6 +586,7 @@ public class Niveau extends JPanel {
 		return false;
 	}
 	
+	// Actualise les mouvements du ballons fait le calcul de collisions 
 	private boolean MouvementBallons(boolean checkCollisions) 
 	{
 		boolean needReset = false;
@@ -593,7 +603,7 @@ public class Niveau extends JPanel {
 		}
 		return needReset;
 	}
-
+	// Est appelé dnas mouvement pour  check les hitbox
 	private boolean CollisionsBallon(Ballon b) 
 	{
 		for (AnimatedSolidBloc bloc : blocs)
@@ -605,7 +615,7 @@ public class Niveau extends JPanel {
 		for(BreakableBloc breakableBloc : breakableBlocs)
 			b.hitboxslow(breakableBloc, true);
 		
-		//Les collisions pour les blocs apparition, si tu veux pas faire comme �a, pas de souc'
+		//Les collisions pour les blocs apparition, si tu veux pas faire comme �a, pas de souc'
 		//J'ai juste fait sur le meme modele que les autres en prenant en compte si il est visible ou pas
 		/*
 		for(Apparition apparition : apparitions)
@@ -623,7 +633,7 @@ public class Niveau extends JPanel {
 		
 		return false;
 	}
-	
+	// Gére les tapis 
 	private void CollisionsTapis(AnimatedObject o)
 	{
 		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified())
@@ -651,7 +661,7 @@ public class Niveau extends JPanel {
 	{
 		return vie;
 	}
-	
+	// Sert a la sauvegarde
 	protected void CallSavePartie() {
 		StopAll();
 		try {
