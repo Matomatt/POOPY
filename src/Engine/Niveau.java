@@ -16,6 +16,7 @@ import javax.swing.*;
 //import Pause;
 import Settings.*;
 import Data.*;
+import Engine.IA.*;
 import Engine.Objets.*;
 import Utilitaires.*;
 
@@ -23,19 +24,19 @@ public class Niveau extends JPanel {
 	private static final long serialVersionUID = 5093936493506272943L;
 	
 	protected String name;
-	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
+	int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
-	private Snoopy POOPY;
-	private List<Apparition> apparitions = new ArrayList<Apparition>();
-	private List<Ballon> ballons = new ArrayList<Ballon>();
-	private List<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
-	private List<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
-	private List<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
-	private List<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
-	private List<Oiseau> oiseaux = new ArrayList<Oiseau>();
-	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
+	Snoopy POOPY;
+	List<Apparition> apparitions = new ArrayList<Apparition>();
+	List<Ballon> ballons = new ArrayList<Ballon>();
+	List<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
+	List<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
+	List<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
+	List<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
+	List<Oiseau> oiseaux = new ArrayList<Oiseau>();
+	List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 	
-	protected boolean ended = false;
+	boolean ended = false;
 	
 	private JLabelText pressSpaceLabel = new JLabelText("Press space to start...", 600, (int)(globalVar.tileHeight/1.5), Color.WHITE);
 	
@@ -50,6 +51,8 @@ public class Niveau extends JPanel {
     
 	private KeysPressedList keysPressedList = new KeysPressedList();
 	private Partie partie;
+	
+	private IA SolveWithAI = null;
 
 	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
 	{
@@ -99,8 +102,7 @@ public class Niveau extends JPanel {
 		this.StopAll();
 	}
 	
-	@SuppressWarnings("serial")
-	public boolean Start(final boolean waitForIt)
+	private boolean PreStart() 
 	{
 		System.out.println("Let's a go ! ("+name+")");
 		if (POOPY == null)
@@ -121,6 +123,44 @@ public class Niveau extends JPanel {
 		this.setVisible(true);
 		
 		vie = partie.vies;
+		
+		return true;
+	}
+	
+	public boolean StartIA(IAType IAtype)
+	{
+		if (!PreStart())
+			return false;
+		
+		switch (IAtype) 
+		{
+			case BRUTEFORCE:
+				SolveWithAI = new IABruteForce(new NiveauForIA(this));
+				break;
+				
+			case BFS:
+				SolveWithAI = new IABFS(new NiveauForIA(this));
+				break;
+				
+			case DFS:
+				SolveWithAI = new IADFS(new NiveauForIA(this));
+				break;
+	
+			default:
+				return false;
+		}
+		
+		this.validate();
+		
+		SolveWithAI.FindPath();
+		return true;
+	}
+	
+	@SuppressWarnings("serial")
+	public boolean Start(final boolean waitForIt)
+	{
+		if (!PreStart())
+			return false;
 		
 		if (waitForIt)
 		{
