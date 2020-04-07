@@ -4,10 +4,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 
 import javax.swing.Timer;
 
+import Engine.ErrorMessage;
 import Settings.globalVar;
 import Utilitaires.*;
 
@@ -63,8 +65,7 @@ public class Snoopy extends AnimatedObject {
 			try {
 				LoadSpriteSet(orientation);
 			} catch (IOException e) {
-				System.out.println("Couldn't load snoopy " + Direction.nameOf(d) + " sprite set");
-				e.printStackTrace();
+				new ErrorMessage("Couldn't load snoopy " + Direction.nameOf(d) + " sprite set...\n" + e.getLocalizedMessage());
 			}
 			return true;
 		}
@@ -122,9 +123,9 @@ public class Snoopy extends AnimatedObject {
 	public void Resume()
 	{
 		super.Resume();
-		if (immuneTimer != null)
+		if (immuneTimer != null && immune)
 			immuneTimer.start();
-		if (pwmTransparency != null)
+		if (pwmTransparency != null && immune)
 			pwmTransparency.start();
 	}
 	

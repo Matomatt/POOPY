@@ -1,3 +1,3 @@
-level1
-false
+level1P
+true
 1 0 3 60

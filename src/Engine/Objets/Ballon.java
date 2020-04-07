@@ -4,6 +4,7 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 
 import Data.ImageManager;
+import Engine.ErrorMessage;
 import Settings.globalVar;
 import Utilitaires.*;
 
@@ -20,6 +21,7 @@ public class Ballon extends AnimatedObject {
 		x = _x;
 		y = _y;
 		direc = _dir;
+		System.out.println("Ballon loaded");
 		InitBallon();
 	}
 	
@@ -46,8 +48,7 @@ public class Ballon extends AnimatedObject {
 		try {
 			this.setIcon(new ImageIcon(ImageManager.LoadImage("./Images/Sprites/ballon/ballon.png", globalVar.tileWidth/2, globalVar.tileHeight/2)));
 		} catch (IOException e) {
-			System.out.println("Couldn't load ballon.png ");
-			e.printStackTrace();
+			new ErrorMessage("Couldn't load ballon.png...\n" + e.getLocalizedMessage());
 		}
 
 		r = globalVar.tileWidth/4;

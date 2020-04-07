@@ -101,7 +101,7 @@ public class Partie extends JPanel {
 		{
 			totallv += 1;
 			try { niveaux.add(new Niveau(new String("level"+ totallv), this, false)); } 
-			catch (IOException e) { e.printStackTrace(); }
+			catch (IOException e) { new ErrorMessage("Impossible d'ajouter le niveau "+totallv+"...\n" + e.getLocalizedMessage()); }
 			
 			f = new File("./Maps/" + "level"+ (totallv+1) + ".txt");
 		}
@@ -117,7 +117,6 @@ public class Partie extends JPanel {
 		try {
 			niveaux.add(1, new Niveau(levelToRestartName, this, false));
 		} catch (IOException e) {
-			e.printStackTrace();
 			new ErrorMessage("Erreur ! Impossible de recommencer le niveau...\n"+ e.getLocalizedMessage());
 		}
 		
@@ -173,7 +172,7 @@ public class Partie extends JPanel {
 			try {
 				TimeUnit.SECONDS.sleep(3);
 			} catch (InterruptedException e) {
-							e.printStackTrace();
+				new ErrorMessage("Alors y'a un probleme avec la pause de 3 secondes mais ce n'est pas de mon ressort...\n" + e.getLocalizedMessage());
 			}
 			
 		    this.removeAll();
@@ -208,7 +207,7 @@ public class Partie extends JPanel {
 		try {
 			TimeUnit.SECONDS.sleep(3);
 		} catch (InterruptedException e) {
-						e.printStackTrace();
+			new ErrorMessage("On fait beaucoup de pause de 3 secondes je trouve...\n" + e.getLocalizedMessage());
 		}
 		
 	    this.removeAll();
@@ -273,13 +272,14 @@ public class Partie extends JPanel {
 	{
 		if (name == null)
 			name = "default";
-		
+		else if (name.isEmpty())
+			name = "default";
 		niveaux.get(0).SaveThis(name);
 		
 		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
 		
-		saveFile.println(niveaux.get(0).name);
-		saveFile.println(niveaux.get(0).ended);
+		saveFile.println(niveaux.get(0).name+"P"+name);
+		saveFile.println(!niveaux.get(0).ended);
 		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(0).getvie() + " " + niveaux.get(0).getseconde());
 		saveFile.close();
 		

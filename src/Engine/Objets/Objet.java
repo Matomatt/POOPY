@@ -2,6 +2,7 @@ package Engine.Objets;
 import java.io.IOException;
 
 import Data.ImageManager;
+import Engine.ErrorMessage;
 //import Engine.Niveau.keylistener;
 import Settings.*;
 import java.awt.*;
@@ -62,7 +63,7 @@ public class Objet extends JLabel{
 		
 		//Chargement de sprite par defaut
 		try { sprite = new ImageIcon(ImageManager.LoadImage("./Images/Sprites/default.png", globalVar.tileWidth, globalVar.tileHeight) ); }
-		catch (IOException ex) { System.out.println("Couldn't open default sprite..."); }
+		catch (IOException e) { new ErrorMessage("Couldn't open default sprite...\n" + e.getLocalizedMessage()); }
 
 		//Les parametres de base tu connais
 		this.setVisible(true);

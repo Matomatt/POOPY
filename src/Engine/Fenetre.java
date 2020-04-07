@@ -1,21 +1,11 @@
 package Engine;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
-import java.util.List;
-
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.CloseAction;
-
-import Data.SaveManager;
 import Data.StringManager;
-import Engine.Objets.Ballon;
 import Settings.globalVar;
 
 
@@ -39,18 +29,17 @@ public class Fenetre extends JFrame
 		this.validate();		
 	}
 	
-	
-	
-	
 	// Correspond au chargement d'une sauvergarde, est appelé par menu
 	public void loadgame(String a) throws IOException
 	{
 		this.add(new Partie(a,this));
 		this.revalidate();
 	}
-	
+
 	// Correspond au chargement d'un niveau , est appelé par menu
-	public void loadlv (String mdp) throws IOException
+	//returns true if the pw exists
+	public boolean loadlv (String mdp) throws IOException
+
 	{
 		File pwData = new File("./Saves/passwordListDontOpenVerySecret.txt");
 		
@@ -64,6 +53,13 @@ public class Fenetre extends JFrame
 			if (st.contains(mdp)) break;
 		}
 	
+		if (st==null)
+		{
+			br.close();
+			new ErrorMessage("Ce mot de passe n'existe pas");
+			return false;
+		}
+		
 		int lv = StringManager.ParseLineToInt(br.readLine()).get(0);
 		System.out.println(lv);
 		
@@ -72,6 +68,8 @@ public class Fenetre extends JFrame
 		br.close();
 		
 		this.revalidate();
+		
+		return true;
 	}
 	
 	// correspond au lancement d'une nouvelle partie, est appelé par menu
@@ -91,8 +89,4 @@ public class Fenetre extends JFrame
 		this.add(new Menu(this));
 		this.revalidate();
 	}
-	
-	
-
-	
 }

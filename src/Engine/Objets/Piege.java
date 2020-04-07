@@ -2,6 +2,7 @@ package Engine.Objets;
 
 import java.io.IOException;
 
+import Engine.ErrorMessage;
 import Utilitaires.ObjectType;
 
 public class Piege  extends AnimatedObject {
@@ -17,8 +18,7 @@ public class Piege  extends AnimatedObject {
 		try {
 			LoadSpriteSet();
 		} catch (IOException e) {
-			System.out.println("Couldn't load piege sprite set");
-			e.printStackTrace();
+			new ErrorMessage("Couldn't load piege sprite set...\n" + e.getLocalizedMessage());
 		}
 		
 		this.ChangeSpriteTo(spriteList[currentSprite]);

@@ -63,11 +63,10 @@ public class Menu extends JPanel{
 		
 		try {
 			sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Menus/snoopytitile.png", globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically)) );
-			sprite.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically);
+			sprite.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*(globalVar.nbTilesVertically+1));
 			this.add(sprite);
 		} catch (IOException e) {
-			System.out.println("Couldn't open snoopy title page ");
-			e.printStackTrace();
+			new ErrorMessage("Couldn't open snoopy title page...\n" + e.getLocalizedMessage());
 		}
 		
 	}
@@ -87,8 +86,8 @@ public class Menu extends JPanel{
 			fenetre.remove(this);
 			fenetre.loadgame(loadgame.getText());
 		} catch (IOException e) {
-			e.printStackTrace();
 			new ErrorMessage();
+			new ErrorMessage(e.getLocalizedMessage());
 			fenetre.remove(this);
 			fenetre.menu();
 		}
@@ -107,11 +106,11 @@ public class Menu extends JPanel{
 	{
 		System.out.println("Load from password");
 		try {
-			fenetre.remove(this);
-			fenetre.loadlv(loadlv.getText());
+			if (fenetre.loadlv(loadlv.getText()))
+				fenetre.remove(this);
 		} catch (IOException e) {
-			e.printStackTrace();
 			new ErrorMessage();
+			new ErrorMessage(e.getLocalizedMessage());
 			fenetre.remove(this);
 			fenetre.menu();
 		}
@@ -131,8 +130,7 @@ public class Menu extends JPanel{
 		try {
 			fenetre.start();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ErrorMessage("Impossible de lancer une nouvelle partie...\n" + e.getLocalizedMessage());
 		}
 	}
 

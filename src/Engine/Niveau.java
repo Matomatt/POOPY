@@ -167,6 +167,7 @@ public class Niveau extends JPanel {
 	}
 	
 	// Sers a l'initialisation de la classe Niveau 
+	@SuppressWarnings("serial")
 	public void AddKeyBindings()
 	{
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
@@ -198,7 +199,10 @@ public class Niveau extends JPanel {
 		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { CallSavePartie(); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false),"AutoWin");
+		this.getActionMap().put("AutoWin", new AbstractAction() { public void actionPerformed(ActionEvent e) { win(); } });
 	}
+	
 	// Sers a actualisé le timer et a enlevé une vie a snoopy si celui ci descend en dessous de 0
 	public void timergestion()
 	{
@@ -209,7 +213,6 @@ public class Niveau extends JPanel {
 		{
 			vieloose();
 		}
-		
 	}
 	
 	// Sers a terminer le niveau en cas de game over
@@ -231,6 +234,7 @@ public class Niveau extends JPanel {
 		
 		return globalVar.resetLevelWhenLosingLife;
 	}
+	
 	//change de niveau et modifie le score
 	private void win()
 	{
@@ -272,7 +276,7 @@ public class Niveau extends JPanel {
 		partie.pPressed();
 	}
 
-	// Arrette temporairement les timer est appeler dans partie ppressed 
+	// Arete temporairement les timer est appeler dans partie ppressed 
 	public void StopAll()
 	{
 		movementsTimer.stop();
@@ -284,6 +288,7 @@ public class Niveau extends JPanel {
 		for (AnimatedSolidBloc bloc : blocs) { bloc.Pause(); }
 		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Pause(); }
 	}
+	
 	// Relance les timers est aussi apelé dans partie ppressed
 	public void Resume()
 	{
@@ -382,7 +387,7 @@ public class Niveau extends JPanel {
 	    }		
 	}
 	
-	// Lit les setting 
+	// Lis le paramètre associé au bloc
 	public int[] SeparateIdParam(int id)
 	{
 		int[] idParam = {id, 0};
@@ -398,7 +403,6 @@ public class Niveau extends JPanel {
 			idParam[0] = (int)(id/div);
 			//System.out.println("{"+idParam[0]+", "+idParam[1]+"}");
 		}
-		
 		return idParam;
 	}
 	
@@ -449,11 +453,9 @@ public class Niveau extends JPanel {
 				movingBlocs.remove(m);
 			}
 		}
-		
-			
-		
 		return false;
 	}
+	
 	
 	private void ExecuteKeys()
 	{
@@ -476,7 +478,6 @@ public class Niveau extends JPanel {
 				return ((Snoopy)o).ChangeOrientationTo(d);
 			
 		return false;
-			
 	}
 	
 	//returns true if the object is a movable object and can move and if there is nothing blocking the way
@@ -542,7 +543,7 @@ public class Niveau extends JPanel {
 			POOPY.StartImmunity();
 			return vieloose();
 		}
-		
+	
 		return false;
 	}
 	// Gère la barre Espace
@@ -641,7 +642,7 @@ public class Niveau extends JPanel {
 			for (TapisRoulant tapisRoulant : tapisRoulants) {
 				if (tapisRoulant.xInMap == o.xInMap && tapisRoulant.yInMap == o.yInMap)
 				{
-					if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]))
+					if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]) && !POOPY.IsMoving())
 					{
 						o.Move(tapisRoulant.orientation);
 						o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
@@ -667,13 +668,8 @@ public class Niveau extends JPanel {
 		try {
 			partie.SavePartie();
 			KillAll();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (FileNotFoundException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); } 
+		  catch (UnsupportedEncodingException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); }
 	}
 	
 	protected void SaveThis(String _namePartie) throws FileNotFoundException, UnsupportedEncodingException

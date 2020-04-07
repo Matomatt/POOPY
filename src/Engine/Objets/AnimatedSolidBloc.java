@@ -2,6 +2,7 @@ package Engine.Objets;
 
 import java.io.IOException;
 
+import Engine.ErrorMessage;
 import Utilitaires.ObjectType;
 
 public class AnimatedSolidBloc extends AnimatedObject {
@@ -16,8 +17,7 @@ public class AnimatedSolidBloc extends AnimatedObject {
 		try {
 			LoadSpriteSet();
 		} catch (IOException e) {
-			System.out.println("Couldn't load solidbloc sprite set");
-			e.printStackTrace();
+			new ErrorMessage("Couldn't load solidbloc sprite set...\n" + e.getLocalizedMessage());
 		}
 		this.ChangeSpriteTo(spriteList[currentSprite]);
 		//StopAnimating();

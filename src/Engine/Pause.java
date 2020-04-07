@@ -51,7 +51,7 @@ public class Pause extends JPanel{
 	      sprite.setBounds(this.getWidth()/4, this.getHeight()/4, this.getWidth()/2, this.getHeight()/2);
 	      this.add(sprite);}
 
-		catch (IOException ex) { System.out.println("Couldn't open snoopy title page "); }
+		catch (IOException e) { new ErrorMessage("Couldn't open snoopy title page...\n" + e.getLocalizedMessage()); }
 
 		this.validate();
 	}

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import Engine.ErrorMessage;
 import Utilitaires.ObjectType;
 
 public class BreakableBloc extends AnimatedObject {
@@ -20,8 +21,7 @@ public class BreakableBloc extends AnimatedObject {
 		try {
 			LoadSpriteSet();
 		} catch (IOException e) {
-			System.out.println("Couldn't load solidbloc sprite set");
-			e.printStackTrace();
+			new ErrorMessage("Couldn't load breakablebloc sprite set...\n" + e.getLocalizedMessage());
 		}
 		
 		this.ChangeSpriteTo(spriteList[currentSprite]);
