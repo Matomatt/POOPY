@@ -16,6 +16,7 @@ public class globalVar {
     
     public static int keyCooldownTime = 100; //en ms
     public static int immuneTime = 800; //en ms
+    public static int tempsApparition = 3000; // en ms temps que prennent les blocs apparition pour apparaite/disparaitre
     
     public static boolean waitForSpaceWhenStartingLevel = true;
     public static boolean resetLevelWhenLosingLife = true;
