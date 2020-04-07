@@ -634,7 +634,7 @@ public class Niveau extends JPanel {
 			for (TapisRoulant tapisRoulant : tapisRoulants) {
 				if (tapisRoulant.xInMap == o.xInMap && tapisRoulant.yInMap == o.yInMap)
 				{
-					if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]))
+					if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]) && !POOPY.IsMoving())
 					{
 						o.Move(tapisRoulant.orientation);
 						o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
