@@ -20,4 +20,7 @@ public class globalVar {
     public static boolean waitForSpaceWhenStartingLevel = true;
     public static boolean resetLevelWhenLosingLife = true;
     public static boolean movingBlocMoveOnce = true;
+    
+    public static int tempsapparition=3000; // temps que prenne le sbloc apparition pour apparaite/disparaitre
+    
 }

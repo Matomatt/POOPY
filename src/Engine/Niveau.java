@@ -24,7 +24,7 @@ public class Niveau extends JPanel {
 	
 	protected String name;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
-
+	private Objet[][] mapObjets = new Objet[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 	private Snoopy POOPY;
 	private List<Apparition> apparitions = new ArrayList<Apparition>();
 	private List<Ballon> ballons = new ArrayList<Ballon>();
@@ -208,7 +208,6 @@ public class Niveau extends JPanel {
 	{
 		seconde-=1;
 		temps.setText(new String("Remaining Time: " + seconde));
-		//System.out.println("seconde"+seconde);
 		if (seconde<=0)
 		{
 			vieloose();
@@ -258,6 +257,7 @@ public class Niveau extends JPanel {
 		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Kill();  }
 		for (AnimatedSolidBloc bloc : blocs) { bloc.Kill(); }
 		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Kill();}
+		for (Apparition apparition: apparitions) { apparition.Kill();}
 		keysPressedList.Kill();
 		
 		this.removeAll();
@@ -287,6 +287,7 @@ public class Niveau extends JPanel {
 		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Pause(); }
 		for (AnimatedSolidBloc bloc : blocs) { bloc.Pause(); }
 		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Pause(); }
+		for (Apparition apparition: apparitions) {apparition.TogglePause();}
 	}
 	
 	// Relance les timers est aussi apelé dans partie ppressed
@@ -300,6 +301,7 @@ public class Niveau extends JPanel {
 		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Resume(); }
 		for (AnimatedSolidBloc bloc : blocs) { bloc.Resume(); }
 		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Resume(); }
+		for (Apparition apparition: apparitions) {apparition.TogglePause();}
 		vieDisplayer.setText(new String("Vies : "+vie));
 		temps.setText(new String("Remaining Time: " + seconde));
 	}
@@ -485,7 +487,23 @@ public class Niveau extends JPanel {
 	{
 		if(o.NextCaseX(d) < 0 || o.NextCaseX(d) >= globalVar.nbTilesHorizontally || o.NextCaseY(d) < 0 || o.NextCaseY(d) >= globalVar.nbTilesVertically)
 			return false;
+		for (Apparition apparition : apparitions) {
+						
+			if (NextObjet(o,d)==(Objet) apparition)
+			{
+				
+					if(apparition.visible==true)
+					{
+						return true;
+					}
+				
+			}
+		}
 		return (o.CanMove(d) && nonSolidObjects.contains(map[o.NextCaseX(d)][o.NextCaseY(d)]));
+	}
+	private Objet NextObjet(Objet o,Direction d)
+	{
+		return mapObjets[o.NextCaseX(d)][o.NextCaseY(d)];
 	}
 	
 	private boolean CollisionsSnoopy()
@@ -618,11 +636,10 @@ public class Niveau extends JPanel {
 		
 		//Les collisions pour les blocs apparition, si tu veux pas faire comme �a, pas de souc'
 		//J'ai juste fait sur le meme modele que les autres en prenant en compte si il est visible ou pas
-		/*
+		
 		for(Apparition apparition : apparitions)
 			b.hitboxslow(apparition, apparition.visible);
-			*/
-
+			
 		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
 		{
 			System.out.println("Et c'est la loooose");
