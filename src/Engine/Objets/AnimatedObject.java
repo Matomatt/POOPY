@@ -27,7 +27,7 @@ public class AnimatedObject extends Objet {
 	protected int animationFrequency = 100; //in milliseconds
 	protected ImageIcon spriteList[];
 	
-	private static boolean selfMoved = true;
+	protected static boolean selfMoved = true;
 	private static boolean selfAnimated = true;
 	public boolean stopAnimation = false;
 	protected boolean animateOnlyWhenMoving = false;

@@ -69,6 +69,7 @@ public class Menu extends JPanel{
 			new ErrorMessage("Couldn't open snoopy title page...\n" + e.getLocalizedMessage());
 		}
 		
+		this.validate();
 	}
 
 	// Gestion chargement d'une partie, appel la fonction analogue dans fenetre

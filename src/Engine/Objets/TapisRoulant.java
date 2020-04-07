@@ -38,4 +38,8 @@ public class TapisRoulant extends AnimatedObject {
 		}
 		return false;
 	}
+	
+	public String SavingInfo() {
+		return ObjectType.mapIdOf(type) + "" + ((orientation == Direction.NORTH)?1:((orientation == Direction.SOUTH)?2:((orientation == Direction.EAST)?3:4)));
+	}
 }

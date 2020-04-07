@@ -144,5 +144,11 @@ public class Objet extends JLabel{
 	{
 		return (xInMap == i && yInMap == j);
 	}
+
+	public String SavingInfo() {
+		return ""+ObjectType.mapIdOf(type);
+	}
+	
+	
 	
 }

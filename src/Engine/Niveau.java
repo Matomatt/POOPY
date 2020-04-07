@@ -70,14 +70,24 @@ public class Niveau extends JPanel {
 		
 		vieDisplayer=new JLabelText("Vies : "+vie, 300, globalVar.tileHeight/2, Color.BLUE);
 		
-		nonSolidObjects.add(0);
-		LoadObjects(MapDataManager.LoadMap(name+".txt"));
-		
 		if (loadEnCours)
 		{
 			List<Ballon> _ballons = SaveManager.LoadSaveNiveau(name);
 			for (Ballon b : _ballons) AddBallon(b);
+			
+			if (POOPY == null)
+			{
+				POOPY = SaveManager.LoadSaveSnoopy(name);
+				if (POOPY != null)
+				{
+					this.add(POOPY);
+	    			POOPY.setSelfMoved(!synchronizedMovements);
+				}
+			}
 		}
+		
+		nonSolidObjects.add(0);
+		LoadObjects(MapDataManager.LoadMap(name+".txt"));
 		
 		if(this.name.contains("P")) name = name.split("P")[0];
 		
@@ -474,11 +484,15 @@ public class Niveau extends JPanel {
 	
 	private void ExecuteKeys()
 	{
-		if (keysPressedList.ActionReadyOf(KeyType.UP)) if (MoveObject(POOPY,Direction.NORTH)) keysPressedList.FireKey(KeyType.UP);
-		if (keysPressedList.ActionReadyOf(KeyType.LEFT)) if (MoveObject(POOPY,Direction.WEST)) keysPressedList.FireKey(KeyType.LEFT);
-		if (keysPressedList.ActionReadyOf(KeyType.DOWN)) if (MoveObject(POOPY,Direction.SOUTH)) keysPressedList.FireKey(KeyType.DOWN);
-		if (keysPressedList.ActionReadyOf(KeyType.RIGHT)) if (MoveObject(POOPY,Direction.EAST)) keysPressedList.FireKey(KeyType.RIGHT);
-		if (keysPressedList.ActionReadyOf(KeyType.SPACE)) if (SpacePressed()) keysPressedList.FireKey(KeyType.UP);
+		if (!POOPY.IsMoving())
+		{
+			if (keysPressedList.ActionReadyOf(KeyType.UP)) if (MoveObject(POOPY,Direction.NORTH)) keysPressedList.FireKey(KeyType.UP);
+			if (keysPressedList.ActionReadyOf(KeyType.LEFT)) if (MoveObject(POOPY,Direction.WEST)) keysPressedList.FireKey(KeyType.LEFT);
+			if (keysPressedList.ActionReadyOf(KeyType.DOWN)) if (MoveObject(POOPY,Direction.SOUTH)) keysPressedList.FireKey(KeyType.DOWN);
+			if (keysPressedList.ActionReadyOf(KeyType.RIGHT)) if (MoveObject(POOPY,Direction.EAST)) keysPressedList.FireKey(KeyType.RIGHT);
+			if (keysPressedList.ActionReadyOf(KeyType.SPACE)) if (SpacePressed()) keysPressedList.FireKey(KeyType.UP);
+		}
+		
 	}
 	
 	//Move an object to the desired direction, returns true if the object moved or changed direction succesfully
@@ -498,7 +512,7 @@ public class Niveau extends JPanel {
 	//returns true if the object is a movable object and can move and if there is nothing blocking the way
 	private boolean PossibleToMove(Objet o, Direction d)
 	{
-		if(o.NextCaseX(d) < 0 || o.NextCaseX(d) >= globalVar.nbTilesHorizontally || o.NextCaseY(d) < 0 || o.NextCaseY(d) >= globalVar.nbTilesVertically)
+		if (OutOfBound(o.NextCaseX(d), o.NextCaseY(d)))
 			return false;
 				
 		if (NextObjet(o,d).Type() == ObjectType.APPARITION)
@@ -545,7 +559,6 @@ public class Niveau extends JPanel {
 			}
 		}
 		
-		
 		  /////////////////////
 		 //  TAPISROULANTS  //
 		/////////////////////
@@ -570,12 +583,16 @@ public class Niveau extends JPanel {
 	
 		return false;
 	}
-	// Gère la barre Espace
+	
+	// Gere la barre Espace
 	private boolean SpacePressed()
 	{
-		System.out.println("Space pressed");
+		//System.out.println("Space pressed");
 		int blocX = POOPY.NextCaseX(POOPY.orientation);
 		int blocY = POOPY.NextCaseY(POOPY.orientation);
+		
+		if (OutOfBound(blocX, blocY))
+			return false;
 		
 		switch (ObjectType.typeOfInt(map[blocX][blocY]))
 		{
@@ -609,6 +626,11 @@ public class Niveau extends JPanel {
 		}
 		
 		return false;
+	}
+	
+	private boolean OutOfBound(int x, int y)
+	{
+		return (x < 0 || x >= globalVar.nbTilesHorizontally || y < 0 || y >= globalVar.nbTilesVertically);
 	}
 	
 	// Actualise les mouvements du ballons fait le calcul de collisions 
@@ -667,8 +689,11 @@ public class Niveau extends JPanel {
 			System.out.println("Le bon tapis");
 			if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]) && !POOPY.IsMoving())
 			{
-				o.Move(tapisRoulant.orientation);
-				o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
+				if (!o.Move(tapisRoulant.orientation))
+				{
+					o.Move(tapisRoulant.orientation);
+					o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
+				}
 			}
 		}
 		else if (o.SpeedModified()) o.ResetSpeed();
@@ -698,7 +723,7 @@ public class Niveau extends JPanel {
 	
 	protected void SaveThis(String _namePartie) throws FileNotFoundException, UnsupportedEncodingException
 	{
-		//ENTREZ NOM PARTIE SI NON EXISTANT
+		boolean printSnoopyInMap = !(POOPY.IsMoving() || map[POOPY.xInMap][POOPY.yInMap] != 0);
 		String fileName = name + "P" + _namePartie;
 		PrintWriter saveFile = new PrintWriter("./Maps/" + fileName + ".txt", "UTF-8");
 		
@@ -710,9 +735,15 @@ public class Niveau extends JPanel {
 	    {
 	    	String lineToPrint = "";
 	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
-	    		lineToPrint+= map[i][j] + ((i >= globalVar.nbTilesHorizontally - 1)?"":" ");
+	    		lineToPrint+= ((printSnoopyInMap && i == POOPY.xInMap && j == POOPY.yInMap)?"8":((mapObjets[i][j] != null)?mapObjets[i][j].SavingInfo():"0")) + ((i >= globalVar.nbTilesHorizontally - 1)?"":" ");
 	    	
 	    	saveFile.println(lineToPrint);
+	    }
+	    
+	    if (!printSnoopyInMap)
+	    {
+	    	saveFile.println("Snoopy");
+	    	saveFile.println(POOPY.SavingInfo());
 	    }
 	    
 	    if (!ballons.isEmpty())

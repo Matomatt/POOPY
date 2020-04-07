@@ -1,10 +1,6 @@
 package Engine.Objets;
-import java.awt.AlphaComposite;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 
 import javax.swing.Timer;
@@ -23,6 +19,20 @@ public class Snoopy extends AnimatedObject {
 	
 	Timer immuneTimer = new Timer( 200, new ActionListener() { public void actionPerformed(ActionEvent arg0) { ToggleTransparency(); } });
 	Timer pwmTransparency = new Timer( 1, new ActionListener() { public void actionPerformed(ActionEvent arg0) { executePwmTransparency(); } });
+	
+	public Snoopy(int _xInMap, int _yInMap, int _x, int _y, int _targetX, int _targetY, int _initSpeedX, int _initSpeedY, int _vitesseX, int _vitesseY, int _orientation)
+	{
+		super(_xInMap, _yInMap, _vitesseX/10, _vitesseY/10, ObjectType.SNOOPY, true, true, false, true);
+		x = _x; y = _y;
+		targetX = _targetX; targetY = _targetY;
+		initSpeed[0] = _initSpeedX/10; initSpeed[1] = _initSpeedY/10;
+		
+		animateOnlyWhenMoving = true;
+		nbSpritesPerAnimationSequence = 4;
+		
+		this.ChangeOrientationTo(Direction.directionOfId(_orientation));
+		this.ChangeSpriteTo(spriteList[currentSprite]);
+	}
 	
 	public Snoopy(int _x, int _y, boolean _selfMoved)
 	{
@@ -135,5 +145,13 @@ public class Snoopy extends AnimatedObject {
 		super.Kill();
 		immuneTimer = null;
 		pwmTransparency = null;
+	}
+
+	public String SavingInfo() {
+		return (xInMap + " " + yInMap + " " + (int)x + " " + (int)y + " " + (int)targetX + " " + (int)targetY + " " + (int)(initSpeed[0]*10) + " " + (int)(initSpeed[1]*10) + " " + (int)(vitesse[0]*10) + " " + (int)(vitesse[1]*10) + " " + Direction.idOf(orientation));
+	}
+
+	public void setSelfMoved(boolean b) {
+		selfMoved = b;
 	}
 }
