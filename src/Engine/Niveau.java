@@ -13,103 +13,67 @@ import java.util.List;
 
 import javax.swing.*;
 
+import Controller.KeysPressedList;
 //import Pause;
 import Settings.*;
 import Data.*;
 import Engine.Objets.*;
 import Utilitaires.*;
 
-public class Niveau extends JPanel {
+public class Niveau {
 	private static final long serialVersionUID = 5093936493506272943L;
-	
+
 	protected String name;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 	private Objet[][] mapObjets = new Objet[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
 	private Snoopy POOPY;
-	private List<Apparition> apparitions = new ArrayList<Apparition>();
 	private List<Ballon> ballons = new ArrayList<Ballon>();
-	private List<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
-	private List<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
-	private List<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
-	private List<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
-	private List<Oiseau> oiseaux = new ArrayList<Oiseau>();
-	private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
-	
+	//private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
+
 	boolean ended = false;
-	
-	private JLabelText pressSpaceLabel = new JLabelText("Press space to start...", 600, (int)(globalVar.tileHeight/1.5), Color.WHITE);
-	
 	private int vie;
-	private JLabelText vieDisplayer;
-	
-    private int seconde = 60;
-    private JLabelText temps;
-	
-	private Timer movementsTimer;
-	private boolean synchronizedMovements = true;
-    
-	private KeysPressedList keysPressedList = new KeysPressedList();
+	private int seconde = 60;
+
+	private Timer calculationsTimer;
+	private boolean synchronizedCalculations = true;
+
 	private Partie partie;
 
 	// Initialisation du niveau 
 	public Niveau(String _name, Partie p, boolean loadEnCours) throws IOException  /// Rajouter partie au constructeur
 	{
-		this.setLayout(null);
-		this.setBackground(new Color(213,210,204));
-		
 		partie = p;
 		name = _name;
-		
+
 		System.out.println("New level : " + name);
-		
-		pressSpaceLabel.setVisible(false);
-		add(pressSpaceLabel);
-		
-		temps = new JLabelText("Remaining Time: " + seconde, 300, globalVar.tileHeight/2, Color.BLUE);
-		
-		vieDisplayer=new JLabelText("Vies : "+vie, 300, globalVar.tileHeight/2, Color.BLUE);
-		
+
 		if (loadEnCours)
 		{
 			List<Ballon> _ballons = SaveManager.LoadSaveNiveau(name);
 			for (Ballon b : _ballons) AddBallon(b);
-			
+
 			if (POOPY == null)
 			{
 				POOPY = SaveManager.LoadSaveSnoopy(name);
-				if (POOPY != null)
-				{
-					this.add(POOPY);
-	    			POOPY.setSelfMoved(!synchronizedMovements);
-				}
+				if (POOPY != null) POOPY.setSelfMoved(!synchronizedCalculations);
 			}
 		}
-		
-		nonSolidObjects.add(0);
+
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
-		
+
 		if(this.name.contains("P")) name = name.split("P")[0];
-		
-		System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
-		
+
 		//Synchronized Movements, gardez if !synchronized pour les collisions
-		ActionListener movementsTaskPerformer = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0)
-			{ 
-				if (movementsTimerTrigger())
-					if (POOPY != null)
-						System.out.println("Faudrait reset l� si on a le time");
-			} };
-		
-		movementsTimer = new Timer(1000/globalVar.CalculusFrequency, movementsTaskPerformer);
-		
-		movementsTimer.start();
-		
-		this.setVisible(false);
+		calculationsTimer = new Timer(1000/globalVar.CalculusFrequency, new ActionListener() { public void actionPerformed(ActionEvent arg0)
+		{ 
+			calculationsTrigger();
+		} });
+
 		this.StopAll();
 	}
-	// Est appelé a l'initialisation avant le start press
+
+	// Est appele a l'initialisation avant le press start
 	private boolean PreStart() 
 	{
 		System.out.println("Let's a go ! ("+name+")");
@@ -118,120 +82,44 @@ public class Niveau extends JPanel {
 			new ErrorMessage("Ce niveau ne contient pas Snoopy, impossible d'y jouer, retour au menu...");
 			return false;
 		}
-		
-		temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
-		vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
-		
-		if (temps.getText() == null)
-			temps.setText(new String("Remaining Time: " + seconde));
-		partie.add(temps);
-		partie.add(vieDisplayer);
-		
-		this.setLocation(0, globalVar.tileHeight);
-		this.setVisible(true);
-		
+
 		vie = partie.vies;
-		
+
 		return true;
 	}
-	
+
 	@SuppressWarnings("serial")
 	public boolean Start(final boolean waitForIt)
 	{
 		if (!PreStart())
 			return false;
-		
-		if (waitForIt)
-		{
-			partie.time.pPressed();
-			this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),"Start");
-			this.getActionMap().put("Start", new AbstractAction() { public void actionPerformed(ActionEvent e) { StartAfterWait(waitForIt); } });
-			
-			pressSpaceLabel.setLocation(this.getWidth()/3, this.getHeight()/2-pressSpaceLabel.getHeight()/2);
-			pressSpaceLabel.setVisible(true);
-		}
-		else
-			StartAfterWait(waitForIt);
-		
-		this.validate();
+
 		return true;
 	}
-	
+
 	// est appelé lors du press de la barre espace, permet au niveau de commencé 
 	public void StartAfterWait(boolean waitedForIt)
 	{
 		System.out.println("Start after wait");
-		if (waitedForIt)
-		{
-			pressSpaceLabel.setVisible(false);
-			this.remove(pressSpaceLabel);
-			pressSpaceLabel=null;
-			this.getInputMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false));
-			//this.getActionMap().remove;
-			partie.time.pPressed();
-		}
-			
-		
-		AddKeyBindings();
+
 		this.Resume();
 		POOPY.StartImmunity();
 	}
-	
-	// Sers a l'initialisation de la classe Niveau 
-	@SuppressWarnings("serial")
-	public void AddKeyBindings()
-	{
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
-		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.UP); } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true),"StopMoveUp");
-		this.getActionMap().put("StopMoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.UP); } });
-		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false),"MoveLeft");
-		this.getActionMap().put("MoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.LEFT); } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true),"StopMoveLeft");
-		this.getActionMap().put("StopMoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.LEFT); } });
-		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false),"MoveDown");
-		this.getActionMap().put("MoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.DOWN); } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true),"StopMoveDown");
-		this.getActionMap().put("StopMoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.DOWN); } });
-		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false),"MoveRight");
-		this.getActionMap().put("MoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.RIGHT); } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true),"StopMoveRight");
-		this.getActionMap().put("StopMoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.RIGHT); } });
-		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),"SnoopyDo");
-		this.getActionMap().put("SnoopyDo", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.SPACE); } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true),"SnoopyStop");
-		this.getActionMap().put("SnoopyStop", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.SPACE); } });
-		
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false),"Save");
-		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { CallSavePartie(); } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
-		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
-		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false),"AutoWin");
-		this.getActionMap().put("AutoWin", new AbstractAction() { public void actionPerformed(ActionEvent e) { win(); } });
-	}
-	
+
 	// Sers a actualisé le timer et a enlevé une vie a snoopy si celui ci descend en dessous de 0
 	public void timergestion()
 	{
-		seconde-=1;
-		temps.setText(new String("Remaining Time: " + seconde));
-		if (seconde<=0)
-		{
+		//temps.setText(new String("Remaining Time: " + seconde));
+		if ((seconde-=1) <= 0)
 			vieloose();
-		}
 	}
-	
+
 	// Sers a terminer le niveau en cas de game over
 	private boolean vieloose() //return true si plus de vie du tout
 	{
-		vie-=1;
-		vieDisplayer.setText(new String("Vies : "+vie));
-		
-		if (vie<=0)
+		//vieDisplayer.setText(new String("Vies : "+vie));
+
+		if ((vie-=1) <= 0)
 		{
 			KillAll();
 			ended = true;
@@ -241,10 +129,10 @@ public class Niveau extends JPanel {
 		else if (globalVar.resetLevelWhenLosingLife) {
 			partie.resetNiveau();
 		}
-		
+
 		return globalVar.resetLevelWhenLosingLife;
 	}
-	
+
 	//change de niveau et modifie le score
 	private void win()
 	{
@@ -253,34 +141,324 @@ public class Niveau extends JPanel {
 		partie.addscore(seconde*100);
 		partie.next(false);//false because is not reset
 	}
-	
-	// Permet d'arreter les timers 
-	protected void KillAll()
+
+	// Est appelé dans l'initialisation 
+	void LoadObjects(int[][] _map) 
 	{
-		movementsTimer.removeActionListener(movementsTimer.getActionListeners()[0]);
-		movementsTimer.stop();
-		
-		if (POOPY != null)
-			POOPY.Kill();
-		POOPY = null;
-		for (Ballon ballon : ballons) { ballon.Kill(); }
-		for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Kill();}
-		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Kill();  }
-		for (AnimatedSolidBloc bloc : blocs) { bloc.Kill(); }
-		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Kill();}
-		for (Apparition apparition: apparitions) { apparition.Kill();}
-		keysPressedList.Kill();
-		
-		this.removeAll();
-		partie.remove(temps);
-		partie.remove(vieDisplayer);
-		
-		this.getInputMap().clear();
-		this.getActionMap().clear();
-		
-		System.gc();
+		for (int j=0; j<globalVar.nbTilesVertically; j++)
+		{
+			for (int i=0; i<globalVar.nbTilesHorizontally; i++)
+			{
+				//On recupere les parametres de l'objet s'il y en a
+				int [] idParam = SeparateIdParam(_map[i][j]);
+
+				switch(ObjectType.typeOfInt(idParam[0]))
+				{
+					case BALLON:AddBallon(new Ballon(i,j, idParam[1], !synchronizedCalculations)); break;
+	
+					case SNOOPY: POOPY = new Snoopy(i, j, !synchronizedCalculations); break;
+	
+					case VIDE: AddObjet(new Vide(i, j)); break;
+	
+					case BREAKABLEBLOC: AddObjet(new BreakableBloc(i,j)); break;
+	
+					case PIEGE: AddObjet(new Piege(i,j)); break;
+	
+					case MOVINGBLOC: AddObjet(new MovingBloc(i, j, !synchronizedCalculations)); break;
+	
+					case SOLIDBLOC: AddObjet(new AnimatedSolidBloc(i,j)); break;
+	
+					case APPARITION: AddObjet(new Apparition(i,j)); break;
+	
+					case TAPISROULANT: AddObjet(new TapisRoulant(i, j, Direction.directionOfId(idParam[1]))); break;
+	
+					case OISEAU: AddObjet(new Oiseau(i,j)); break;
+	
+					default: break;
+				}
+			}
+		}		
+	}
+
+	// Lis le paramètre associé au bloc
+	public int[] SeparateIdParam(int id)
+	{
+		int[] idParam = {id, 0};
+
+		if (id > 9)
+		{
+			int div = 10;
+
+			while(id/div > 9)
+				div*=10;
+
+			idParam[1] = id - ((int)(id/div))*10;
+			idParam[0] = (int)(id/div);
+		}
+
+		return idParam;
+	}
+
+	private void AddObjet(Objet o) {
+		map[o.xInMap][o.yInMap] = ObjectType.mapIdOf(o.Type());
+		mapObjets[o.xInMap][o.yInMap] = o;
+	}
+
+	private void AddBallon(Ballon b)
+	{
+		ballons.add(b);
+		AddObjet(new Vide(b.xInMap, b.yInMap));
+	}
+
+	private void RemoveObjet(Objet o) {
+		AddObjet(new Vide(o.xInMap, o.yInMap));
+	}
+
+	private Objet NextObjet(Objet o, Direction d)
+	{
+		if (mapObjets[o.NextCaseX(d)][o.NextCaseY(d)] != null)
+			return mapObjets[o.NextCaseX(d)][o.NextCaseY(d)];
+		return new Objet(-1, -1, ObjectType.none);
+	}
+
+
+	//Calculs effectues sur la frequence globalVar.CalculusFrequency
+	//Return true si on doit tout kill
+	private boolean calculationsTrigger()
+	{
+		if (CollisionsSnoopy()) //Si return true ca veut dire c'est la mort
+			return true;
+
+		//Contient les collisions donc a lance meme si les mouvements ne sont pas synchronisees (que la balle bouge sur son propre timer)
+		//return true si poopy touch� donc vie perdu donc retour a 0
+		if (MouvementBallons(true))
+			return globalVar.resetLevelWhenLosingLife;
+
+		if (synchronizedCalculations)
+		{
+			POOPY.doCalculations((double)1/globalVar.CalculusFrequency);
+
+			for (Objet[] line : mapObjets) {
+				for (Objet objet : line) objet.doCalculations((double)1/globalVar.CalculusFrequency);
+			}
+		}
+
+		boolean oiseauxTousAttrape = true;
+		for (Objet[] line : mapObjets) {
+			for (Objet objet : line)
+			{
+				boolean succesfull = false;
+
+				switch (objet.actionReturned())
+				{
+					case CHANGEBLOCINMAP:
+						AddObjet(new AnimatedSolidBloc(objet.xInMap, objet.yInMap));
+						succesfull = true;
+						break;
+					case REMOVEIT:
+						RemoveObjet(objet);
+						break;
+					default: break;
+				}
+
+				if (objet != null) objet.getReturnedActionSuccess(succesfull);
+
+				if (objet.Type() == ObjectType.OISEAU) oiseauxTousAttrape = false;
+			}
+		}
+
+		if (oiseauxTousAttrape)
+		{
+			System.out.println("Et c'est la wiiin");
+			win();
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean ExecuteKey(KeyType key)
+	{
+		if (!POOPY.IsMoving())
+		{
+			switch (key) {
+				case UP: return MoveObject(POOPY,Direction.NORTH);
+	
+				case LEFT: return MoveObject(POOPY,Direction.WEST);
+	
+				case DOWN: return MoveObject(POOPY,Direction.SOUTH);
+	
+				case RIGHT: return MoveObject(POOPY,Direction.EAST);
+	
+				case SPACE: return SpacePressed();
+	
+				default: return false;
+			}
+		}
+		return false;
+	}
+
+	//Move an object to the desired direction, returns true if the object moved or changed direction succesfully
+	private boolean MoveObject(Objet o, Direction d)
+	{
+		//If the object is a movable object and can move and if there is nothing blocking the way
+		if (PossibleToMove(o, d))
+			return o.Move(d);
+
+		//Ok il peut pas bouger mais si c'est snoopy il veut ptet juste regarder du bon cote tu sais pas
+		else if (o.Type() == ObjectType.SNOOPY && !o.IsMoving())
+			return ((Snoopy)o).ChangeOrientationTo(d);
+
+		return false;
+	}
+
+	//returns true if the object is a movable object and can move and if there is nothing blocking the way
+	private boolean PossibleToMove(Objet o, Direction d)
+	{
+		if (OutOfBound(o.NextCaseX(d), o.NextCaseY(d)))
+			return false;
+
+		if (NextObjet(o,d).Type() == ObjectType.APPARITION)
+		{
+			if(!((Apparition) NextObjet(o, d)).visible)
+				return false;
+		}
+
+		return (o.CanMove(d) && !NextObjet(o, d).isSolid());
+	}
+
+	private boolean CollisionsSnoopy()
+	{
+		//Les collisions de snoopy ne sont triggered que quand il a finit son deplacement sur la case
+		if (POOPY.IsMoving())
+			return false;
+
+		///////////////
+		//  OISEAUX  //
+		///////////////
+
+		Oiseau catchedOiseau;
+		//Si snoopy est sur une case oiseau on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
+		if ((catchedOiseau = (Oiseau) mapObjets[POOPY.xInMap][POOPY.yInMap]) != null)
+			RemoveObjet(catchedOiseau);
+
+		/////////////////////
+		//  TAPISROULANTS  //
+		/////////////////////
+
+		CollisionsTapis(POOPY);
+
+		//////////////
+		//  PIEGES  //
+		//////////////
+
+		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE) && !POOPY.IsMoving())
+		{
+			vieloose();
+			return true;
+		}
+
+		return false;
+	}
+
+	// Gere la barre Espace
+	private boolean SpacePressed()
+	{
+		//System.out.println("Space pressed");
+		int blocX = POOPY.NextCaseX(POOPY.orientation);
+		int blocY = POOPY.NextCaseY(POOPY.orientation);
+
+		if (OutOfBound(blocX, blocY))
+			return false;
+
+		switch (ObjectType.typeOfInt(map[blocX][blocY]))
+		{
+		case MOVINGBLOC:
+			MovingBloc bloc = (MovingBloc) mapObjets[blocX][blocY];
+			if (MoveObject(bloc, POOPY.orientation))
+			{
+				AddObjet(bloc);
+				AddObjet(new Vide(blocX, blocY));
+				return true;
+			}
+			break;
+		case BREAKABLEBLOC:
+			BreakableBloc breakableBloc = (BreakableBloc) mapObjets[blocX][blocY];
+			if (breakableBloc.stopAnimation)
+				breakableBloc.Break();
+			break;
+		default:
+			break;
+		}
+
+		return false;
+	}
+
+	private boolean OutOfBound(int x, int y)
+	{
+		return (x < 0 || x >= globalVar.nbTilesHorizontally || y < 0 || y >= globalVar.nbTilesVertically);
+	}
+
+	// Actualise les mouvements du ballons fait le calcul de collisions 
+	private boolean MouvementBallons(boolean checkCollisions) 
+	{
+		boolean needReset = false;
+		for (Ballon ballon : ballons)
+		{
+			if (synchronizedCalculations)
+				ballon.doCalculations((double)1/globalVar.CalculusFrequency);
+
+			if (checkCollisions)
+				needReset = CollisionsBallon(ballon);
+
+			if (needReset)
+				break;
+		}
+		return needReset;
 	}
 	
+	// Est appelé dnas mouvement pour  check les hitbox
+	private boolean CollisionsBallon(Ballon b) 
+	{
+		for (Objet[] line : mapObjets) {
+			for (Objet objet : line) 
+				if (objet.isSolid())
+					b.hitboxslow(objet, true);
+		}
+
+		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
+		{
+			System.out.println("Et c'est la loooose");
+
+			POOPY.StartImmunity();
+
+			return vieloose();
+		}
+
+		return false;
+	}
+
+	// Gere le deplacement forc� et l'acc�ration des objets quand ils passent sur un tapis roulant
+	private void CollisionsTapis(AnimatedObject o)
+	{
+		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified())
+		{
+			TapisRoulant tapisRoulant = (TapisRoulant) mapObjets[o.xInMap][o.yInMap];
+
+			if (!NextObjet(POOPY, tapisRoulant.orientation).isSolid() && !POOPY.IsMoving())
+			{
+				
+				if (!o.Move(tapisRoulant.orientation))
+				{
+					if (o.Move(tapisRoulant.orientation))
+						o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
+				}
+				else o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
+			}
+		}
+		else if (o.SpeedModified()) o.ResetSpeed(); //The condition if Snoopy stopped moving has already been taken care of when calling this function
+	}
+
 	// lance la pause
 	private void pause()  // Timer to stop 
 	{
@@ -290,425 +468,49 @@ public class Niveau extends JPanel {
 	// Arete temporairement les timer est appeler dans partie ppressed 
 	public void StopAll()
 	{
-		movementsTimer.stop();
+		calculationsTimer.stop();
 		if (POOPY != null)
-			POOPY.Pause();
-		for (Ballon ballon : ballons) { ballon.Pause(); }
-		for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Pause(); }
-		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Pause(); }
-		for (AnimatedSolidBloc bloc : blocs) { bloc.Pause(); }
-		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Pause(); }
-		for (Apparition apparition: apparitions) {apparition.TogglePause();}
+			POOPY.Stop();
+
+		for (Ballon ballon : ballons) { ballon.Stop(); }
+
+		for (Objet[] line : mapObjets) {
+			for (Objet objet : line)
+				objet.Stop();
+		}
 	}
-	
+
 	// Relance les timers est aussi apelé dans partie ppressed
 	public void Resume()
 	{
-		movementsTimer.start();
+		calculationsTimer.start();
 		if (POOPY != null)
 			POOPY.Resume();
+
+		for (Objet[] line : mapObjets) {
+			for (Objet objet : line)
+				objet.Resume();
+		}
+
 		for (Ballon ballon : ballons) { ballon.Resume(); }
-		for (BreakableBloc breakableBloc : breakableBlocs) { breakableBloc.Resume(); }
-		for (MovingBloc movingBloc : movingBlocs) { movingBloc.Resume(); }
-		for (AnimatedSolidBloc bloc : blocs) { bloc.Resume(); }
-		for (TapisRoulant tapisRoulant : tapisRoulants) { tapisRoulant.Resume(); }
-		for (Apparition apparition: apparitions) {apparition.TogglePause();}
-		vieDisplayer.setText(new String("Vies : "+vie));
-		temps.setText(new String("Remaining Time: " + seconde));
 	}
-	
-	// Est appelé dans l'initialisation 
-	void LoadObjects(int[][] _map) 
+
+	// Permet d'arreter les timers
+	protected void KillAll()
 	{
-		map = _map;
-		
-		this.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally,  globalVar.tileHeight*globalVar.nbTilesVertically);
-		System.out.println("screen size : " + globalVar.tileWidth*globalVar.nbTilesHorizontally + " " +  globalVar.tileHeight*globalVar.nbTilesVertically);
-		
-		//On charge les ballons et Snoopy
-		for (int j=0; j<globalVar.nbTilesVertically; j++)
-	    {
-	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
-	    	{
-	    		int [] idParam = SeparateIdParam(map[i][j]);
-	    		
-	    		switch(ObjectType.typeOfInt(idParam[0]))
-	    		{
-	    		case BALLON:
-	    			AddBallon(new Ballon(i,j, idParam[1], !synchronizedMovements));
-	    			map[i][j] = 0;
-	    			break;
-	    		case SNOOPY:
-	    			POOPY = new Snoopy(i, j, !synchronizedMovements);
-	    			this.add(POOPY);
-	    			map[i][j] = 0;
-	    			break;
-				default:
-					break;
-	    		}
-	    	}
-	    }
-		
-		//On charge le reste
-		for (int j=0; j<globalVar.nbTilesVertically; j++)
-	    {
-	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
-	    	{
-	    		//On recupere les parametres de l'objet s'il y en a
-	    		int [] idParam = SeparateIdParam(map[i][j]);
-	    		
-	    		switch(ObjectType.typeOfInt(idParam[0]))
-	    		{
-	    		case BREAKABLEBLOC:
-	    			mapObjets[i][j] = new BreakableBloc(i,j);
-	    			breakableBlocs.add((BreakableBloc) mapObjets[i][j]);
-	    			this.add(mapObjets[i][j]);
-	    			
-	    			break;
-	    		case PIEGE:
-	    			mapObjets[i][j] = new Piege(i,j);
-	    			this.add(mapObjets[i][j]);
-	    			
-	    			if(!nonSolidObjects.contains(idParam[0]))
-	    				nonSolidObjects.add(idParam[0]);
-	    			break;
-	    		case MOVINGBLOC:
-	    			mapObjets[i][j] = new MovingBloc(i, j, !synchronizedMovements);
-	    			movingBlocs.add((MovingBloc) mapObjets[i][j]);
-	    			this.add(mapObjets[i][j]);
-	    			break;
-	    		case SOLIDBLOC:
-	    			mapObjets[i][j] = new AnimatedSolidBloc(i,j);
-	    			blocs.add((AnimatedSolidBloc) mapObjets[i][j]);
-	    			this.add(mapObjets[i][j]);
-	    			break;
-	    		case APPARITION:
-	    			mapObjets[i][j] = new Apparition(i,j);
-	    			apparitions.add((Apparition) mapObjets[i][j]);
-	    			this.add(mapObjets[i][j]);
-	    			if(!nonSolidObjects.contains(idParam[0]))
-	    				nonSolidObjects.add(idParam[0]);
-	    			break;
-	    		case TAPISROULANT:
-	    			map[i][j] = idParam[0];
-	    			mapObjets[i][j] = new TapisRoulant(i, j, ((idParam[1] == 1)?Direction.NORTH:((idParam[1] == 2)?Direction.SOUTH:((idParam[1] == 3)?Direction.EAST:Direction.WEST))));
-	    			tapisRoulants.add((TapisRoulant) mapObjets[i][j]);
-	    			this.add(mapObjets[i][j]);
-	    			if(!nonSolidObjects.contains(idParam[0]))
-	    				nonSolidObjects.add(idParam[0]);
-	    			break;
-	    		case OISEAU:
-	    			mapObjets[i][j] = new Oiseau(i,j);
-	    			oiseaux.add((Oiseau) mapObjets[i][j]);
-	    			this.add(mapObjets[i][j]);
-	    			if(!nonSolidObjects.contains(idParam[0]))
-	    				nonSolidObjects.add(idParam[0]);
-	    			break;
-				default:
-					break;
-	    		}
-	    	}
-	    }		
-	}
-	
-	// Lis le paramètre associé au bloc
-	public int[] SeparateIdParam(int id)
-	{
-		int[] idParam = {id, 0};
-		if (id > 9)
-		{
-			int div = 10;
-			
-			while(id/div > 0)
-				div*=10;
-			div/=10;
-			
-			idParam[1] = id - ((int)(id/div))*10;
-			idParam[0] = (int)(id/div);
-			//System.out.println("{"+idParam[0]+", "+idParam[1]+"}");
+		calculationsTimer.removeActionListener(calculationsTimer.getActionListeners()[0]);
+		calculationsTimer.stop();
+
+		if (POOPY != null)
+			POOPY.Kill();
+		POOPY = null;
+
+		for (Objet[] line : mapObjets) {
+			for (Objet objet : line)
+				objet.Kill();
 		}
-		return idParam;
 	}
-	
-	public void AddBallon(Ballon b)
-	{
-		ballons.add(b);
-		this.add(b);
-	}
-	
-	//Calculs effectues sur la frequence globalVar.CalculusFrequency
-	//Return true si on doit tout kill
-	private boolean movementsTimerTrigger() 
-	{
-		if (CollisionsSnoopy()) //Si return true ca veut dire c'est la mort
-			return globalVar.resetLevelWhenLosingLife;
-		
-		ExecuteKeys(); //Si une touche a ete appuyee et est donc en attente on l'execute
-		
-		//Contient les collisions donc a lance meme si les mouvements ne sont pas synchronisees (que la balle bouge sur son propre timer)
-		//return true si poopy touch� donc vie perdu donc retour a 0
-		if (MouvementBallons(true))
-			return globalVar.resetLevelWhenLosingLife;
-		
-		if (synchronizedMovements)
-		{
-			POOPY.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
-			for (MovingBloc movingBloc : movingBlocs) {
-				movingBloc.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
-			}
-		}
-		
-		if (globalVar.movingBlocMoveOnce)
-		{
-			//Passage d'un movingbloc en solidbloc apr�s son d�placement
-			MovingBloc m = null;
-			for (MovingBloc movingBloc : movingBlocs)
-			{
-				if (movingBloc.moved && !movingBloc.IsMoving())
-				{
-					map[movingBloc.xInMap][movingBloc.yInMap] = ObjectType.mapIdOf(ObjectType.SOLIDBLOC);
-					blocs.add(new AnimatedSolidBloc(movingBloc.xInMap, movingBloc.yInMap));
-					this.add(blocs.get(blocs.size()-1));
-					m = movingBloc;
-				}
-			}
-			if (m!=null) {
-				this.remove(m);
-				movingBlocs.remove(m);
-			}
-		}
-		
-		return false;
-	}
-	
-	
-	private void ExecuteKeys()
-	{
-		if (!POOPY.IsMoving())
-		{
-			if (keysPressedList.ActionReadyOf(KeyType.UP)) if (MoveObject(POOPY,Direction.NORTH)) keysPressedList.FireKey(KeyType.UP);
-			if (keysPressedList.ActionReadyOf(KeyType.LEFT)) if (MoveObject(POOPY,Direction.WEST)) keysPressedList.FireKey(KeyType.LEFT);
-			if (keysPressedList.ActionReadyOf(KeyType.DOWN)) if (MoveObject(POOPY,Direction.SOUTH)) keysPressedList.FireKey(KeyType.DOWN);
-			if (keysPressedList.ActionReadyOf(KeyType.RIGHT)) if (MoveObject(POOPY,Direction.EAST)) keysPressedList.FireKey(KeyType.RIGHT);
-			if (keysPressedList.ActionReadyOf(KeyType.SPACE)) if (SpacePressed()) keysPressedList.FireKey(KeyType.UP);
-		}
-		
-	}
-	
-	//Move an object to the desired direction, returns true if the object moved or changed direction succesfully
-	private boolean MoveObject(Objet o, Direction d)
-	{
-		//If the object is a movable object and can move and if there is nothing blocking the way
-		if (PossibleToMove(o, d))
-			return o.Move(d);
-		
-		//Ok il peut pas bouger mais si c'est snoopy il veut ptet juste regarder du bon cote tu sais pas
-		else if (o.Type() == ObjectType.SNOOPY && !o.IsMoving())
-				return ((Snoopy)o).ChangeOrientationTo(d);
-			
-		return false;
-	}
-	
-	//returns true if the object is a movable object and can move and if there is nothing blocking the way
-	private boolean PossibleToMove(Objet o, Direction d)
-	{
-		if (OutOfBound(o.NextCaseX(d), o.NextCaseY(d)))
-			return false;
-				
-		if (NextObjet(o,d).Type() == ObjectType.APPARITION)
-		{
-			if(!((Apparition) NextObjet(o, d)).visible)
-				return false;
-		}
-		
-		return (o.CanMove(d) && nonSolidObjects.contains(map[o.NextCaseX(d)][o.NextCaseY(d)]));
-	}
-	private Objet NextObjet(Objet o,Direction d)
-	{
-		if (mapObjets[o.NextCaseX(d)][o.NextCaseY(d)] != null)
-			return mapObjets[o.NextCaseX(d)][o.NextCaseY(d)];
-		return new Objet(-1, -1, ObjectType.none);
-	}
-	
-	private boolean CollisionsSnoopy()
-	{
-		//Les collisions de snoopy ne sont triggered que quand il a finit son deplacement sur la case
-		if (POOPY.IsMoving())
-			return false;
-		
-		  ///////////////
-		 //  OISEAUX  //
-		///////////////
-		
-		//Si snoopy est sur une case oiseau on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
-		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.OISEAU))
-		{
-			Oiseau catchedOiseau = (Oiseau) mapObjets[POOPY.xInMap][POOPY.yInMap];
-			
-			map[catchedOiseau.xInMap][catchedOiseau.yInMap] = 0;
-			this.remove(catchedOiseau);
-			oiseaux.remove(catchedOiseau);
-			POOPY.RefreshSprite();
-			
-			//Si la liste est vide ca veut dire que snoopy a attrape tous les oiseaux et qu'il a fini le niveau
-			if(oiseaux.isEmpty())
-			{
-				System.out.println("Et c'est la wiiin");
-				win();
-				return true;
-			}
-		}
-		
-		  /////////////////////
-		 //  TAPISROULANTS  //
-		/////////////////////
-		
-		CollisionsTapis(POOPY);
-		
-		  //////////////
-		 //  PIEGES  //
-		//////////////
-		
-		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE) && !POOPY.IsMoving())
-		{
-			/*
-			String bip = "bip.mp3";
-			Media hit = new Media(new File(bip).toURI().toString());
-			MediaPlayer mediaPlayer = new MediaPlayer(hit);
-			mediaPlayer.play();
-			*/
-			POOPY.StartImmunity();
-			return vieloose();
-		}
-	
-		return false;
-	}
-	
-	// Gere la barre Espace
-	private boolean SpacePressed()
-	{
-		//System.out.println("Space pressed");
-		int blocX = POOPY.NextCaseX(POOPY.orientation);
-		int blocY = POOPY.NextCaseY(POOPY.orientation);
-		
-		if (OutOfBound(blocX, blocY))
-			return false;
-		
-		switch (ObjectType.typeOfInt(map[blocX][blocY]))
-		{
-		case MOVINGBLOC:
-			for (MovingBloc movingBloc : movingBlocs) {
-				if (movingBloc.xInMap == blocX && movingBloc.yInMap == blocY)
-				{
-					System.out.println("MovingBloc found");
-					if (MoveObject(movingBloc, POOPY.orientation))
-					{
-						map[movingBloc.xInMap][movingBloc.yInMap]  = map[blocX][blocY];
-						map[blocX][blocY] = 0;
-						return true;
-					}
-				}
-			}
-			break;
-		case BREAKABLEBLOC:
-			for (BreakableBloc breakableBloc : breakableBlocs) {
-				if (breakableBloc.xInMap == blocX && breakableBloc.yInMap == blocY)
-				{
-					System.out.println("breakableBloc found");
-					if (breakableBloc.stopAnimation)
-						breakableBloc.Break();
-					map[blocX][blocY] = 0;
-				}
-			}
-			break;
-		default:
-			break;
-		}
-		
-		return false;
-	}
-	
-	private boolean OutOfBound(int x, int y)
-	{
-		return (x < 0 || x >= globalVar.nbTilesHorizontally || y < 0 || y >= globalVar.nbTilesVertically);
-	}
-	
-	// Actualise les mouvements du ballons fait le calcul de collisions 
-	private boolean MouvementBallons(boolean checkCollisions) 
-	{
-		boolean needReset = false;
-		for (Ballon ballon : ballons)
-		{
-			if (synchronizedMovements)
-				ballon.MoveTowardsTarget((double)1/globalVar.CalculusFrequency);
-			
-			if (checkCollisions)
-				needReset = CollisionsBallon(ballon);
-			
-			if (needReset)
-				break;
-		}
-		return needReset;
-	}
-	// Est appelé dnas mouvement pour  check les hitbox
-	private boolean CollisionsBallon(Ballon b) 
-	{
-		for (AnimatedSolidBloc bloc : blocs)
-			b.hitboxslow(bloc, true);
-		
-		for(MovingBloc movingBloc : movingBlocs)
-			b.hitboxslow(movingBloc, true);
-		
-		for(BreakableBloc breakableBloc : breakableBlocs)
-			b.hitboxslow(breakableBloc, true);
-		
-		//Les collisions pour les blocs apparition, si tu veux pas faire comme �a, pas de souc'
-		//J'ai juste fait sur le meme modele que les autres en prenant en compte si il est visible ou pas
-		
-		for(Apparition apparition : apparitions)
-			b.hitboxslow(apparition, !apparition.visible);
-			
-		if(b.hitboxslow(POOPY, false) && !POOPY.immune)
-		{
-			System.out.println("Et c'est la loooose");
-		
-			POOPY.StartImmunity();
-			
-			return vieloose();
-		}
-		
-		return false;
-	}
-	
-	// Gere les tapis 
-	private void CollisionsTapis(AnimatedObject o)
-	{
-		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified())
-		{
-			TapisRoulant tapisRoulant = (TapisRoulant) mapObjets[o.xInMap][o.yInMap];
-			System.out.println("Le bon tapis");
-			if (nonSolidObjects.contains(map[o.NextCaseX(tapisRoulant.orientation)][o.NextCaseY(tapisRoulant.orientation)]) && !POOPY.IsMoving())
-			{
-				if (!o.Move(tapisRoulant.orientation))
-				{
-					o.Move(tapisRoulant.orientation);
-					o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
-				}
-			}
-		}
-		else if (o.SpeedModified()) o.ResetSpeed();
-	}
-	
-	public int getseconde()
-	{
-		return seconde;
-	}
-	
-	public int getvie()
-	{
-		return vie;
-	}
-	
+
 	// Sert a la sauvegarde
 	protected void CallSavePartie() {
 		StopAll();
@@ -718,51 +520,182 @@ public class Niveau extends JPanel {
 			else
 				partie.SavePartie();
 		} catch (FileNotFoundException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); } 
-		  catch (UnsupportedEncodingException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); }
+		catch (UnsupportedEncodingException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); }
 	}
-	
+
 	protected void SaveThis(String _namePartie) throws FileNotFoundException, UnsupportedEncodingException
 	{
 		boolean printSnoopyInMap = !(POOPY.IsMoving() || map[POOPY.xInMap][POOPY.yInMap] != 0);
 		String fileName = name + "P" + _namePartie;
 		PrintWriter saveFile = new PrintWriter("./Maps/" + fileName + ".txt", "UTF-8");
-		
+
 		System.out.println("Saving...");
-		
+
 		saveFile.println(globalVar.nbTilesHorizontally + " " + globalVar.nbTilesVertically);
-		
-	    for (int j=0; j<globalVar.nbTilesVertically; j++)
-	    {
-	    	String lineToPrint = "";
-	    	for (int i=0; i<globalVar.nbTilesHorizontally; i++)
-	    		lineToPrint+= ((printSnoopyInMap && i == POOPY.xInMap && j == POOPY.yInMap)?"8":((mapObjets[i][j] != null)?mapObjets[i][j].SavingInfo():"0")) + ((i >= globalVar.nbTilesHorizontally - 1)?"":" ");
-	    	
-	    	saveFile.println(lineToPrint);
-	    }
-	    
-	    if (!printSnoopyInMap)
-	    {
-	    	saveFile.println("Snoopy");
-	    	saveFile.println(POOPY.SavingInfo());
-	    }
-	    
-	    if (!ballons.isEmpty())
-	    {
-	    	saveFile.println("Ballons");
-	    	for (Ballon ballon : ballons)
-		    	saveFile.println(ballon.SavingInfo());
-	    }
-	    
-	    saveFile.close();
+
+		for (int j=0; j<globalVar.nbTilesVertically; j++)
+		{
+			String lineToPrint = "";
+			for (int i=0; i<globalVar.nbTilesHorizontally; i++)
+				lineToPrint+= ((printSnoopyInMap && i == POOPY.xInMap && j == POOPY.yInMap)?"8":((mapObjets[i][j] != null)?mapObjets[i][j].SavingInfo():"0")) + ((i >= globalVar.nbTilesHorizontally - 1)?"":" ");
+
+			saveFile.println(lineToPrint);
+		}
+
+		if (!printSnoopyInMap)
+		{
+			saveFile.println("Snoopy");
+			saveFile.println(POOPY.SavingInfo());
+		}
+
+		if (!ballons.isEmpty())
+		{
+			saveFile.println("Ballons");
+			for (Ballon ballon : ballons)
+				saveFile.println(ballon.SavingInfo());
+		}
+
+		saveFile.close();
+	}
+
+	public int getseconde()
+	{
+		return seconde;
+	}
+
+	public int getvie()
+	{
+		return vie;
 	}
 
 	public void setSeconde(int timeLeft) {
 		seconde = timeLeft;
-		temps.setText(new String("Remaining Time: " + seconde));
+		//temps.setText(new String("Remaining Time: " + seconde));
 	}
 
 	public void setVies(int vies) {
 		vie = vies;
-		vieDisplayer.setText(new String("Vies : "+vie));
+		//vieDisplayer.setText(new String("Vies : "+vie));
 	}
 }
+
+
+/*
+private List<Oiseau> oiseaux = new ArrayList<Oiseau>();
+private List<MovingBloc> movingBlocs = new ArrayList<MovingBloc>();
+private List<Apparition> apparitions = new ArrayList<Apparition>();
+private List<BreakableBloc> breakableBlocs = new ArrayList<BreakableBloc>();
+private List<AnimatedSolidBloc> blocs = new ArrayList<AnimatedSolidBloc>();
+private List<TapisRoulant> tapisRoulants = new ArrayList<TapisRoulant>();
+ */
+
+/*
+private JLabelText pressSpaceLabel = new JLabelText("Press space to start...", 600, (int)(globalVar.tileHeight/1.5), Color.WHITE);
+
+private JLabelText vieDisplayer;
+
+private JLabelText temps;
+
+private KeysPressedList keysPressedList = new KeysPressedList();
+ */
+
+/* Niveau()
+this.setLayout(null);
+this.setBackground(new Color(213,210,204));
+
+pressSpaceLabel.setVisible(false);
+add(pressSpaceLabel);
+
+temps = new JLabelText("Remaining Time: " + seconde, 300, globalVar.tileHeight/2, Color.BLUE);
+
+vieDisplayer=new JLabelText("Vies : "+vie, 300, globalVar.tileHeight/2, Color.BLUE);
+
+this.add(POOPY);
+
+System.out.println("Nombre d'objets dans le niveau : " + this.getComponentCount());
+
+this.setVisible(false);
+ */
+
+/* PreStart()
+temps.setLocation(globalVar.tileWidth/6, globalVar.tileHeight/6);
+vieDisplayer.setLocation(globalVar.tileWidth*10, globalVar.tileHeight/6);
+
+if (temps.getText() == null)
+	temps.setText(new String("Remaining Time: " + seconde));
+partie.add(temps);
+partie.add(vieDisplayer);
+
+this.setLocation(0, globalVar.tileHeight);
+this.setVisible(true);
+ */
+
+/* Start()
+if (waitForIt)
+{
+	partie.time.pPressed();
+	this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),"Start");
+	this.getActionMap().put("Start", new AbstractAction() { public void actionPerformed(ActionEvent e) { StartAfterWait(waitForIt); } });
+
+	pressSpaceLabel.setLocation(this.getWidth()/3, this.getHeight()/2-pressSpaceLabel.getHeight()/2);
+	pressSpaceLabel.setVisible(true);
+}
+else
+	StartAfterWait(waitForIt);
+
+this.validate();
+ */
+
+/* StartAfterWait()
+if (waitedForIt)
+{
+	pressSpaceLabel.setVisible(false);
+	this.remove(pressSpaceLabel);
+	pressSpaceLabel=null;
+	this.getInputMap().remove(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false));
+	//this.getActionMap().remove;
+	partie.time.pPressed();
+}
+
+
+AddKeyBindings();
+ */
+
+/*
+// Sers a l'initialisation de la classe Niveau 
+	@SuppressWarnings("serial")
+	public void AddKeyBindings()
+	{
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
+		this.getActionMap().put("MoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.UP); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, true),"StopMoveUp");
+		this.getActionMap().put("StopMoveUp", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.UP); } });
+
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false),"MoveLeft");
+		this.getActionMap().put("MoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.LEFT); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, true),"StopMoveLeft");
+		this.getActionMap().put("StopMoveLeft", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.LEFT); } });
+
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false),"MoveDown");
+		this.getActionMap().put("MoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.DOWN); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, true),"StopMoveDown");
+		this.getActionMap().put("StopMoveDown", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.DOWN); } });
+
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false),"MoveRight");
+		this.getActionMap().put("MoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.RIGHT); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, true),"StopMoveRight");
+		this.getActionMap().put("StopMoveRight", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.RIGHT); } });
+
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false),"SnoopyDo");
+		this.getActionMap().put("SnoopyDo", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.add(KeyType.SPACE); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true),"SnoopyStop");
+		this.getActionMap().put("SnoopyStop", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.SPACE); } });
+
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false),"Save");
+		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { CallSavePartie(); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
+		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { pause(); } });
+		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false),"AutoWin");
+		this.getActionMap().put("AutoWin", new AbstractAction() { public void actionPerformed(ActionEvent e) { win(); } });
+	}
+ */

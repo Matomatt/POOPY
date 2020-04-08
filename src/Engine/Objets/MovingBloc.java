@@ -3,6 +3,7 @@ package Engine.Objets;
 import java.io.IOException;
 
 import Engine.ErrorMessage;
+import Utilitaires.Action;
 import Utilitaires.Direction;
 import Utilitaires.ObjectType;
 
@@ -37,5 +38,12 @@ public class MovingBloc extends AnimatedObject {
 		if (!IsMoving())
 			return true;
 		return false;
+	}
+	
+	public Action actionReturned()
+	{
+		if (this.moved && !this.IsMoving())
+			return Action.CHANGEBLOCINMAP;
+		return null;
 	}
 }

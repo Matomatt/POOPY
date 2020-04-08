@@ -13,20 +13,19 @@ import javax.swing.*;
 import javax.swing.Timer;
 
 import Utilitaires.*;
+import Utilitaires.Action;
 
-public class Objet extends JLabel{
-	private static final long serialVersionUID = 1L;
+public class Objet {
 	
 	protected double r;
 	protected CoordType coordType = CoordType.LEFTRIGHTCORNER;
-	public int xInMap = 0;
-
-	public int yInMap = 0;
-	protected double x=0,y=0;
-	protected double targetX = 0, targetY = 0; // target ???
+	public int xInMap = 0, yInMap = 0;
+	protected double x=0, y=0;
+	protected double targetX = 0, targetY = 0;
 	
-	//protected  JPanel img;
-	protected  int hitbox;
+	protected boolean solid = true;
+	protected boolean visible = true;
+	
 	protected  ObjectType type;
 	
 	protected ImageIcon sprite;
@@ -55,42 +54,41 @@ public class Objet extends JLabel{
 	
 	protected void Init()
 	{
-		this.setLayout(new BorderLayout());
-		this.setOpaque(false);
+		//this.setLayout(new BorderLayout());
+		//this.setOpaque(false);
 		
 		targetX = x; targetY = y;
 		r = globalVar.tileWidth;
 		
 		//Chargement de sprite par defaut
-		try { sprite = new ImageIcon(ImageManager.LoadImage("./Images/Sprites/default.png", globalVar.tileWidth, globalVar.tileHeight) ); }
+		try { ChangeSpriteTo("default.png"); }
 		catch (IOException e) { new ErrorMessage("Couldn't open default sprite...\n" + e.getLocalizedMessage()); }
 
 		//Les parametres de base tu connais
-		this.setVisible(true);
-		this.setSize(globalVar.tileWidth, globalVar.tileHeight);
-		Draw();
-		this.validate();
+		//this.setVisible(true);
+		//this.setSize(globalVar.tileWidth, globalVar.tileHeight);
+		//Draw();
+		//this.validate();
 	}
 	
 	protected void Draw()
 	{
-		this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r*2:0));
+		//this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r*2:0));
+	}
+	
+	protected void ChangeSpriteTo(String fileName, int w, int h) throws IOException
+	{
+		sprite = new ImageIcon(ImageManager.LoadImage("./Images/Sprites/" + fileName, w, h));
 	}
 	
 	protected void ChangeSpriteTo(String fileName) throws IOException
 	{
-		this.setIcon(new ImageIcon(ImageManager.LoadImage("./Images/Sprites/" + fileName, globalVar.tileWidth, globalVar.tileHeight)));
+		ChangeSpriteTo(fileName, globalVar.tileWidth, globalVar.tileHeight);
 	}
 	
 	protected void ChangeSpriteTo(ImageIcon newSprite)
 	{
-		this.setIcon(newSprite);
-	}
- 
-	public int Hitbox (Objet tocheck)
-	{
-		int result=0;
-		return result;
+		sprite = newSprite;
 	}
 	
 	public ObjectType Type()
@@ -144,9 +142,43 @@ public class Objet extends JLabel{
 	{
 		return (xInMap == i && yInMap == j);
 	}
+	
+	public boolean isSolid() { return solid; }
+	
+	public boolean isVisible() { return visible; }
 
 	public String SavingInfo() {
 		return ""+ObjectType.mapIdOf(type);
+	}
+
+	public void Kill() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Stop() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void Resume() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void doCalculations(double elapsedTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Action actionReturned() {
+		
+		return null;
+	}
+
+	public void getReturnedActionSuccess(boolean succesfull) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

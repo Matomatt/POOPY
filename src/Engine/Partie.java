@@ -72,13 +72,13 @@ public class Partie extends JPanel {
 	{
 		time = new Time(niveaux.get(0));
 		
-		niveaux.get(0).setFocusable(true);
+		//niveaux.get(0).setFocusable(true);
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
 		this.setLayout(null);
 		
 		this.add((pause = new Pause(this)));
 		
-		this.add(niveaux.get(0)); //Le premier c'est toujours le nievau a reprendre quand on charge une partie (nouvelle ou pas, mdp ou pas)
+		//this.add(niveaux.get(0)); //Le premier c'est toujours le nievau a reprendre quand on charge une partie (nouvelle ou pas, mdp ou pas)
 		
 		RemplirNiveau();
 		
@@ -95,7 +95,7 @@ public class Partie extends JPanel {
 		}
 			
 		else {
-			this.remove(niveaux.get(0));
+			//this.remove(niveaux.get(0));
 			menu();
 		}
 	}
@@ -136,7 +136,7 @@ public class Partie extends JPanel {
 	public void next(boolean isReset) 
 	{
 		vies = niveaux.get(0).getvie() + ((isReset)?0:1);
-		remove(niveaux.get(0));
+		//remove(niveaux.get(0));
 		niveaux.remove(0);
 		time.cancel();
 		
@@ -145,7 +145,7 @@ public class Partie extends JPanel {
 		if(!niveaux.isEmpty())
 		{
 			do {
-				add(niveaux.get(0));
+				//add(niveaux.get(0));
 				
 				time=new Time(niveaux.get(0));
 				unlockedLevels += ((isReset)?0:1);

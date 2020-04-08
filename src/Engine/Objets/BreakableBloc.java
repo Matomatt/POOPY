@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import Engine.ErrorMessage;
+import Utilitaires.Action;
 import Utilitaires.ObjectType;
 
 public class BreakableBloc extends AnimatedObject {
@@ -39,10 +40,16 @@ public class BreakableBloc extends AnimatedObject {
 		}
 	}
 	
-	
 	public void Break()
 	{
 		ResumeAnimating();
 		SwitchToNextSprite();
+	}
+	
+	public Action actionReturned()
+	{
+		if (broken)
+			return Action.REMOVEIT;
+		return null;
 	}
 }

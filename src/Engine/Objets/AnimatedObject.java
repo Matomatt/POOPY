@@ -15,8 +15,6 @@ import Settings.*;
 
 public class AnimatedObject extends Objet {
 
-	private static final long serialVersionUID = -3920430219062203809L;
-	
 	protected double initSpeed[] = new double[2];
 	protected double vitesse[] = new double[2];
 	protected boolean alwaysMoving = false;
@@ -171,6 +169,11 @@ public class AnimatedObject extends Objet {
 		animationTimer.setInitialDelay(animationFrequency);
 	}
 	
+	public void doCalculations(double elapsedTime) {
+		MoveTowardsTarget(elapsedTime);
+		
+	}
+	
 	public void StopAnimating()
 	{
 		stopAnimation = true;
@@ -211,7 +214,7 @@ public class AnimatedObject extends Objet {
 		vitesse[1] = initSpeed[1];
 	}
 	
-	public void Pause()
+	public void Stop()
 	{
 		if (movementTimer != null)
 			movementTimer.stop();
@@ -229,7 +232,7 @@ public class AnimatedObject extends Objet {
 	
 	public void Kill()
 	{
-		this.Pause();
+		this.Stop();
 		movementTimer = null;
 		animationTimer = null;
 	}

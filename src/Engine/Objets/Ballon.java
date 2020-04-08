@@ -46,7 +46,7 @@ public class Ballon extends AnimatedObject {
 	{
 		vitesseUpdate();
 		try {
-			this.setIcon(new ImageIcon(ImageManager.LoadImage("./Images/Sprites/ballon/ballon.png", globalVar.tileWidth/2, globalVar.tileHeight/2)));
+			ChangeSpriteTo("/ballon/ballon.png", globalVar.tileWidth/2, globalVar.tileHeight/2);
 		} catch (IOException e) {
 			new ErrorMessage("Couldn't load ballon.png...\n" + e.getLocalizedMessage());
 		}
@@ -55,7 +55,7 @@ public class Ballon extends AnimatedObject {
 		coordType = CoordType.CENTER;
 		alwaysMoving=true;
 		//this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
-		Draw();
+		//Draw();
 		//System.out.println("Init speed : " + vitesse[0] + ", " + vitesse[1]+"direction initial" + direc);
 
 		//stopMovements=true;

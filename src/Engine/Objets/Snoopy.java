@@ -10,8 +10,6 @@ import Settings.globalVar;
 import Utilitaires.*;
 
 public class Snoopy extends AnimatedObject {
-	private static final long serialVersionUID = -7782172256474576827L;
-	
 	public Direction orientation = null;
 	
 	public boolean immune = false;
@@ -82,11 +80,6 @@ public class Snoopy extends AnimatedObject {
 		return false;
 	}
 	
-	public void RefreshSprite()
-	{
-		this.update(this.getGraphics());
-	}
-	
 	public void StartImmunity()
 	{
 		immune = true;
@@ -96,7 +89,7 @@ public class Snoopy extends AnimatedObject {
 	}
 	
 	protected void executePwmTransparency() {
-		this.setVisible(!this.isVisible());
+		visible = !visible;
 	}
 	
 	protected void ToggleTransparency()
@@ -104,7 +97,7 @@ public class Snoopy extends AnimatedObject {
 		if (pwmTransparency.isRunning())
 		{
 			pwmTransparency.stop();
-			this.setVisible(true);
+			visible = true;
 		}
 		else
 			pwmTransparency.restart();
@@ -116,14 +109,14 @@ public class Snoopy extends AnimatedObject {
 	public void EndImmunity()
 	{
 		immune = false;
-		this.setVisible(true);
+		visible = true;
 		pwmTransparency.stop();
 		immuneTimer.stop();
 	}
 	
-	public void Pause()
+	public void Stop()
 	{
-		super.Pause();
+		super.Stop();
 		if (immuneTimer != null)
 			immuneTimer.stop();
 		if (pwmTransparency != null)
@@ -141,7 +134,7 @@ public class Snoopy extends AnimatedObject {
 	
 	public void Kill()
 	{
-		super.Pause();
+		super.Stop();
 		super.Kill();
 		immuneTimer = null;
 		pwmTransparency = null;

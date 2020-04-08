@@ -1,12 +1,13 @@
 package Utilitaires;
 
 public enum ObjectType {
-	BREAKABLEBLOC, MOVINGBLOC, PIEGE, SOLIDBLOC, TAPISROULANT, APPARITION, BALLON, OISEAU, SNOOPY, none;
+	VIDE, BREAKABLEBLOC, MOVINGBLOC, PIEGE, SOLIDBLOC, TAPISROULANT, APPARITION, BALLON, OISEAU, SNOOPY, none;
 	
 	public static String nameOf(ObjectType o)
 	{
 		switch (o)
 		{
+			case VIDE: return "vide";
 			case BREAKABLEBLOC: return "breakablebloc";
 			case SOLIDBLOC: return "solidbloc";
 			case PIEGE: return "piege";
@@ -24,6 +25,7 @@ public enum ObjectType {
 	{
 		switch (n)
 		{
+			case 0: return VIDE;
 			case 1: return BREAKABLEBLOC;
 			case 2: return MOVINGBLOC;
 			case 3: return PIEGE;
@@ -40,6 +42,7 @@ public enum ObjectType {
 	{
 		switch (o)
 		{
+			case VIDE: return 0;
 			case BREAKABLEBLOC: return 1;
 			case MOVINGBLOC: return 2;
 			case PIEGE: return 3;
