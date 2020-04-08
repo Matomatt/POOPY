@@ -1,7 +1,5 @@
 package Engine.Objets;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import Engine.ErrorMessage;
@@ -9,8 +7,6 @@ import Utilitaires.Action;
 import Utilitaires.ObjectType;
 
 public class BreakableBloc extends AnimatedObject {
-	private static final long serialVersionUID = 534601364790057414L;
-
 	public boolean broken = false;
 	
 	public BreakableBloc(int _x, int _y)

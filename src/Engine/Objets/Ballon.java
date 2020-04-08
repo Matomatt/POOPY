@@ -9,8 +9,6 @@ import Settings.globalVar;
 import Utilitaires.*;
 
 public class Ballon extends AnimatedObject {
-	private static final long serialVersionUID = -32406108732612528L;
-
 	double vit = 5;
 	int direc= 0;  // je mets un int de direction pour keep le dernier moove en mémoire 0 NE 1 NW 2 SW 3 SE  
 
@@ -92,7 +90,6 @@ public class Ballon extends AnimatedObject {
 	{
 		//System.out.println("hitboxslow " + tocheck.x + " " + tocheck.y+" vitesse x "+vitesse [0]+ " vitesse y "+ vitesse[1] +" direction " +direc ) ;
 		boolean test=false;
-		String toPrintAtTheEnd = "";
 		int tmpDirec = direc;
 		
 		if (x-r<=0)
@@ -145,8 +142,6 @@ public class Ballon extends AnimatedObject {
 						direc=1;
 					if (direc==3)
 						direc=2;
-					//vitesseUpdate();
-					toPrintAtTheEnd = "BallonCollisionCG  direction "+direc + "  / x ballon "+x+" y ballon"+y;
 				}
 
 				else if (x-r<=tocheck.x+tocheck.r&&x-r>=tocheck.x) 	// Cas bord droit 
@@ -156,8 +151,6 @@ public class Ballon extends AnimatedObject {
 						direc=0;
 					else if (direc==2)
 						direc=3;
-					//vitesseUpdate();
-					toPrintAtTheEnd = "BallonCollisionCD  direction"+direc + "  / x ballon "+x+" y ballon"+y;
 				}
 			}
 		}
@@ -174,8 +167,6 @@ public class Ballon extends AnimatedObject {
 							direc=0;
 						else if (direc==2)
 							direc=1;
-						//vitesseUpdate();
-						toPrintAtTheEnd = "BallonCollisionCH "+direc +" Item touché sur le coté haut en  "+y+r+ " y du carré  "+tocheck.y + "  / x ballon "+x+" y ballon"+y;
 					}
 					else  if(y-r<=tocheck.y+tocheck.r&&y-r>=tocheck.y) //Cas Bas du carré 
 					{
@@ -184,8 +175,6 @@ public class Ballon extends AnimatedObject {
 							direc=3;
 						else if (direc==1)
 							direc=2;
-						//vitesseUpdate();
-						toPrintAtTheEnd  = "BallonCollisionCB"+direc + "  / x ballon "+x+"y ballon"+y;
 					}
 				}
 			}
@@ -246,8 +235,6 @@ public class Ballon extends AnimatedObject {
 						direc-=2;
 				}
 				test=true;
-				//vitesseUpdate();
-				toPrintAtTheEnd = "BallonCollisionHD"+direc + "  / x ballon "+x+" y ballon"+y;
 			}
 			else if (Math.sqrt((tocheck.x-x)*(tocheck.x-x) + ((tocheck.y+tocheck.r)-y)*((tocheck.y+tocheck.r)-y))<r)//BG
 			{
@@ -273,8 +260,6 @@ public class Ballon extends AnimatedObject {
 							direc-=2;
 					}
 				test=true;
-				//vitesseUpdate();
-				toPrintAtTheEnd = "BallonCollisionBG"+direc + "  / x ballon "+x+" y ballon"+y;
 			}
 			else if (Math.sqrt(((tocheck.x+tocheck.r)-x)*((tocheck.x+tocheck.r)-x) + ((tocheck.y+tocheck.r)-y)*((tocheck.y+tocheck.r)-y))<r)//BD
 			{
@@ -300,8 +285,6 @@ public class Ballon extends AnimatedObject {
 							direc-=2;
 					}
 				test=true;
-				//vitesseUpdate();
-				toPrintAtTheEnd = "BallonCollisionBD"+direc + "  / x ballon "+x+" y ballon"+y;
 			}
 
 		}

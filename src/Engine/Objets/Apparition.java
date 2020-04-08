@@ -1,7 +1,5 @@
 package Engine.Objets;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,12 +9,8 @@ import Settings.globalVar;
 import Utilitaires.ObjectType;
 
 public class Apparition extends AnimatedObject {
-	private static final long serialVersionUID = -7805073306416261166L;
-	
 	public boolean visible = true;
 	private Timer chrono;
-	private Timer chronoanimation;
-
 	public Apparition(int _x, int _y)
 	{
 		super(_x, _y, 0, 0, ObjectType.APPARITION, false, true);

@@ -152,35 +152,27 @@ public class Objet {
 	}
 
 	public void Kill() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void Stop() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void Resume() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public void doCalculations(double elapsedTime) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public Action actionReturned() {
-		
 		return null;
 	}
 
-	public void getReturnedActionSuccess(boolean succesfull) {
-		// TODO Auto-generated method stub
-		
+	public void setReturnedActionSuccess(boolean succesfull) {
 	}
 	
-	
+	public ImageIcon getSprite()
+	{
+		return sprite;
+	}
 	
 }

@@ -1,5 +1,7 @@
 package Engine.Objets;
 
+import javax.swing.ImageIcon;
+
 import Utilitaires.ObjectType;
 
 public class Vide extends Objet {
@@ -9,4 +11,8 @@ public class Vide extends Objet {
 		super(_x, _y, ObjectType.VIDE);
 	}
 
+	public ImageIcon getSprite()
+	{
+		return null;
+	}
 }

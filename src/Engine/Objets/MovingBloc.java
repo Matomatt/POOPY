@@ -8,8 +8,6 @@ import Utilitaires.Direction;
 import Utilitaires.ObjectType;
 
 public class MovingBloc extends AnimatedObject {
-	private static final long serialVersionUID = -3537496655119019160L;
-	
 	public boolean moved = false;
 	
 	public MovingBloc(int _x, int _y, boolean _selfMoved) {

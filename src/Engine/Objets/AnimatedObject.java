@@ -236,5 +236,4 @@ public class AnimatedObject extends Objet {
 		movementTimer = null;
 		animationTimer = null;
 	}
-
 }

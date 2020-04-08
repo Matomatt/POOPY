@@ -1,9 +1,7 @@
 package Engine;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,7 +11,6 @@ import java.util.List;
 
 import javax.swing.*;
 
-import Controller.KeysPressedList;
 //import Pause;
 import Settings.*;
 import Data.*;
@@ -21,8 +18,6 @@ import Engine.Objets.*;
 import Utilitaires.*;
 
 public class Niveau {
-	private static final long serialVersionUID = 5093936493506272943L;
-
 	protected String name;
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 	private Objet[][] mapObjets = new Objet[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
@@ -88,7 +83,6 @@ public class Niveau {
 		return true;
 	}
 
-	@SuppressWarnings("serial")
 	public boolean Start(final boolean waitForIt)
 	{
 		if (!PreStart())
@@ -154,9 +148,9 @@ public class Niveau {
 
 				switch(ObjectType.typeOfInt(idParam[0]))
 				{
-					case BALLON:AddBallon(new Ballon(i,j, idParam[1], !synchronizedCalculations)); break;
+					case BALLON: AddBallon(new Ballon(i,j, idParam[1], !synchronizedCalculations)); break;
 	
-					case SNOOPY: POOPY = new Snoopy(i, j, !synchronizedCalculations); break;
+					case SNOOPY: POOPY = new Snoopy(i, j, !synchronizedCalculations); AddObjet(new Vide(i, j)); break;
 	
 					case VIDE: AddObjet(new Vide(i, j)); break;
 	
@@ -180,7 +174,7 @@ public class Niveau {
 		}		
 	}
 
-	// Lis le paramètre associé au bloc
+	// Lis le parametre associé au bloc
 	public int[] SeparateIdParam(int id)
 	{
 		int[] idParam = {id, 0};
@@ -200,6 +194,7 @@ public class Niveau {
 	}
 
 	private void AddObjet(Objet o) {
+		System.out.println("Adding " + ObjectType.nameOf(o.Type()));
 		map[o.xInMap][o.yInMap] = ObjectType.mapIdOf(o.Type());
 		mapObjets[o.xInMap][o.yInMap] = o;
 	}
@@ -261,7 +256,7 @@ public class Niveau {
 					default: break;
 				}
 
-				if (objet != null) objet.getReturnedActionSuccess(succesfull);
+				if (objet != null) objet.setReturnedActionSuccess(succesfull);
 
 				if (objet.Type() == ObjectType.OISEAU) oiseauxTousAttrape = false;
 			}
@@ -468,7 +463,8 @@ public class Niveau {
 	// Arete temporairement les timer est appeler dans partie ppressed 
 	public void StopAll()
 	{
-		calculationsTimer.stop();
+		if (calculationsTimer != null)
+			calculationsTimer.stop();
 		if (POOPY != null)
 			POOPY.Stop();
 
@@ -476,14 +472,21 @@ public class Niveau {
 
 		for (Objet[] line : mapObjets) {
 			for (Objet objet : line)
-				objet.Stop();
+			{
+				if (objet != null)
+					objet.Stop();
+				else {
+					System.out.println("null");
+				}
+			}
 		}
 	}
 
 	// Relance les timers est aussi apelé dans partie ppressed
 	public void Resume()
 	{
-		calculationsTimer.start();
+		if (calculationsTimer != null)
+			calculationsTimer.start();
 		if (POOPY != null)
 			POOPY.Resume();
 
@@ -576,6 +579,29 @@ public class Niveau {
 	public void setVies(int vies) {
 		vie = vies;
 		//vieDisplayer.setText(new String("Vies : "+vie));
+	}
+	
+	public ArrayList<DrawableObjet> GetDrawableBallons()
+	{
+		ArrayList<DrawableObjet> list = new ArrayList<DrawableObjet>();
+		
+		for (Ballon ballon : ballons) {
+			list.add(new DrawableObjet(ballon));
+		}
+		
+		return list;
+	}
+	
+	public DrawableObjet getDrawable(Objet o)
+	{
+		return new DrawableObjet(o);
+	}
+	
+	public ImageIcon getSpriteToDraw(int x, int y)
+	{
+		if (!OutOfBound(x, y))
+			return mapObjets[x][y].getSprite();
+		return null;
 	}
 }
 
