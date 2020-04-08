@@ -89,7 +89,8 @@ public class ViewNiveau extends JPanel {
 		
 		ArrayList<DrawableObjet> ballonsDrawable = niveau.GetDrawableBallons();
 		for (int i=0; i<nbBallons; i++) {
-			ballons.get(i).setLocation(ballonsDrawable.get(i).getX(), ballonsDrawable.get(i).getY());
+			if (ballons.get(i).getX() != ballonsDrawable.get(i).getX() || ballons.get(i).getY() != ballonsDrawable.get(i).getY())
+				ballons.get(i).setLocation(ballonsDrawable.get(i).getX(), ballonsDrawable.get(i).getY());
 		}
 		
 		this.revalidate();
