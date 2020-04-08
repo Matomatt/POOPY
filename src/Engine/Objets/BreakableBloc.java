@@ -46,6 +46,6 @@ public class BreakableBloc extends AnimatedObject {
 	{
 		if (broken)
 			return Action.REMOVEIT;
-		return null;
+		return Action.none;
 	}
 }

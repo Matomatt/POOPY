@@ -42,6 +42,6 @@ public class MovingBloc extends AnimatedObject {
 	{
 		if (this.moved && !this.IsMoving())
 			return Action.CHANGEBLOCINMAP;
-		return null;
+		return Action.none;
 	}
 }

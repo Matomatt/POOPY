@@ -1,5 +1,5 @@
 package Utilitaires;
 
 public enum Action {
-	CHANGEBLOCINMAP, REMOVEIT;
+	CHANGEBLOCINMAP, REMOVEIT,  none;
 }

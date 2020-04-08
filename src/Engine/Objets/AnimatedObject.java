@@ -171,7 +171,6 @@ public class AnimatedObject extends Objet {
 	
 	public void doCalculations(double elapsedTime) {
 		MoveTowardsTarget(elapsedTime);
-		
 	}
 	
 	public void StopAnimating()

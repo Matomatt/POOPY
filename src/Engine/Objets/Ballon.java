@@ -52,12 +52,14 @@ public class Ballon extends AnimatedObject {
 		r = globalVar.tileWidth/4;
 		coordType = CoordType.CENTER;
 		alwaysMoving=true;
+		solid = false;
 		//this.setLocation((int)x-((coordType == CoordType.CENTER)?(int)r:0), (int)y-((coordType == CoordType.CENTER)?(int)r:0));
 		//Draw();
 		//System.out.println("Init speed : " + vitesse[0] + ", " + vitesse[1]+"direction initial" + direc);
 
 		//stopMovements=true;
 	}
+	
 //	public boolean hitboxfast (Objet tocheck)// Non fini / fonctionel
 //	{
 //		boolean result=false;

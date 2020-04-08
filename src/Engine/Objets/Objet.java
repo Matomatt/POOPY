@@ -164,7 +164,7 @@ public class Objet {
 	}
 
 	public Action actionReturned() {
-		return null;
+		return Action.none;
 	}
 
 	public void setReturnedActionSuccess(boolean succesfull) {

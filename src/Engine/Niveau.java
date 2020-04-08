@@ -87,6 +87,8 @@ public class Niveau {
 	{
 		if (!PreStart())
 			return false;
+		
+		StartAfterWait(true);
 
 		return true;
 	}
@@ -121,6 +123,7 @@ public class Niveau {
 			return true;
 		}
 		else if (globalVar.resetLevelWhenLosingLife) {
+			ended = true;
 			partie.resetNiveau();
 		}
 
@@ -328,23 +331,22 @@ public class Niveau {
 		if (POOPY.IsMoving())
 			return false;
 
-		///////////////
-		//  OISEAUX  //
+		  ///////////////
+		 //  OISEAUX  //
 		///////////////
 
-		Oiseau catchedOiseau;
 		//Si snoopy est sur une case oiseau on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
-		if ((catchedOiseau = (Oiseau) mapObjets[POOPY.xInMap][POOPY.yInMap]) != null)
-			RemoveObjet(catchedOiseau);
+		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.OISEAU))
+			RemoveObjet(mapObjets[POOPY.xInMap][POOPY.yInMap]);
 
-		/////////////////////
-		//  TAPISROULANTS  //
+		  /////////////////////
+		 //  TAPISROULANTS  //
 		/////////////////////
 
 		CollisionsTapis(POOPY);
 
-		//////////////
-		//  PIEGES  //
+		  //////////////
+		 //  PIEGES  //
 		//////////////
 
 		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE) && !POOPY.IsMoving())
@@ -592,6 +594,11 @@ public class Niveau {
 		return list;
 	}
 	
+	public DrawableObjet getDrawableSnoopy()
+	{
+		return new DrawableObjet(POOPY);
+	}
+	
 	public DrawableObjet getDrawable(Objet o)
 	{
 		return new DrawableObjet(o);
@@ -602,6 +609,16 @@ public class Niveau {
 		if (!OutOfBound(x, y))
 			return mapObjets[x][y].getSprite();
 		return null;
+	}
+
+	public DrawableObjet getObjetToDraw(int x, int y) {
+		if (!OutOfBound(x, y))
+			return new DrawableObjet(mapObjets[x][y]);
+		return null;
+	}
+
+	public boolean isEnded() {
+		return ended;
 	}
 }
 

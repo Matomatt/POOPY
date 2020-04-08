@@ -79,7 +79,7 @@ public class Apparition extends AnimatedObject {
 		}
 	}
 	
-	
+	public boolean isSolid() { return visible; }
 	
 	public void TogglePause()
 	{
@@ -96,9 +96,8 @@ public class Apparition extends AnimatedObject {
 			chrono=null;
 			StopAnimating();
 		}
-		
-		
 	}
+	
 	@Override
 	public void Kill() {
 		// TODO Auto-generated method stub

@@ -36,6 +36,7 @@ public class Snoopy extends AnimatedObject {
 	{
 		super(_x, _y, 4.5, 4.5, ObjectType.SNOOPY, true, true, _selfMoved, true);
 		
+		solid = false;
 		animateOnlyWhenMoving = true;
 		nbSpritesPerAnimationSequence = 4;
 		

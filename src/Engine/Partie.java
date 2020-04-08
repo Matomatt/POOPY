@@ -15,6 +15,7 @@ import javax.swing.*;
 
 import Data.StringManager;
 import Settings.globalVar;
+import View.ViewNiveau;
 
 import java.util.concurrent.TimeUnit;
 
@@ -88,6 +89,8 @@ public class Partie extends JPanel {
 		niveaux.get(0).setSeconde(timeLeft);
 		niveaux.get(0).setVies(vies);
 		
+		this.add(new ViewNiveau(niveaux.get(0)));
+		
 		if (niveaux.get(0).Start(globalVar.waitForSpaceWhenStartingLevel))
 		{
 			time.pPressed();
@@ -136,7 +139,7 @@ public class Partie extends JPanel {
 	public void next(boolean isReset) 
 	{
 		vies = niveaux.get(0).getvie() + ((isReset)?0:1);
-		//remove(niveaux.get(0));
+		this.removeAll();
 		niveaux.remove(0);
 		time.cancel();
 		
@@ -152,10 +155,13 @@ public class Partie extends JPanel {
 				niveaux.get(0).setVies(vies);
 				niveaux.get(0).setSeconde(globalVar.timerAuDepart);
 				
+				this.add(new ViewNiveau(niveaux.get(0)));
+				
 				troubleStarting = false;
 				time.pPressed();
 				if (!niveaux.get(0).Start(globalVar.waitForSpaceWhenStartingLevel))
 				{
+					this.removeAll();
 					niveaux.remove(0);
 					troubleStarting = true;
 				}
@@ -285,7 +291,7 @@ public class Partie extends JPanel {
 		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
 		
 		saveFile.println(niveaux.get(0).name+"P"+name);
-		saveFile.println(!niveaux.get(0).ended);
+		saveFile.println(!niveaux.get(0).isEnded());
 		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(0).getvie() + " " + niveaux.get(0).getseconde());
 		saveFile.close();
 		

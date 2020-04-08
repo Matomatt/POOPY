@@ -20,7 +20,8 @@ public class Piege  extends AnimatedObject {
 		}
 		
 		this.ChangeSpriteTo(spriteList[currentSprite]);
-		//StopAnimating();
+		
+		solid = false;
 	}
 }
 

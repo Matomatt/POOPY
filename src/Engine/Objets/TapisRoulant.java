@@ -13,6 +13,7 @@ public class TapisRoulant extends AnimatedObject {
 	{
 		super(_x, _y, 0, 0, ObjectType.TAPISROULANT, false, true);
 		orientation = _orientation;
+		solid = false;
 		
 		nbSpritesPerAnimationSequence = 3;
 		ChangeAnimationFrequency(100);
