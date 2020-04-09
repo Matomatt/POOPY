@@ -14,7 +14,7 @@ public class DrawableObjet{
 	private ImageIcon sprite;
 	
 	public DrawableObjet(Objet o) {
-		x = (int) (o.x - ((o.coordType == CoordType.CENTER)?(int)o.r:0)); y = (int) (o.y - ((o.coordType == CoordType.CENTER)?(int)o.r:0));
+		x = (int) (o.getX() - ((o.coordType == CoordType.CENTER)?(int)o.r:0)); y = (int) (o.getY() - ((o.coordType == CoordType.CENTER)?(int)o.r:0));
 		i = o.xInMap; j = o.yInMap;
 		sprite = ((o.isVisible())?o.sprite:null);
 	}

@@ -88,39 +88,39 @@ public class AnimatedObject extends Objet {
 	
 	public void MoveTowardsTarget(double elapsedTime)
 	{
-		if (x == targetX && y == targetY && !alwaysMoving || stopMovements)
+		if (getX() == targetX && getY() == targetY && !alwaysMoving || stopMovements)
 			return;
 		if (alwaysMoving)
 		{
 			//System.out.println(vitesse[0] + " / " + vitesse[1] + " + " + vitesse[1]*globalVar.tileHeight);
-			x += vitesse[0]*globalVar.tileWidth*elapsedTime;
-			y += vitesse[1]*globalVar.tileHeight*elapsedTime;
+			x = getX() + vitesse[0]*globalVar.tileWidth*elapsedTime;
+			y = getY() + vitesse[1]*globalVar.tileHeight*elapsedTime;
 		}
 		else 
 		{
-			if (x < targetX)
+			if (getX() < targetX)
 			{
-				x += vitesse[0]*globalVar.tileWidth*elapsedTime;
-				if (x > targetX)
+				x = getX() + vitesse[0]*globalVar.tileWidth*elapsedTime;
+				if (getX() > targetX)
 					x = targetX;
 			}
-			else if (x > targetX)
+			else if (getX() > targetX)
 			{
-				x -= vitesse[0]*globalVar.tileWidth*elapsedTime;
-				if (x < targetX)
+				x = getX() - vitesse[0]*globalVar.tileWidth*elapsedTime;
+				if (getX() < targetX)
 					x = targetX;
 			}
 			
-			if (y < targetY)
+			if (getY() < targetY)
 			{
-				y += vitesse[1]*globalVar.tileHeight*elapsedTime;
-				if (y > targetY)
+				y = getY() + vitesse[1]*globalVar.tileHeight*elapsedTime;
+				if (getY() > targetY)
 					y = targetY;
 			}
-			else if (y > targetY)
+			else if (getY() > targetY)
 			{
-				y -= vitesse[1]*globalVar.tileHeight*elapsedTime;
-				if (y < targetY)
+				y = getY() - vitesse[1]*globalVar.tileHeight*elapsedTime;
+				if (getY() < targetY)
 					y = targetY;
 			}
 		}
@@ -131,14 +131,14 @@ public class AnimatedObject extends Objet {
 	
 	public boolean IsMoving()
 	{
-		if (x == targetX && y == targetY && !alwaysMoving || stopMovements)
+		if (getX() == targetX && getY() == targetY && !alwaysMoving || stopMovements)
 			return false;
 		return true;
 	}
 	
 	public void SwitchToNextSprite()
 	{
-		if (x == targetX && y == targetY && animateOnlyWhenMoving)
+		if (getX() == targetX && getY() == targetY && animateOnlyWhenMoving)
 			currentSprite = 0;
 		else if (!stopAnimation)
 			currentSprite = (currentSprite+1)%nbSpritesPerAnimationSequence;
@@ -187,7 +187,7 @@ public class AnimatedObject extends Objet {
 	
 	public boolean CollideWith(Objet o)
 	{
-		if (o.x+globalVar.tileWidth < x || o.x > x+globalVar.tileWidth || o.y+globalVar.tileHeight < y || o.y > y+globalVar.tileHeight)
+		if (o.getX()+globalVar.tileWidth < getX() || o.getX() > getX()+globalVar.tileWidth || o.getY()+globalVar.tileHeight < getY() || o.getY() > getY()+globalVar.tileHeight)
 			return false;
 		return true;
 	}

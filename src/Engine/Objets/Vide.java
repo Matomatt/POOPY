@@ -18,7 +18,7 @@ public class Vide extends Objet {
 		} catch (IOException e) {
 			new ErrorMessage("Impossible de récupérer le sprite vide...\n" + e.getLocalizedMessage());
 		}
-		
+		this.sprite = null;
 		solid = false;
 	}
 

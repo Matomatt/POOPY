@@ -5,6 +5,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import Engine.Objets.DrawableObjet;
+import Settings.globalVar;
 
 public class JLabelObjet extends JLabel {
 	private static final long serialVersionUID = 7616670564695743177L;
@@ -16,16 +17,24 @@ public class JLabelObjet extends JLabel {
 		super(sprite);
 		this.setLayout(new GridLayout());
 		i=_i; j=_j;
-		this.setBounds(_x, _y, sprite.getIconWidth(), sprite.getIconHeight());
+		this.setLocation(_x, _y);
+		this.setSize(getPreferredSize());
 		this.setVisible(true);
 		this.validate();
 	}
 	
 	public void refresh(DrawableObjet o)
 	{
-		this.setIcon(o.getSprite());
+		/*
+		if (!(this.getIcon() == null && o.getSprite() == null))
+			this.setIcon(o.getSprite());
+		*/
 		if (this.getX() != o.getX() || this.getY() != o.getY())
 			this.setLocation(o.getX(), o.getY());
-		this.revalidate();
+		//this.revalidate();
+		//if (this.getName().contains("ballon"))
+		//	paint(this.getGraphics());
+		//if (this.getIcon() != null)
+			
 	}
 }

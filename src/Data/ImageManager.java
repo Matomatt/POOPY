@@ -18,7 +18,7 @@ public class ImageManager {
 	public static BufferedImage LoadImage(String filePath, int scaleWidth, int scaleHeight) throws IOException
 	{
 		//System.out.println(filePath);
-		return createResizedCopy(ImageIO.read(new File(filePath)), scaleWidth, scaleHeight, false);
+		return createResizedCopy(LoadImage(filePath), scaleWidth, scaleHeight, false);
 	}
 	
 	static BufferedImage createResizedCopy(Image originalImage, int scaledWidth, int scaledHeight, boolean preserveAlpha)

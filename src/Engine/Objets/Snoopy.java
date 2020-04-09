@@ -142,7 +142,7 @@ public class Snoopy extends AnimatedObject {
 	}
 
 	public String SavingInfo() {
-		return (xInMap + " " + yInMap + " " + (int)x + " " + (int)y + " " + (int)targetX + " " + (int)targetY + " " + (int)(initSpeed[0]*10) + " " + (int)(initSpeed[1]*10) + " " + (int)(vitesse[0]*10) + " " + (int)(vitesse[1]*10) + " " + Direction.idOf(orientation));
+		return (xInMap + " " + yInMap + " " + (int)getX() + " " + (int)getY() + " " + (int)targetX + " " + (int)targetY + " " + (int)(initSpeed[0]*10) + " " + (int)(initSpeed[1]*10) + " " + (int)(vitesse[0]*10) + " " + (int)(vitesse[1]*10) + " " + Direction.idOf(orientation));
 	}
 
 	public void setSelfMoved(boolean b) {

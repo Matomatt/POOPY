@@ -32,7 +32,8 @@ public class Niveau {
 
 	private Timer calculationsTimer;
 	private boolean synchronizedCalculations = true;
-
+	private long lastTrigger = System.currentTimeMillis();
+	
 	private Partie partie;
 
 	// Initialisation du niveau 
@@ -234,12 +235,16 @@ public class Niveau {
 
 		if (synchronizedCalculations)
 		{
-			POOPY.doCalculations((double)1/globalVar.CalculusFrequency);
+			POOPY.doCalculations((double)(System.currentTimeMillis()-lastTrigger)/1000);
 
 			for (Objet[] line : mapObjets) {
-				for (Objet objet : line) objet.doCalculations((double)1/globalVar.CalculusFrequency);
+				for (Objet objet : line) objet.doCalculations((double)(System.currentTimeMillis()-lastTrigger)/1000);
 			}
+			
+			//System.out.println((double)(System.currentTimeMillis()-lastTrigger));
+			lastTrigger = System.currentTimeMillis();
 		}
+		
 
 		boolean oiseauxTousAttrape = true;
 		for (Objet[] line : mapObjets) {
@@ -594,6 +599,25 @@ public class Niveau {
 		return list;
 	}
 	
+	public DrawableObjet getDrawableBallon(int i)
+	{
+		if (i>=0 && i<ballons.size())
+			return new DrawableObjet(ballons.get(i));
+		return null;
+	}
+	
+	public int getBallonX(int i) {
+		if (i>=0 && i<ballons.size())
+			return (int) ballons.get(i).getX();
+		return -1;
+	}
+	
+	public int getBallonY(int i) {
+		if (i>=0 && i<ballons.size())
+			return (int) ballons.get(i).getY();
+		return -1;
+	}
+	
 	public DrawableObjet getDrawableSnoopy()
 	{
 		return new DrawableObjet(POOPY);
@@ -620,6 +644,8 @@ public class Niveau {
 	public boolean isEnded() {
 		return ended;
 	}
+
+	
 }
 
 

@@ -25,6 +25,7 @@ public class ViewNiveau extends JPanel {
 	ArrayList<JLabelObjet> ballons = new ArrayList<JLabelObjet>();
 	
 	Timer refreshTimer = new Timer( 1000/globalVar.FPS, new ActionListener() { public void actionPerformed(ActionEvent arg0) { Refresh(); } });
+	private int refreshCounter = 0;
 	
 	public ViewNiveau(Niveau _niveau)
 	{
@@ -41,11 +42,13 @@ public class ViewNiveau extends JPanel {
 		ArrayList<DrawableObjet> listeBallonList = niveau.GetDrawableBallons();
 		nbBallons = listeBallonList.size();
 		
+		int b=0;
 		for (DrawableObjet drawableObjet : listeBallonList) {
 			toAddJLabel = new JLabelObjet(drawableObjet.getX(), drawableObjet.getY(), drawableObjet.geti(), drawableObjet.getj(), drawableObjet.getSprite());
-			toAddJLabel.setName("ballon");
+			toAddJLabel.setName("ballon"+b);
 			this.add(toAddJLabel);
 			ballons.add(toAddJLabel);
+			b++;
 		}
 		
 		for (int i=0; i < globalVar.nbTilesHorizontally; i++)
@@ -73,26 +76,44 @@ public class ViewNiveau extends JPanel {
 			refreshTimer.stop();
 			return;
 		}
-			
-		
-		for (Component component : this.getComponents())
-		{
-			if (component.getName() == "bloc")
-			{
-				JLabelObjet toRefreshJLabel = ((JLabelObjet) component);
-				toRefreshJLabel.refresh(niveau.getObjetToDraw(toRefreshJLabel.i, toRefreshJLabel.j));
-			}
-			else if (component.getName() == "Snoopy")
-				((JLabelObjet) component).refresh(niveau.getDrawableSnoopy());
-			
-		}
-		
+		/*
 		ArrayList<DrawableObjet> ballonsDrawable = niveau.GetDrawableBallons();
 		for (int i=0; i<nbBallons; i++) {
 			if (ballons.get(i).getX() != ballonsDrawable.get(i).getX() || ballons.get(i).getY() != ballonsDrawable.get(i).getY())
 				ballons.get(i).setLocation(ballonsDrawable.get(i).getX(), ballonsDrawable.get(i).getY());
+			ballons.get(i).revalidate();
 		}
+		*/
 		
-		this.revalidate();
+		for (int i=0; i<nbBallons; i++)
+		{
+			ballons.get(i).refresh(niveau.getDrawableBallon(i));
+		}
+		/*
+		for (Component component : this.getComponents())
+		{
+			if (component.getName() == "bloc" && false)
+			{
+				JLabelObjet toRefreshJLabel = ((JLabelObjet) component);
+				toRefreshJLabel.refresh(niveau.getObjetToDraw(toRefreshJLabel.i, toRefreshJLabel.j));
+			}
+			else if (component.getName() == "Snoopy" && false)
+				((JLabelObjet) component).refresh(niveau.getDrawableSnoopy());
+			else if (component.getName().contains("ballon") && false)
+			{
+				int index = component.getName().toCharArray()[6]-'0';
+				ballons.get(index).refresh(niveau.getDrawableBallon(index));
+			}
+			
+		}
+		*/
+
+		
+		/*
+		refreshCounter = (refreshCounter+1)%3;
+		if (refreshCounter == 0)
+			this.updateUI();
+			*/
+		//this.revalidate();
 	}
 }
