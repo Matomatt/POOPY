@@ -2,8 +2,8 @@ package Engine.Objets;
 
 import java.io.IOException;
 
-import Engine.ErrorMessage;
 import Utilitaires.Direction;
+import Utilitaires.ErrorMessage;
 import Utilitaires.ObjectType;
 
 public class TapisRoulant extends AnimatedObject {

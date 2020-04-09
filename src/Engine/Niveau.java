@@ -16,6 +16,7 @@ import Controller.KeysPressedList;
 import Settings.*;
 import Data.*;
 import Engine.Objets.*;
+import Menus.SaveFichier;
 import Utilitaires.*;
 
 public class Niveau {
@@ -45,6 +46,8 @@ public class Niveau {
 
 		System.out.println("New level : " + name);
 
+		LoadObjects(MapDataManager.LoadMap(name+".txt"));
+		
 		if (loadEnCours)
 		{
 			List<Ballon> _ballons = SaveManager.LoadSaveNiveau(name);
@@ -56,9 +59,7 @@ public class Niveau {
 				if (POOPY != null) POOPY.setSelfMoved(!synchronizedCalculations);
 			}
 		}
-
-		LoadObjects(MapDataManager.LoadMap(name+".txt"));
-
+		
 		if(this.name.contains("P")) name = name.split("P")[0];
 
 		//Synchronized Movements, gardez if !synchronized pour les collisions
@@ -89,9 +90,10 @@ public class Niveau {
 	{
 		if (!PreStart())
 			return false;
-		
-		StartAfterWait(true);
 
+		if (globalVar.waitForSpaceWhenStartingLevel)
+			partie.time.pPressed();
+		
 		return true;
 	}
 
@@ -99,7 +101,8 @@ public class Niveau {
 	public void StartAfterWait(boolean waitedForIt)
 	{
 		System.out.println("Start after wait");
-
+		if (waitedForIt)
+			partie.time.pPressed();
 		this.Resume();
 		POOPY.StartImmunity();
 	}
@@ -286,10 +289,11 @@ public class Niveau {
 
 	public boolean ExecuteKey(KeyType key)
 	{
-
+		if (CollisionsSnoopy())
+			return false;
+		
 		if (!PoupyMoving())
 		{
-			System.out.println("poupynotmooving");
 			switch (key) {
 				case UP: return MoveObject(POOPY,Direction.NORTH);
 	
@@ -306,6 +310,7 @@ public class Niveau {
 		}
 		return false;
 	}
+	
 	public Boolean PoupyMoving()
 	{
 		return POOPY.IsMoving();
@@ -532,20 +537,27 @@ public class Niveau {
 	}
 
 	// Sert a la sauvegarde
-	public void CallSavePartie() {
+	public void CallSavePartie() 
+	{
+		ended = true;
 		StopAll();
+		
 		try {
 			if (globalVar.enterNameWhenSavingWithS)
 				new SaveFichier(partie);
 			else
 				partie.SavePartie();
-		} catch (FileNotFoundException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); } 
+		} 
+		catch (FileNotFoundException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); } 
 		catch (UnsupportedEncodingException e) { new ErrorMessage("Erreur de sauvegarde...\n" + e.getLocalizedMessage()); }
 	}
 
 	protected void SaveThis(String _namePartie) throws FileNotFoundException, UnsupportedEncodingException
 	{
+		ended = true;
+		
 		boolean printSnoopyInMap = !(POOPY.IsMoving() || map[POOPY.xInMap][POOPY.yInMap] != 0);
+		
 		String fileName = name + "P" + _namePartie;
 		PrintWriter saveFile = new PrintWriter("./Maps/" + fileName + ".txt", "UTF-8");
 
@@ -557,7 +569,7 @@ public class Niveau {
 		{
 			String lineToPrint = "";
 			for (int i=0; i<globalVar.nbTilesHorizontally; i++)
-				lineToPrint+= ((printSnoopyInMap && i == POOPY.xInMap && j == POOPY.yInMap)?"8":((mapObjets[i][j] != null)?mapObjets[i][j].SavingInfo():"0")) + ((i >= globalVar.nbTilesHorizontally - 1)?"":" ");
+				lineToPrint+= ((printSnoopyInMap && POOPY.IsHere(i, j))?"8":((mapObjets[i][j] != null)?mapObjets[i][j].SavingInfo():"0")) + ((i >= globalVar.nbTilesHorizontally - 1)?"":" ");
 
 			saveFile.println(lineToPrint);
 		}

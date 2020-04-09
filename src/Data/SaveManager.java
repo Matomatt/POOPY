@@ -49,6 +49,12 @@ public class SaveManager {
 		String st;
 		while ( (st = br.readLine()) != null) if (st.contains("Snoopy")) break;
 		
+		if (st==null)
+		{
+			br.close();
+			return null;
+		}
+		
 		if (!st.contains("Snoopy"))
 		{
 			br.close();

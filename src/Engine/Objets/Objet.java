@@ -2,7 +2,6 @@ package Engine.Objets;
 import java.io.IOException;
 
 import Data.ImageManager;
-import Engine.ErrorMessage;
 //import Engine.Niveau.keylistener;
 import Settings.*;
 import java.awt.*;

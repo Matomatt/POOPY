@@ -1,4 +1,4 @@
-package Engine;
+package Menus;
 import java.awt.BorderLayout;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
@@ -8,12 +8,9 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.*;
 
 import Data.ImageManager;
+import Engine.Partie;
 import Settings.globalVar;
-
-
-
-
-
+import Utilitaires.ErrorMessage;
 
 public class Pause extends JPanel{
 	//private Fenetre fenetre;

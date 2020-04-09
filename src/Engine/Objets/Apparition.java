@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import Engine.ErrorMessage;
 import Settings.globalVar;
+import Utilitaires.ErrorMessage;
 import Utilitaires.ObjectType;
 
 public class Apparition extends AnimatedObject {
@@ -76,7 +76,7 @@ public class Apparition extends AnimatedObject {
 		}
 	}
 	
-	public boolean isSolid() { return visible; }
+	public boolean isSolid() { return !visible; }
 	
 	public void TogglePause()
 	{

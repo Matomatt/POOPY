@@ -2,6 +2,7 @@ package Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9,6 +10,7 @@ import javax.swing.*;
 
 
 import Engine.Niveau;
+import Settings.globalVar;
 import Utilitaires.KeyType;
 import View.ViewNiveau;
 
@@ -17,43 +19,63 @@ public class InputManager extends JPanel{
 	
 	private Niveau niveau;
 	ViewNiveau view;
+	
 	private KeysPressedList keysPressedList;
+	KeyStroke keyToWaitFor = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false);
+	
 	private Timer timer;
-	public InputManager(Niveau niv) 
+	
+	
+	@SuppressWarnings("serial")
+	public InputManager(Niveau niv, ViewNiveau _view) 
 	{
 		this.setLayout(null);
 		niveau = niv;
+		view = _view;
+		
 		this.requestFocus();
 		this.setVisible(true);
 		
 		keysPressedList=new KeysPressedList();
 
 		timer=new Timer();
-		AddKeyBindings();
 		timer.schedule( new ExecuteKey(), 0, 10);
+		
+		if (globalVar.waitForSpaceWhenStartingLevel)
+		{
+			this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyToWaitFor,"waitSpacePress");
+			this.getActionMap().put("waitSpacePress", new AbstractAction() { public void actionPerformed(ActionEvent e) { StartNiveau(); } });
+		}
+		else
+			AddKeyBindings();
+		
 		this.validate();
 	}
 	
+	private void StartNiveau()
+	{
+		this.getInputMap().remove(keyToWaitFor);
+		AddKeyBindings();
+		view.StartNiveau();
+	}
 	private class ExecuteKey extends TimerTask
 	{
 		
 		public void run()
 		{
 			runkey();
-			//System.out.println("poupynotmooving");
-
 		}
 	}
 	
 	private void runkey()
 	{
-		KeyType keyType;
-		System.out.println("size keypressedlist: "+keysPressedList.getReadyKeys().size());
-		for(int i=0;i<keysPressedList.getReadyKeys().size();i++)
-		{
-			keyType= keysPressedList.getReadyKeys().get(i);
-			if(niveau.ExecuteKey(keyType))
-				keysPressedList.FireKey(keyType);
+		if (niveau.isEnded())
+			return;
+		ArrayList<KeyType> keysReadyList = keysPressedList.getReadyKeys();
+		for (KeyType keyType : keysReadyList) {
+			KeyType tmpKeyType = keyType;
+			if(niveau.ExecuteKey(tmpKeyType))
+				keysPressedList.FireKey(tmpKeyType);
 		}	
 	}
 	
@@ -96,7 +118,7 @@ public class InputManager extends JPanel{
 		this.getActionMap().put("SnoopyStop", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.SPACE); } });
 
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false),"Save");
-		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Oui"); niveau.CallSavePartie(); } });
+		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { niveau.CallSavePartie(); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { niveau.pause(); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false),"AutoWin");

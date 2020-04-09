@@ -1,4 +1,4 @@
-package Engine;
+package Menus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 import Data.ImageManager;
+import Engine.Niveau;
 import Settings.globalVar;
+import Utilitaires.ErrorMessage;
+import View.Fenetre;
 
 // La classe menu est un panneaux n'ayant pour but que de servir d'interface pour trigger les fonctions approprié dans Fenetre
 public class Menu extends JPanel{
@@ -42,8 +45,8 @@ public class Menu extends JPanel{
 		loadgamebutt.addActionListener(new LoadGameListener());
 		start.addActionListener(new StartListener());
 
-		loadlv.setText("Code");
-		loadgame.setText("fichier.txt");
+		loadlv.setText("Mot de passe");
+		loadgame.setText("Partie");
 
 
 		this.add(loadlvlabel);

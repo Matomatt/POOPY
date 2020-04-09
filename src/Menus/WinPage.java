@@ -1,4 +1,4 @@
-package Engine;
+package Menus;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,12 +10,14 @@ import javax.swing.JPanel;
 
 import Data.ImageManager;
 import Settings.globalVar;
+import Utilitaires.ErrorMessage;
 
 import java.util.concurrent.*;
 
 public class WinPage extends JPanel
-
 {
+	private static final long serialVersionUID = 790327203544610088L;
+	
 	private int score;
 	private JLabel sprite;
 	public WinPage(int sco,int width,int height,int lv) 

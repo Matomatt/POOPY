@@ -12,12 +12,13 @@ public class JLabelObjet extends JLabel {
 	
 	int i; int j;
 	
-	public JLabelObjet(int _i, int _j, int _x, int _y, ImageIcon sprite)
+	public JLabelObjet(String _name, int _i, int _j, int _x, int _y, ImageIcon sprite)
 	{
 		super(sprite);
+		this.setName(_name);
 		this.setLayout(new GridLayout());
 		i=_i; j=_j;
-		this.setLocation(_x, _y);
+		this.setLocation(_x, _y+globalVar.tileHeight);
 		this.setSize(getPreferredSize());
 		this.setVisible(true);
 		this.validate();
@@ -25,16 +26,10 @@ public class JLabelObjet extends JLabel {
 	
 	public void refresh(DrawableObjet o)
 	{
-		/*
 		if (!(this.getIcon() == null && o.getSprite() == null))
 			this.setIcon(o.getSprite());
-		*/
+		
 		if (this.getX() != o.getX() || this.getY() != o.getY())
-			this.setLocation(o.getX(), o.getY());
-		//this.revalidate();
-		//if (this.getName().contains("ballon"))
-		//	paint(this.getGraphics());
-		//if (this.getIcon() != null)
-			
+			this.setLocation(o.getX(), o.getY()+globalVar.tileHeight);
 	}
 }

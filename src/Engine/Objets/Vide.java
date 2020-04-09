@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.swing.ImageIcon;
 
-import Engine.ErrorMessage;
+import Utilitaires.ErrorMessage;
 import Utilitaires.ObjectType;
 
 public class Vide extends Objet {

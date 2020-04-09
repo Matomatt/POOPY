@@ -15,7 +15,12 @@ import javax.swing.*;
 
 import Controller.InputManager;
 import Data.StringManager;
+import Menus.GameOver;
+import Menus.Pause;
+import Menus.WinPage;
 import Settings.globalVar;
+import Utilitaires.ErrorMessage;
+import View.Fenetre;
 import View.ViewNiveau;
 
 import java.util.concurrent.TimeUnit;
@@ -35,7 +40,7 @@ public class Partie extends JPanel {
 	private int timeLeft = globalVar.timerAuDepart;
 	private int unlockedLevels = globalVar.niveauAuDepart;
 	
-	protected ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
+	public ArrayList<Niveau> niveaux = new ArrayList<Niveau>();
 	
 	// Chargement d'une Partie Sauvegardé
 	public Partie(String partieToLoad, Fenetre _fenetre) throws IOException
@@ -120,6 +125,7 @@ public class Partie extends JPanel {
 		
 		System.out.println("Nombre total de niveaux : " + totallv);
 	}
+	
 	// est utilisé pour consérvé le nombre de vie et relancé le niveau quand snoopy perd un PV 
 	void resetNiveau()
 	{
@@ -149,8 +155,6 @@ public class Partie extends JPanel {
 		if(!niveaux.isEmpty())
 		{
 			do {
-				//add(niveaux.get(0));
-				
 				time=new Time(niveaux.get(0));
 				unlockedLevels += ((isReset)?0:1);
 				niveaux.get(0).setVies(vies);
@@ -195,7 +199,7 @@ public class Partie extends JPanel {
 		}
 	}
 	// Deconstruit la classe ses descendants ainsi que les timer, appel la fonction menu de fenetre
-	protected void menu()
+	public void menu()
 	{
 		time.cancel();
 		pause=null;
@@ -205,6 +209,7 @@ public class Partie extends JPanel {
 		
 		fenetre.menu();
 	}
+	
 	// Affiche le game Over en cas de défaite
 	protected void perdu()
 	{
@@ -227,6 +232,7 @@ public class Partie extends JPanel {
 	    
 		menu();
 	}
+	
 	//Garde le score a jour a la fin de chaque niveau en cas de victoire
 	protected void addscore(int lvscore)
 	{
@@ -234,6 +240,7 @@ public class Partie extends JPanel {
 	}
 	
 	javax.swing.Timer cooldownTimer = new javax.swing.Timer( 50, new ActionListener() { public void actionPerformed(ActionEvent arg0) { pPressedNext(); } });
+	
 	// Gere la pause
 	public void pPressed()
 	{
@@ -249,6 +256,7 @@ public class Partie extends JPanel {
 		}
 		
 	}
+	
 	// est utilisé pour arreté le timer dans pause lors du premier appuie
 	public void pPressedNext()
 	{
@@ -259,6 +267,7 @@ public class Partie extends JPanel {
 		pause.grabFocus();
 		this.revalidate();
 	}
+	
 	// Est utilisé dans le constructeur pour chargé une partie
 	private void LoadPartie(String fileToLoad) throws IOException
 	{
@@ -280,8 +289,9 @@ public class Partie extends JPanel {
 		
 		br.close();
 	}
+	
 	// Permet la sauvegarde d'un fichier  
-	protected void SavePartie() throws FileNotFoundException, UnsupportedEncodingException
+	public void SavePartie() throws FileNotFoundException, UnsupportedEncodingException
 	{
 		if (name == null)
 			name = "default";
@@ -292,7 +302,7 @@ public class Partie extends JPanel {
 		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
 		
 		saveFile.println(niveaux.get(0).name+"P"+name);
-		saveFile.println(!niveaux.get(0).isEnded());
+		saveFile.println(true);
 		saveFile.println(unlockedLevels + " " + score + " " + niveaux.get(0).getvie() + " " + niveaux.get(0).getseconde());
 		saveFile.close();
 		

@@ -4,7 +4,6 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 
 import Data.ImageManager;
-import Engine.ErrorMessage;
 import Settings.globalVar;
 import Utilitaires.*;
 
