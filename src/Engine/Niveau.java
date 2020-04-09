@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import Controller.KeysPressedList;
 //import Pause;
 import Settings.*;
 import Data.*;
@@ -177,10 +178,13 @@ public class Niveau {
 			}
 		}		
 	}
+	
+	KeysPressedList keysPressedList = new KeysPressedList();
 
 	// Lis le parametre associé au bloc
 	public int[] SeparateIdParam(int id)
 	{
+		
 		int[] idParam = {id, 0};
 
 		if (id > 9)

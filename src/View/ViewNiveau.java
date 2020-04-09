@@ -56,9 +56,14 @@ public class ViewNiveau extends JPanel {
 			for (int j=0; j < globalVar.nbTilesVertically; j++ )
 			{
 				o = niveau.getObjetToDraw(i, j);
-				toAddJLabel = new JLabelObjet(i, j, o.getX(), o.getY(), o.getSprite());
-				toAddJLabel.setName("bloc");
-				this.add(toAddJLabel);
+				if (o.getSprite() != null)
+				{
+					System.out.println("["+i+", "+j+"]");
+					toAddJLabel = new JLabelObjet(i, j, o.getX(), o.getY(), o.getSprite());
+					toAddJLabel.setName("bloc");
+					this.add(toAddJLabel);
+				}
+				
 			}
 			
 		}
