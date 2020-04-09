@@ -1,6 +1,5 @@
 package Controller;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -8,24 +7,28 @@ import javax.swing.*;
 
 
 import Engine.Niveau;
-import Utilitaires.Direction;
 import Utilitaires.KeyType;
+import View.ViewNiveau;
 
 public class InputManager extends JPanel{
+	private static final long serialVersionUID = -1000453229612833299L;
 	
 	private Niveau niveau;
+	ViewNiveau view;
 	private KeysPressedList keysPressedList;
 	
 	public InputManager(Niveau niv) 
 	{
 		niveau = niv;
-		this.setVisible(false);
+		
+		this.requestFocus();
+		this.setVisible(true);
 		AddKeyBindings();
 		
 		this.validate();
 	}
 	
-	
+	@SuppressWarnings("serial")
 	public void AddKeyBindings()
 	{
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");
@@ -54,7 +57,7 @@ public class InputManager extends JPanel{
 		this.getActionMap().put("SnoopyStop", new AbstractAction() { public void actionPerformed(ActionEvent e) { keysPressedList.remove(KeyType.SPACE); } });
 
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false),"Save");
-		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { niveau.CallSavePartie(); } });
+		this.getActionMap().put("Save", new AbstractAction() { public void actionPerformed(ActionEvent e) { System.out.println("Oui"); niveau.CallSavePartie(); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false),"Pause");
 		this.getActionMap().put("Pause", new AbstractAction() { public void actionPerformed(ActionEvent e) { niveau.pause(); } });
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false),"AutoWin");

@@ -1,12 +1,11 @@
 package View;
 
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -27,14 +26,13 @@ public class ViewNiveau extends JPanel {
 	ArrayList<JLabelObjet> ballons = new ArrayList<JLabelObjet>();
 	
 	Timer refreshTimer = new Timer( 1000/globalVar.FPS, new ActionListener() { public void actionPerformed(ActionEvent arg0) { Refresh(); } });
-	private int refreshCounter = 0;
 	
 	public ViewNiveau(Niveau _niveau)
 	{
 		niveau = _niveau;
-		inputManager=new InputManager(niveau);
-		add(inputManager);
+		
 		this.setLayout(null);
+		this.setBackground(new Color(213,210,204));
 		this.setBounds(0, globalVar.tileHeight, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.nbTilesVertically*globalVar.tileHeight);
 		
 		DrawableObjet o = niveau.getDrawableSnoopy();
@@ -97,7 +95,7 @@ public class ViewNiveau extends JPanel {
 		{
 			ballons.get(i).refresh(niveau.getDrawableBallon(i));
 		}
-		/*
+		
 		for (Component component : this.getComponents())
 		{
 			if (component.getName() == "bloc" && false)
@@ -114,7 +112,7 @@ public class ViewNiveau extends JPanel {
 			}
 			
 		}
-		*/
+		
 
 		
 		/*

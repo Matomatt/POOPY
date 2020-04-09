@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import Controller.InputManager;
 import Data.StringManager;
 import Settings.globalVar;
 import View.ViewNiveau;
@@ -90,6 +91,8 @@ public class Partie extends JPanel {
 		niveaux.get(0).setVies(vies);
 		
 		this.add(new ViewNiveau(niveaux.get(0)));
+		
+		this.add(new InputManager(niveaux.get(0)));
 		
 		if (niveaux.get(0).Start(globalVar.waitForSpaceWhenStartingLevel))
 		{
