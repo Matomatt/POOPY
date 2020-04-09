@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import Controller.InputManager;
 import Engine.Niveau;
 import Engine.Objets.DrawableObjet;
 import Settings.globalVar;
@@ -18,6 +19,7 @@ public class ViewNiveau extends JPanel {
 	private static final long serialVersionUID = -1571384451040609831L;
 
 	Niveau niveau;
+	InputManager inputManager;
 	
 	int nbBallons;
 	int nbTiles = globalVar.nbTilesHorizontally*globalVar.nbTilesVertically;
@@ -30,7 +32,8 @@ public class ViewNiveau extends JPanel {
 	public ViewNiveau(Niveau _niveau)
 	{
 		niveau = _niveau;
-		
+		inputManager=new InputManager(niveau);
+		add(inputManager);
 		this.setLayout(null);
 		this.setBounds(0, globalVar.tileHeight, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.nbTilesVertically*globalVar.tileHeight);
 		

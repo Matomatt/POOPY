@@ -133,7 +133,7 @@ public class Niveau {
 	}
 
 	//change de niveau et modifie le score
-	private void win()
+	public void win()
 	{
 		KillAll();
 		ended = true;
@@ -444,7 +444,7 @@ public class Niveau {
 		return false;
 	}
 
-	// Gere le deplacement forcé et l'accération des objets quand ils passent sur un tapis roulant
+	// Gere le deplacement forcï¿½ et l'accï¿½ration des objets quand ils passent sur un tapis roulant
 	private void CollisionsTapis(AnimatedObject o)
 	{
 		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified())
@@ -466,7 +466,7 @@ public class Niveau {
 	}
 
 	// lance la pause
-	private void pause()  // Timer to stop 
+	public void pause()  // Timer to stop 
 	{
 		partie.pPressed();
 	}
@@ -526,7 +526,7 @@ public class Niveau {
 	}
 
 	// Sert a la sauvegarde
-	protected void CallSavePartie() {
+	public void CallSavePartie() {
 		StopAll();
 		try {
 			if (globalVar.enterNameWhenSavingWithS)
