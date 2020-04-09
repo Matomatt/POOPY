@@ -36,7 +36,7 @@ public class Apparition extends AnimatedObject {
 	{
 		@Override
 		public void run() {
-			System.out.println("chrono apparition");
+			//System.out.println("chrono apparition");
 			if (visible==true)
 			{
 				visible=false;
@@ -54,16 +54,13 @@ public class Apparition extends AnimatedObject {
 	public void SwitchToNextSprite() {
 		if(visible)
 		{
-			System.out.println("Sens 0");
 			super.SwitchToNextSprite();
 			if (currentSprite>=nbSpritesPerAnimationSequence-1)
 				StopAnimating();
 		}
 		else 
 		{
-			System.out.println("Sens 1");
-			
-			if (x == targetX && y == targetY && animateOnlyWhenMoving)
+			if (getX() == targetX && getY() == targetY && animateOnlyWhenMoving)
 				currentSprite = 0;
 			else if (!stopAnimation)
 			{

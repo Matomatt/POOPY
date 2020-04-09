@@ -26,8 +26,8 @@ public class Ballon extends AnimatedObject {
 	public Ballon(int _x, int _y, int _dir, boolean _selfMoved)
 	{
 		super(_x, _y, 3, 3, ObjectType.BALLON, true, false, _selfMoved, false);// x donné pas bon ? j'ai set la position de dépat
-		x += globalVar.tileWidth/2;
-		y += globalVar.tileWidth/2;
+		x = getX() + globalVar.tileWidth/2;
+		y = getY() + globalVar.tileWidth/2;
 		direc = _dir;
 		InitBallon();
 	}
@@ -35,8 +35,8 @@ public class Ballon extends AnimatedObject {
 	public Ballon(int _x, int _y, boolean _selfMoved)
 	{
 		super(_x, _y, 3, 3, ObjectType.BALLON, true, false, _selfMoved, false);// x donné pas bon ? j'ai set la position de dépat
-		x += globalVar.tileWidth/2;
-		y += globalVar.tileWidth/2;
+		x = getX() + globalVar.tileWidth/2;
+		y = getY() + globalVar.tileWidth/2;
 		InitBallon();
 	}
 
@@ -94,7 +94,7 @@ public class Ballon extends AnimatedObject {
 		boolean test=false;
 		int tmpDirec = direc;
 		
-		if (x-r<=0)
+		if (getX()-r<=0)
 		{
 			test=true;
 			if(direc==1)
@@ -103,7 +103,7 @@ public class Ballon extends AnimatedObject {
 				direc=3;
 			}
 		}
-		if (x+r>=globalVar.tileWidth*globalVar.nbTilesHorizontally)
+		if (getX()+r>=globalVar.tileWidth*globalVar.nbTilesHorizontally)
 		{
 			
 			test=true;
@@ -113,7 +113,7 @@ public class Ballon extends AnimatedObject {
 				direc=2;
 			}
 		}
-		if (y-r<=0)
+		if (getY()-r<=0)
 		{
 			//System.out.println("y : " + (y-r));
 			test=true;
@@ -123,7 +123,7 @@ public class Ballon extends AnimatedObject {
 				direc=2;
 			}
 		}
-		if (y+r>=globalVar.nbTilesVertically*globalVar.tileHeight)
+		if (getY()+r>=globalVar.nbTilesVertically*globalVar.tileHeight)
 		{
 			test=true;
 			if(direc==2)
@@ -133,11 +133,11 @@ public class Ballon extends AnimatedObject {
 			}
 		}
 		
-		if(y>=tocheck.y) // Collision bord droit ou gauche du carré 
+		if(getY()>=tocheck.getY()) // Collision bord droit ou gauche du carré 
 		{
-			if(y<=tocheck.y+tocheck.r)
+			if(getY()<=tocheck.getY()+tocheck.r)
 			{
-				if((x+r>=tocheck.x)&&(x+r<=tocheck.x+tocheck.r)) // Cas bord gauche
+				if((getX()+r>=tocheck.getX())&&(getX()+r<=tocheck.getX()+tocheck.r)) // Cas bord gauche
 				{
 					test=true;
 					if (direc==0)
@@ -146,7 +146,7 @@ public class Ballon extends AnimatedObject {
 						direc=2;
 				}
 
-				else if (x-r<=tocheck.x+tocheck.r&&x-r>=tocheck.x) 	// Cas bord droit 
+				else if (getX()-r<=tocheck.getX()+tocheck.r&&getX()-r>=tocheck.getX()) 	// Cas bord droit 
 				{
 					test=true;
 					if (direc==1)
@@ -158,11 +158,11 @@ public class Ballon extends AnimatedObject {
 		}
 		if (test!=true)
 		{
-			if (x>=tocheck.x)  // cas bord haut ou bas
+			if (getX()>=tocheck.getX())  // cas bord haut ou bas
 			{
-				if (x<=tocheck.x+tocheck.r)
+				if (getX()<=tocheck.getX()+tocheck.r)
 				{
-					if ((y+r>=tocheck.y)&&(y+r<=tocheck.y+tocheck.r))// Cas Haut du carré
+					if ((getY()+r>=tocheck.getY())&&(getY()+r<=tocheck.getY()+tocheck.r))// Cas Haut du carré
 					{
 						test=true;
 						if(direc==3)
@@ -170,7 +170,7 @@ public class Ballon extends AnimatedObject {
 						else if (direc==2)
 							direc=1;
 					}
-					else  if(y-r<=tocheck.y+tocheck.r&&y-r>=tocheck.y) //Cas Bas du carré 
+					else  if(getY()-r<=tocheck.getY()+tocheck.r&&getY()-r>=tocheck.getY()) //Cas Bas du carré 
 					{
 						test=true;
 						if (direc==0)
@@ -183,17 +183,17 @@ public class Ballon extends AnimatedObject {
 		}
 		if(test!=true)
 		{
-			if (Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y)*(tocheck.y-y))<=r)// Distance par rapport aux coins HG
+			if (Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY())*(tocheck.getY()-getY()))<=r)// Distance par rapport aux coins HG
 			{
 				// si plus proche de sud ballon plutot que de east ballon 
-				if (Math.sqrt((tocheck.x-x+r)*(tocheck.x-x+r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y+r)*(tocheck.y-y+r)))
+				if (Math.sqrt((tocheck.getX()-getX()+r)*(tocheck.getX()-getX()+r) + (tocheck.getY()-getY())*(tocheck.getY()-getY())) > Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY()+r)*(tocheck.getY()-getY()+r)))
 						{
 							direc+=1;
 							if(direc==4)
 								direc=3;
 						}
 				// si plus proche de East 
-				else if (Math.sqrt((tocheck.x-x+r)*(tocheck.x-x+r) + (tocheck.y-y)*(tocheck.y-y)) < Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y+r)*(tocheck.y-y+r)))
+				else if (Math.sqrt((tocheck.getX()-getX()+r)*(tocheck.getX()-getX()+r) + (tocheck.getY()-getY())*(tocheck.getY()-getY())) < Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY()+r)*(tocheck.getY()-getY()+r)))
 				
 				{
 					direc-=1;
@@ -212,17 +212,17 @@ public class Ballon extends AnimatedObject {
 				//vitesseUpdate();
 				//toPrintAtTheEnd = "BallonCollisionG"+direc + "  / x ballon "+x+" y ballon"+y;
 			}
-			else if (Math.sqrt(((tocheck.x+tocheck.r)-x)*((tocheck.x+tocheck.r)-x) + (tocheck.y-y)*(tocheck.y-y))<=r)//HD
+			else if (Math.sqrt(((tocheck.getX()+tocheck.r)-getX())*((tocheck.getX()+tocheck.r)-getX()) + (tocheck.getY()-getY())*(tocheck.getY()-getY()))<=r)//HD
 			{
 				// si plus proche de south ballon plutot que de WEST ballon 
-				if (Math.sqrt((tocheck.x-x-r)*(tocheck.x-x-r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y+r)*(tocheck.y-y+r)))
+				if (Math.sqrt((tocheck.getX()-getX()-r)*(tocheck.getX()-getX()-r) + (tocheck.getY()-getY())*(tocheck.getY()-getY())) > Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY()+r)*(tocheck.getY()-getY()+r)))
 						{
 							direc+=1;
 							if(direc==4)
 								direc=3;
 						}
 				// si plus proche de West 
-				else if (Math.sqrt((tocheck.x-x-r)*(tocheck.x-x-r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y+r)*(tocheck.y-y+r)))
+				else if (Math.sqrt((tocheck.getX()-getX()-r)*(tocheck.getX()-getX()-r) + (tocheck.getY()-getY())*(tocheck.getY()-getY())) > Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY()+r)*(tocheck.getY()-getY()+r)))
 				
 				{
 					direc-=1;
@@ -238,16 +238,16 @@ public class Ballon extends AnimatedObject {
 				}
 				test=true;
 			}
-			else if (Math.sqrt((tocheck.x-x)*(tocheck.x-x) + ((tocheck.y+tocheck.r)-y)*((tocheck.y+tocheck.r)-y))<r)//BG
+			else if (Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + ((tocheck.getY()+tocheck.r)-getY())*((tocheck.getY()+tocheck.r)-getY()))<r)//BG
 			{
-				if (Math.sqrt((tocheck.x-x+r)*(tocheck.x-x+r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y-r)*(tocheck.y-y-r)))
+				if (Math.sqrt((tocheck.getX()-getX()+r)*(tocheck.getX()-getX()+r) + (tocheck.getY()-getY())*(tocheck.getY()-getY())) > Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY()-r)*(tocheck.getY()-getY()-r)))
 				{
 					direc+=1;
 					if(direc==4)
 						direc=3;
 				}
 		// si plus proche de East 
-				else if (Math.sqrt((tocheck.x-x+r)*(tocheck.x-x+r) + (tocheck.y-y)*(tocheck.y-y)) < Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y-r)*(tocheck.y-y-r)))
+				else if (Math.sqrt((tocheck.getX()-getX()+r)*(tocheck.getX()-getX()+r) + (tocheck.getY()-getY())*(tocheck.getY()-getY())) < Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY()-r)*(tocheck.getY()-getY()-r)))
 		
 				{
 					direc-=1;
@@ -263,16 +263,16 @@ public class Ballon extends AnimatedObject {
 					}
 				test=true;
 			}
-			else if (Math.sqrt(((tocheck.x+tocheck.r)-x)*((tocheck.x+tocheck.r)-x) + ((tocheck.y+tocheck.r)-y)*((tocheck.y+tocheck.r)-y))<r)//BD
+			else if (Math.sqrt(((tocheck.getX()+tocheck.r)-getX())*((tocheck.getX()+tocheck.r)-getX()) + ((tocheck.getY()+tocheck.r)-getY())*((tocheck.getY()+tocheck.r)-getY()))<r)//BD
 			{
-				if (Math.sqrt((tocheck.x-x-r)*(tocheck.x-x-r) + (tocheck.y-y)*(tocheck.y-y)) > Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y-r)*(tocheck.y-y-r)))
+				if (Math.sqrt((tocheck.getX()-getX()-r)*(tocheck.getX()-getX()-r) + (tocheck.getY()-getY())*(tocheck.getY()-getY())) > Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY()-r)*(tocheck.getY()-getY()-r)))
 				{
 					direc+=1;
 					if(direc==4)
 						direc=3;
 				}
 		// si plus proche de East 
-				else if (Math.sqrt((tocheck.x-x-r)*(tocheck.x-x-r) + (tocheck.y-y)*(tocheck.y-y)) < Math.sqrt((tocheck.x-x)*(tocheck.x-x) + (tocheck.y-y-r)*(tocheck.y-y-r)))
+				else if (Math.sqrt((tocheck.getX()-getX()-r)*(tocheck.getX()-getX()-r) + (tocheck.getY()-getY())*(tocheck.getY()-getY())) < Math.sqrt((tocheck.getX()-getX())*(tocheck.getX()-getX()) + (tocheck.getY()-getY()-r)*(tocheck.getY()-getY()-r)))
 		
 				{
 					direc-=1;
@@ -359,7 +359,7 @@ public class Ballon extends AnimatedObject {
 	
 	public String SavingInfo()
 	{
-		return (int)x + " " + (int)y + " " + direc;
+		return (int)getX() + " " + (int)getY() + " " + direc;
 	}
 	
 	/*

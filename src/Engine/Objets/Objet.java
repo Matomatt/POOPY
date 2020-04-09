@@ -57,7 +57,7 @@ public class Objet {
 		//this.setLayout(new BorderLayout());
 		//this.setOpaque(false);
 		
-		targetX = x; targetY = y;
+		targetX = getX(); targetY = getY();
 		r = globalVar.tileWidth;
 		
 		//Chargement de sprite par defaut
@@ -173,6 +173,14 @@ public class Objet {
 	public ImageIcon getSprite()
 	{
 		return sprite;
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
 	}
 	
 }
