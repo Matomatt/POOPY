@@ -2,6 +2,8 @@ package Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.*;
 
@@ -16,16 +18,53 @@ public class InputManager extends JPanel{
 	private Niveau niveau;
 	ViewNiveau view;
 	private KeysPressedList keysPressedList;
-	
+	private Timer timer;
 	public InputManager(Niveau niv) 
 	{
+		this.setLayout(null);
 		niveau = niv;
-		
 		this.requestFocus();
 		this.setVisible(true);
-		AddKeyBindings();
 		
+		keysPressedList=new KeysPressedList();
+
+		timer=new Timer();
+		AddKeyBindings();
+		timer.schedule( new ExecuteKey(), 0, 10);
 		this.validate();
+	}
+	
+	private class ExecuteKey extends TimerTask
+	{
+		
+		public void run()
+		{
+			runkey();
+			//System.out.println("poupynotmooving");
+
+		}
+	}
+	
+	private void runkey()
+	{
+		KeyType keyType;
+		System.out.println("size keypressedlist: "+keysPressedList.getReadyKeys().size());
+		for(int i=0;i<keysPressedList.getReadyKeys().size();i++)
+		{
+			keyType= keysPressedList.getReadyKeys().get(i);
+			if(niveau.ExecuteKey(keyType))
+				keysPressedList.FireKey(keyType);
+		}	
+	}
+	
+	public void stop()
+	{
+		timer.cancel();
+	}
+	
+	public void resume()
+	{
+		timer.schedule( new ExecuteKey(), 0, 10);
 	}
 	
 	@SuppressWarnings("serial")

@@ -92,8 +92,6 @@ public class Partie extends JPanel {
 		
 		this.add(new ViewNiveau(niveaux.get(0)));
 		
-		this.add(new InputManager(niveaux.get(0)));
-		
 		if (niveaux.get(0).Start(globalVar.waitForSpaceWhenStartingLevel))
 		{
 			time.pPressed();

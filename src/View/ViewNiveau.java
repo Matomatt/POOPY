@@ -29,10 +29,14 @@ public class ViewNiveau extends JPanel {
 	
 	public ViewNiveau(Niveau _niveau)
 	{
-		niveau = _niveau;
-		
 		this.setLayout(null);
 		this.setBackground(new Color(213,210,204));
+		niveau = _niveau;
+
+		inputManager=new InputManager(niveau);
+		add(inputManager);
+
+
 		this.setBounds(0, globalVar.tileHeight, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.nbTilesVertically*globalVar.tileHeight);
 		
 		DrawableObjet o = niveau.getDrawableSnoopy();
@@ -82,14 +86,6 @@ public class ViewNiveau extends JPanel {
 			refreshTimer.stop();
 			return;
 		}
-		/*
-		ArrayList<DrawableObjet> ballonsDrawable = niveau.GetDrawableBallons();
-		for (int i=0; i<nbBallons; i++) {
-			if (ballons.get(i).getX() != ballonsDrawable.get(i).getX() || ballons.get(i).getY() != ballonsDrawable.get(i).getY())
-				ballons.get(i).setLocation(ballonsDrawable.get(i).getX(), ballonsDrawable.get(i).getY());
-			ballons.get(i).revalidate();
-		}
-		*/
 		
 		for (int i=0; i<nbBallons; i++)
 		{
@@ -98,28 +94,14 @@ public class ViewNiveau extends JPanel {
 		
 		for (Component component : this.getComponents())
 		{
-			if (component.getName() == "bloc" && false)
+			if (component.getName() == "bloc" )
 			{
 				JLabelObjet toRefreshJLabel = ((JLabelObjet) component);
 				toRefreshJLabel.refresh(niveau.getObjetToDraw(toRefreshJLabel.i, toRefreshJLabel.j));
 			}
-			else if (component.getName() == "Snoopy" && false)
+			else if (component.getName() == "Snoopy" )
 				((JLabelObjet) component).refresh(niveau.getDrawableSnoopy());
-			else if (component.getName().contains("ballon") && false)
-			{
-				int index = component.getName().toCharArray()[6]-'0';
-				ballons.get(index).refresh(niveau.getDrawableBallon(index));
-			}
-			
+	
 		}
-		
-
-		
-		/*
-		refreshCounter = (refreshCounter+1)%3;
-		if (refreshCounter == 0)
-			this.updateUI();
-			*/
-		//this.revalidate();
 	}
 }

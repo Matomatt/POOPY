@@ -35,7 +35,7 @@ public class KeysPressedList {
 		
 		return false;
 	}
-	
+
 	private KeyHolder GetKeyHolder(KeyType _key)
 	{
 		for (KeyHolder keyHolder : list) {
