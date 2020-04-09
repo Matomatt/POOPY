@@ -31,10 +31,11 @@ public class ViewNiveau extends JPanel {
 	
 	public ViewNiveau(Niveau _niveau)
 	{
+		this.setLayout(null);
 		niveau = _niveau;
 		inputManager=new InputManager(niveau);
 		add(inputManager);
-		this.setLayout(null);
+		
 		this.setBounds(0, globalVar.tileHeight, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.nbTilesVertically*globalVar.tileHeight);
 		
 		DrawableObjet o = niveau.getDrawableSnoopy();
@@ -92,24 +93,19 @@ public class ViewNiveau extends JPanel {
 		{
 			ballons.get(i).refresh(niveau.getDrawableBallon(i));
 		}
-		/*
+		
 		for (Component component : this.getComponents())
 		{
-			if (component.getName() == "bloc" && false)
+			if (component.getName() == "bloc" )
 			{
 				JLabelObjet toRefreshJLabel = ((JLabelObjet) component);
 				toRefreshJLabel.refresh(niveau.getObjetToDraw(toRefreshJLabel.i, toRefreshJLabel.j));
 			}
-			else if (component.getName() == "Snoopy" && false)
+			else if (component.getName() == "Snoopy" )
 				((JLabelObjet) component).refresh(niveau.getDrawableSnoopy());
-			else if (component.getName().contains("ballon") && false)
-			{
-				int index = component.getName().toCharArray()[6]-'0';
-				ballons.get(index).refresh(niveau.getDrawableBallon(index));
-			}
-			
+	
 		}
-		*/
+		
 
 		
 		/*

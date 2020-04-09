@@ -35,7 +35,16 @@ public class KeysPressedList {
 		
 		return false;
 	}
-	
+	public ArrayList<KeyType> getReadyKeys()
+    {
+        ArrayList<KeyType> list2 = new ArrayList<KeyType>();
+
+        for (KeyHolder key : list) {
+            if (!key.cooldown)
+                list2.add(key.key);
+        }
+        return list2;
+    }
 	private KeyHolder GetKeyHolder(KeyType _key)
 	{
 		for (KeyHolder keyHolder : list) {

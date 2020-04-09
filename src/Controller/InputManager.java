@@ -3,6 +3,8 @@ package Controller;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.*;
 
@@ -15,17 +17,69 @@ public class InputManager extends JPanel{
 	
 	private Niveau niveau;
 	private KeysPressedList keysPressedList;
-	
+	private Timer timer;
 	public InputManager(Niveau niv) 
 	{
+		this.setLayout(null);
 		niveau = niv;
-		this.setVisible(false);
+		this.setVisible(true);
+		keysPressedList=new KeysPressedList();
+		//this.setEnabled(true);
+		timer=new Timer();
 		AddKeyBindings();
-		
+		timer.schedule( new ExecuteKey(), 0, 10);
 		this.validate();
 	}
-	
-	
+
+	private class ExecuteKey extends TimerTask
+	{
+		
+		public void run()
+		{
+			runkey();
+			//System.out.println("poupynotmooving");
+
+		}
+	}
+	private void runkey()
+	{
+		KeyType keyType;
+		System.out.println("size keypressedlist: "+keysPressedList.getReadyKeys().size());
+		for(int i=0;i<keysPressedList.getReadyKeys().size();i++)
+		{
+			keyType= keysPressedList.getReadyKeys().get(i);
+			if(niveau.ExecuteKey(keyType))
+				keysPressedList.FireKey(keyType);
+		}	
+	}
+	public void stop()
+	{
+		timer.cancel();
+	}
+	public void resume()
+	{
+		timer.schedule( new ExecuteKey(), 0, 10);
+	}
+//	private boolean execute(KeyType key) {
+//		if (!niveau.PoupyMoving())
+//		{
+//			switch (key) {
+//				case UP: return niveau.MoveObject(niveau.POOPY,Direction.NORTH);
+//
+//				case LEFT: return niveau.MoveObject(niveau.POOPY,Direction.WEST);
+//	
+//				case DOWN: return niveau.MoveObject(niveau.POOPY,Direction.SOUTH);
+//	
+//				case RIGHT: return niveau.MoveObject(niveau.POOPY,Direction.EAST);
+//	
+//				case SPACE: return niveau.SpacePressed();
+//				
+//				default:return false;
+//			}
+//		
+//		}
+//		return false;
+//	}
 	public void AddKeyBindings()
 	{
 		this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false),"MoveUp");

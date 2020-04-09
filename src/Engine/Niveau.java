@@ -22,7 +22,7 @@ public class Niveau {
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 	private Objet[][] mapObjets = new Objet[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
-	private Snoopy POOPY;
+	public Snoopy POOPY;
 	private List<Ballon> ballons = new ArrayList<Ballon>();
 	//private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 
@@ -280,10 +280,12 @@ public class Niveau {
 		return false;
 	}
 
-	private boolean ExecuteKey(KeyType key)
+	public boolean ExecuteKey(KeyType key)
 	{
-		if (!POOPY.IsMoving())
+
+		if (!PoupyMoving())
 		{
+			System.out.println("poupynotmooving");
 			switch (key) {
 				case UP: return MoveObject(POOPY,Direction.NORTH);
 	
@@ -300,9 +302,13 @@ public class Niveau {
 		}
 		return false;
 	}
+	public Boolean PoupyMoving()
+	{
+		return POOPY.IsMoving();
+	}
 
 	//Move an object to the desired direction, returns true if the object moved or changed direction succesfully
-	private boolean MoveObject(Objet o, Direction d)
+	public boolean MoveObject(Objet o, Direction d)
 	{
 		//If the object is a movable object and can move and if there is nothing blocking the way
 		if (PossibleToMove(o, d))
@@ -364,7 +370,7 @@ public class Niveau {
 	}
 
 	// Gere la barre Espace
-	private boolean SpacePressed()
+	public boolean SpacePressed()
 	{
 		//System.out.println("Space pressed");
 		int blocX = POOPY.NextCaseX(POOPY.orientation);
