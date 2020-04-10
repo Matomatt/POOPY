@@ -90,8 +90,7 @@ public class Menu extends JPanel{
 			fenetre.remove(this);
 			fenetre.loadgame(loadgame.getText());
 		} catch (IOException e) {
-			new ErrorMessage();
-			new ErrorMessage(e.getLocalizedMessage());
+			new ErrorMessage("Impossible de charger cette partie...\n" + e.getLocalizedMessage());
 			fenetre.remove(this);
 			fenetre.menu();
 		}
