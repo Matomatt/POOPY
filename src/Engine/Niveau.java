@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.*;
 
-import Controller.KeysPressedList;
 //import Pause;
 import Settings.*;
 import Data.*;
@@ -24,7 +23,7 @@ public class Niveau {
 	private int[][] map = new int[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 	private Objet[][] mapObjets = new Objet[globalVar.nbTilesHorizontally][globalVar.nbTilesVertically];
 
-	public Snoopy POOPY;
+	private Snoopy POOPY;
 	private List<Ballon> ballons = new ArrayList<Ballon>();
 	//private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 
@@ -182,8 +181,6 @@ public class Niveau {
 		}		
 	}
 	
-	KeysPressedList keysPressedList = new KeysPressedList();
-
 	// Lis le parametre associé au bloc
 	public int[] SeparateIdParam(int id)
 	{
@@ -292,7 +289,7 @@ public class Niveau {
 		if (CollisionsSnoopy())
 			return false;
 		
-		if (!PoupyMoving())
+		if (!POOPY.IsMoving() && !POOPY.SpeedModified())
 		{
 			switch (key) {
 				case UP: return MoveObject(POOPY,Direction.NORTH);
@@ -311,11 +308,6 @@ public class Niveau {
 		return false;
 	}
 	
-	public Boolean PoupyMoving()
-	{
-		return POOPY.IsMoving();
-	}
-
 	//Move an object to the desired direction, returns true if the object moved or changed direction succesfully
 	public boolean MoveObject(Objet o, Direction d)
 	{
@@ -351,29 +343,20 @@ public class Niveau {
 		if (POOPY.IsMoving())
 			return false;
 
-		  ///////////////
 		 //  OISEAUX  //
-		///////////////
-
 		//Si snoopy est sur une case oiseau on le retire de la map, des objets de la fenetre et de la liste ne contenant que les oiseaux
 		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.OISEAU))
 			RemoveObjet(mapObjets[POOPY.xInMap][POOPY.yInMap]);
 
-		  /////////////////////
-		 //  TAPISROULANTS  //
-		/////////////////////
-
-		CollisionsTapis(POOPY);
-
-		  //////////////
 		 //  PIEGES  //
-		//////////////
-
-		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE) && !POOPY.IsMoving())
+		if (map[POOPY.xInMap][POOPY.yInMap] == ObjectType.mapIdOf(ObjectType.PIEGE))
 		{
 			vieloose();
 			return true;
 		}
+		
+		 //  TAPISROULANTS  //
+		CollisionsTapis(POOPY);
 
 		return false;
 	}
@@ -458,22 +441,22 @@ public class Niveau {
 	// Gere le deplacement forc� et l'acc�ration des objets quand ils passent sur un tapis roulant
 	private void CollisionsTapis(AnimatedObject o)
 	{
-		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified())
+		if (map[o.xInMap][o.yInMap] == ObjectType.mapIdOf(ObjectType.TAPISROULANT) && !o.SpeedModified() && !POOPY.IsMoving())
 		{
 			TapisRoulant tapisRoulant = (TapisRoulant) mapObjets[o.xInMap][o.yInMap];
 
-			if (!NextObjet(POOPY, tapisRoulant.orientation).isSolid() && !POOPY.IsMoving())
+			if (!NextObjet(POOPY, tapisRoulant.orientation).isSolid())
 			{
-				
 				if (!o.Move(tapisRoulant.orientation))
 				{
 					if (o.Move(tapisRoulant.orientation))
 						o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
 				}
 				else o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
+				System.out.println("go " + POOPY.IsMoving());
 			}
 		}
-		else if (o.SpeedModified()) o.ResetSpeed(); //The condition if Snoopy stopped moving has already been taken care of when calling this function
+		else if (o.SpeedModified()) { o.ResetSpeed(); System.out.println("Reset"); } //The condition if Snoopy stopped moving has already been taken care of when calling this function
 	}
 
 	// lance la pause
