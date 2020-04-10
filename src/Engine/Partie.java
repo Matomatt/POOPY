@@ -13,7 +13,6 @@ import java.util.List;
 
 import javax.swing.*;
 
-import Controller.InputManager;
 import Data.StringManager;
 import Menus.GameOver;
 import Menus.Pause;
@@ -56,6 +55,7 @@ public class Partie extends JPanel {
 
 		Init();// charge les caractéristique graphique et initialise les variable autre que niveau 
 	}
+	
 	// Chargement d'une parite au niveau indiqué 
 	public Partie(Fenetre _fenetre, int numlv) throws IOException
 	{
@@ -74,6 +74,7 @@ public class Partie extends JPanel {
 		vies = globalVar.vieAuDepart;
 		timeLeft = globalVar.timerAuDepart;
 	}
+	
 	// charge les caractéristique graphique et initialise les variable autre que niveau 
 	private void Init()
 	{
@@ -84,8 +85,6 @@ public class Partie extends JPanel {
 		this.setLayout(null);
 		
 		this.add((pause = new Pause(this)));
-		
-		//this.add(niveaux.get(0)); //Le premier c'est toujours le nievau a reprendre quand on charge une partie (nouvelle ou pas, mdp ou pas)
 		
 		RemplirNiveau();
 		
@@ -108,6 +107,7 @@ public class Partie extends JPanel {
 			menu();
 		}
 	}
+	
 	//Initialis l'attribut niveau de la classe éponyme 
 	private void RemplirNiveau()
 	{

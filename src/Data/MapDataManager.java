@@ -64,11 +64,11 @@ public class MapDataManager {
 	    	for (int i=0; i<nbTilesHor; i++)
 	    	{
 	    		int index = j*nbTilesHor+i;
-	    		System.out.print(parsedIntList.get(index+2));
+	    		//System.out.print(parsedIntList.get(index+2) + " ");
     			map[i][j] = parsedIntList.get(index+2);
 	    		
 	    	}
-	    	System.out.println("");
+	    	//System.out.println("");
 	    }
 	    
 		return map;

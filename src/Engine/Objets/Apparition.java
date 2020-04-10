@@ -79,8 +79,7 @@ public class Apparition extends AnimatedObject {
 	public boolean isSolid() { return !visible; }
 	
 	public void TogglePause()
-	{
-		System.out.println("Pause ici");	
+	{	
 		if (chrono==null)
 		{
 			chrono=new Timer();
@@ -88,7 +87,6 @@ public class Apparition extends AnimatedObject {
 			ResumeAnimating();
 		}
 		else {
-			System.out.println("Pause la");
 			chrono.cancel();
 			chrono=null;
 			StopAnimating();
