@@ -1,18 +1,15 @@
 package Menus;
-import java.awt.BorderLayout;
 import java.awt.event.*;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 import javax.swing.*;
 
 import Data.ImageManager;
 import Engine.Partie;
-import Settings.globalVar;
 import Utilitaires.ErrorMessage;
 
 public class Pause extends JPanel{
+	private static final long serialVersionUID = 235988395139816870L;
+	
 	//private Fenetre fenetre;
 	private JButton menu;
 	private JButton resume;
@@ -97,8 +94,13 @@ public class Pause extends JPanel{
 	}
 	private void open()
 	{
+		
+		try {
+			this.paint(getGraphics());
+		}
+		catch (Exception e) { close(); }
+		
 		active=true;
-		this.paint(getGraphics());
 		this.setVisible(true);
 		this.setEnabled(true);
 		this.revalidate();
