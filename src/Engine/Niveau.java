@@ -27,6 +27,7 @@ public class Niveau {
 	private List<Ballon> ballons = new ArrayList<Ballon>();
 	//private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 
+	private boolean busy = false;
 	boolean ended = false;
 	private int vie;
 	private int seconde = 60;
@@ -64,7 +65,7 @@ public class Niveau {
 		//Synchronized Movements, gardez if !synchronized pour les collisions
 		calculationsTimer = new Timer(1000/globalVar.CalculusFrequency, new ActionListener() { public void actionPerformed(ActionEvent arg0)
 		{ 
-			calculationsTrigger();
+			calculationsTrigger(); setBusy();
 		} });
 
 		this.StopAll();
@@ -229,6 +230,15 @@ public class Niveau {
 	//Return true si on doit tout kill
 	private boolean calculationsTrigger()
 	{
+		while (isBusy()) { try {
+			Thread.sleep(1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} }
+		
+		busy = true;
+		
 		if (CollisionsSnoopy()) //Si return true ca veut dire c'est la mort
 			return true;
 
@@ -286,6 +296,14 @@ public class Niveau {
 
 	public boolean ExecuteKey(KeyType key)
 	{
+		while (isBusy()) { try {
+			Thread.sleep(1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} }
+		
+		busy = true;
 		if (CollisionsSnoopy())
 			return false;
 		
@@ -648,6 +666,14 @@ public class Niveau {
 
 	public boolean isEnded() {
 		return ended;
+	}
+
+	public boolean isBusy() {
+		return busy;
+	}
+
+	public void setBusy() {
+		this.busy = false;
 	}
 
 	

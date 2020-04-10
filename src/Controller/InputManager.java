@@ -69,13 +69,14 @@ public class InputManager extends JPanel{
 	
 	private void runkey()
 	{
-		if (niveau.isEnded())
+		if (niveau.isEnded() || niveau.isBusy())
 			return;
 		ArrayList<KeyType> keysReadyList = keysPressedList.getReadyKeys();
 		for (KeyType keyType : keysReadyList) {
 			KeyType tmpKeyType = keyType;
 			if(niveau.ExecuteKey(tmpKeyType))
 				keysPressedList.FireKey(tmpKeyType);
+			niveau.setBusy();
 		}	
 	}
 	
