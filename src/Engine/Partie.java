@@ -147,6 +147,7 @@ public class Partie extends JPanel {
 	{
 		vies = niveaux.get(0).getvie() + ((isReset)?0:1);
 		this.removeAll();
+		this.add(pause);
 		niveaux.remove(0);
 		time.cancel();
 		

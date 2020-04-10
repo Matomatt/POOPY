@@ -28,6 +28,7 @@ public class Niveau {
 	//private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 
 	private boolean busy = false;
+	boolean paused = false;
 	boolean ended = false;
 	private int vie;
 	private int seconde = 60;
@@ -230,12 +231,8 @@ public class Niveau {
 	//Return true si on doit tout kill
 	private boolean calculationsTrigger()
 	{
-		while (isBusy()) { try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} }
+		while (isBusy()) { try { Thread.sleep(1); } 
+		catch (InterruptedException e) { e.printStackTrace(); } }
 		
 		busy = true;
 		
@@ -296,12 +293,10 @@ public class Niveau {
 
 	public boolean ExecuteKey(KeyType key)
 	{
-		while (isBusy()) { try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} }
+		if (paused) return false;
+		
+		while (isBusy()) { try { Thread.sleep(1); } 
+		catch (InterruptedException e) { e.printStackTrace(); } }
 		
 		busy = true;
 		if (CollisionsSnoopy())
@@ -486,6 +481,8 @@ public class Niveau {
 	// Arete temporairement les timer est appeler dans partie ppressed 
 	public void StopAll()
 	{
+		paused = true;
+		
 		if (calculationsTimer != null)
 			calculationsTimer.stop();
 		if (POOPY != null)
@@ -519,6 +516,8 @@ public class Niveau {
 		}
 
 		for (Ballon ballon : ballons) { ballon.Resume(); }
+		
+		paused = false;
 	}
 
 	// Permet d'arreter les timers

@@ -94,7 +94,6 @@ public class Pause extends JPanel{
 	}
 	private void open()
 	{
-		
 		try {
 			this.paint(getGraphics());
 		}

@@ -96,8 +96,19 @@ public class Apparition extends AnimatedObject {
 	}
 	
 	@Override
+	public void Stop() {
+		super.Stop();
+		TogglePause();
+	}
+	
+	@Override
+	public void Resume() {
+		super.Resume();
+		TogglePause();
+	}
+	
+	@Override
 	public void Kill() {
-		// TODO Auto-generated method stub
 		chrono.cancel();
 		super.Kill();
 		
