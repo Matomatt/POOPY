@@ -25,7 +25,7 @@ public class Menu extends JPanel{
 	private JButton loadlvbutt;
 	private JButton loadgamebutt;
 	private JButton start;
-
+	private JButton scoreButton;
 	protected ArrayList<Niveau> niveaux;
 	int actuallv=0;
 	private JLabel sprite;
@@ -40,7 +40,9 @@ public class Menu extends JPanel{
 		loadlvbutt=new JButton("Validé");
 		loadgamebutt=new JButton("Validé");
 		start=new JButton("Nouvelle Partie");
-
+		scoreButton=new JButton("Leaderboard");
+		scoreButton.addActionListener(new LeaderboardtListener());
+		
 		loadlvbutt.addActionListener(new LoadLvListener());
 		loadgamebutt.addActionListener(new LoadGameListener());
 		start.addActionListener(new StartListener());
@@ -58,7 +60,7 @@ public class Menu extends JPanel{
 		this.add(loadgamebutt);
 
 		this.add(start);
-
+		this.add(scoreButton);
 
 		fenetre=fen;
 		this.setSize(fenetre.getSize().width, fenetre.getSize().height);
@@ -117,6 +119,15 @@ public class Menu extends JPanel{
 			new ErrorMessage(e.getLocalizedMessage());
 			fenetre.remove(this);
 			fenetre.menu();
+		}
+	}
+	
+	// Lance le menu
+	private class LeaderboardtListener implements ActionListener  //?
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			new LeaderBoard();
 		}
 	}
 
