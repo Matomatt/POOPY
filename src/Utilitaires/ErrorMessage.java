@@ -12,7 +12,7 @@ public class ErrorMessage extends JFrame{
 	
 	public ErrorMessage()
 	{
-		this.setTitle("Wrong Input");
+		this.setTitle("Error");
 		this.setVisible(true);
 		this.setAlwaysOnTop(true);
 		JLabel bufferJLabel =new JLabel("Wrong Input");
@@ -35,7 +35,7 @@ public class ErrorMessage extends JFrame{
 
 	public ErrorMessage(String a)
 	{
-		this.setTitle(a);
+		this.setTitle("Error");
 		this.setVisible(true);
 		this.setAlwaysOnTop(true);
 		this.setLayout(new BorderLayout());

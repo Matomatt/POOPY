@@ -50,8 +50,6 @@ public class Pause extends JPanel{
 		this.validate();
 	}
 
-
-
 	private  class MenuListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -60,13 +58,15 @@ public class Pause extends JPanel{
 			partie.menu();
 		}
 	}
+	
 	private  class SaveListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-		saveFichier= new SaveFichier(partie);	
+			saveFichier= new SaveFichier(partie);	
 		}
 	}
+	
 	private  class ResumeListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -75,14 +75,15 @@ public class Pause extends JPanel{
 			close();
 		}
 	}
+	
 	public void pPressed()
 	{
-		System.out.println("pPressed dans pause");
 		if (active==true)
 			close();
 		else
 			open();
 	}
+	
 	private void close()
 	{
 		if(saveFichier!=null)
@@ -92,9 +93,9 @@ public class Pause extends JPanel{
 		this.setEnabled(false);
 		this.revalidate();
 	}
+	
 	private void open()
 	{
-		
 		try {
 			this.paint(getGraphics());
 		}

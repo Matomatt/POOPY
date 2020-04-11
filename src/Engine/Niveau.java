@@ -28,6 +28,7 @@ public class Niveau {
 	//private List<Integer> nonSolidObjects = new ArrayList<Integer>(); //Liste des objets qu'il est possible de traverser
 
 	private boolean busy = false;
+	boolean paused = false;
 	boolean ended = false;
 	private int vie;
 	private int seconde = 60;
@@ -44,7 +45,7 @@ public class Niveau {
 		partie = p;
 		name = _name;
 
-		System.out.println("New level : " + name);
+		System.out.println("Loading " + name);
 
 		LoadObjects(MapDataManager.LoadMap(name+".txt"));
 		
@@ -100,7 +101,6 @@ public class Niveau {
 	// est appelé lors du press de la barre espace, permet au niveau de commencé 
 	public void StartAfterWait(boolean waitedForIt)
 	{
-		System.out.println("Start after wait");
 		if (waitedForIt)
 			partie.time.pPressed();
 		this.Resume();
@@ -118,8 +118,6 @@ public class Niveau {
 	// Sers a terminer le niveau en cas de game over
 	private boolean vieloose() //return true si plus de vie du tout
 	{
-		//vieDisplayer.setText(new String("Vies : "+vie));
-
 		if ((vie-=1) <= 0)
 		{
 			KillAll();
@@ -202,8 +200,8 @@ public class Niveau {
 		return idParam;
 	}
 
-	private void AddObjet(Objet o) {
-		System.out.println("Adding " + ObjectType.nameOf(o.Type()));
+	private void AddObjet(Objet o) 
+	{
 		map[o.xInMap][o.yInMap] = ObjectType.mapIdOf(o.Type());
 		mapObjets[o.xInMap][o.yInMap] = o;
 	}
@@ -230,12 +228,8 @@ public class Niveau {
 	//Return true si on doit tout kill
 	private boolean calculationsTrigger()
 	{
-		while (isBusy()) { try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} }
+		while (isBusy()) { try { Thread.sleep(1); } 
+		catch (InterruptedException e) { e.printStackTrace(); } }
 		
 		busy = true;
 		
@@ -296,12 +290,10 @@ public class Niveau {
 
 	public boolean ExecuteKey(KeyType key)
 	{
-		while (isBusy()) { try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} }
+		if (paused) return false;
+		
+		while (isBusy()) { try { Thread.sleep(1); } 
+		catch (InterruptedException e) { e.printStackTrace(); } }
 		
 		busy = true;
 		if (CollisionsSnoopy())
@@ -471,10 +463,9 @@ public class Niveau {
 						o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
 				}
 				else o.IncreaseSpeed(tapisRoulant.orientation, 1.5);
-				System.out.println("go " + POOPY.IsMoving());
 			}
 		}
-		else if (o.SpeedModified()) { o.ResetSpeed(); System.out.println("Reset"); } //The condition if Snoopy stopped moving has already been taken care of when calling this function
+		else if (o.SpeedModified()) o.ResetSpeed();//The condition if Snoopy stopped moving has already been taken care of when calling this function
 	}
 
 	// lance la pause
@@ -486,6 +477,8 @@ public class Niveau {
 	// Arete temporairement les timer est appeler dans partie ppressed 
 	public void StopAll()
 	{
+		paused = true;
+		
 		if (calculationsTimer != null)
 			calculationsTimer.stop();
 		if (POOPY != null)
@@ -508,6 +501,8 @@ public class Niveau {
 	// Relance les timers est aussi apelé dans partie ppressed
 	public void Resume()
 	{
+		if (!partie.time.active)
+			partie.time.pPressed();
 		if (calculationsTimer != null)
 			calculationsTimer.start();
 		if (POOPY != null)
@@ -519,11 +514,15 @@ public class Niveau {
 		}
 
 		for (Ballon ballon : ballons) { ballon.Resume(); }
+		
+		paused = false;
 	}
 
 	// Permet d'arreter les timers
 	protected void KillAll()
 	{
+		ended = true;
+		
 		calculationsTimer.removeActionListener(calculationsTimer.getActionListeners()[0]);
 		calculationsTimer.stop();
 
@@ -540,12 +539,12 @@ public class Niveau {
 	// Sert a la sauvegarde
 	public void CallSavePartie() 
 	{
-		ended = true;
 		StopAll();
+		partie.time.pPressed();
 		
 		try {
 			if (globalVar.enterNameWhenSavingWithS)
-				new SaveFichier(partie);
+				new SaveFichier(partie, true);
 			else
 				partie.SavePartie();
 		} 
