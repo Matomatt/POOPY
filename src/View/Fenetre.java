@@ -28,7 +28,6 @@ public class Fenetre extends JFrame
 		this.setLocation(300, 100);
 		this.add(new Menu(this));
 		
-		
 		this.validate();		
 	}
 	
