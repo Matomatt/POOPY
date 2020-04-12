@@ -37,8 +37,8 @@ public class Menu extends JPanel{
 		loadgame=new JTextField(20);
 		loadlvlabel=new JLabel("Entrer le code niveau");
 		loadgamelabel=new JLabel("Entrer le nom du fichier");
-		loadlvbutt=new JButton("Validé");
-		loadgamebutt=new JButton("Validé");
+		loadlvbutt=new JButton("Valider");
+		loadgamebutt=new JButton("Valider");
 		start=new JButton("Nouvelle Partie");
 		scoreButton=new JButton("Leaderboard");
 		scoreButton.addActionListener(new LeaderboardtListener());

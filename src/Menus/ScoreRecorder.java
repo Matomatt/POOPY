@@ -29,6 +29,7 @@ public class ScoreRecorder extends SaveFichier{
 			} catch (IOException e1) {
 				new ErrorMessage("Impossible de mettre a jour les scores... \n" + e1.getLocalizedMessage());
 			}
+			close();
 		}
 	}
 	

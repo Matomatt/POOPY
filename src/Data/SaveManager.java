@@ -94,6 +94,9 @@ public class SaveManager {
 		{
 			leaderboard.get(leaderboard.indexOf(name)).score = score;
 		}
+		else {
+            leaderboard.add(new NomScoreAssoc(name,score));
+        }
 
 	}
 	
