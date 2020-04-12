@@ -22,15 +22,15 @@ public class SaveFichier extends JFrame
 {
 	private static final long serialVersionUID = 521387102919772058L;
 	
-	private Partie partie;
-	private JLabel messJLabel;
-	private JTextField chaine;
-	private JButton ok;
+	protected Partie partie;
+	protected JLabel messJLabel;
+	protected JTextField chaine;
+	protected JButton ok;
 
 	public SaveFichier(Partie part, boolean resumeLevelIfClosed)
 	{
+		this.setLocation(300, 100);
 		partie=part;
-		
 		if (!resumeLevelIfClosed)
 			Init();
 		

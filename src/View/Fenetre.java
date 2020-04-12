@@ -25,7 +25,7 @@ public class Fenetre extends JFrame
 		this.setLayout(new BorderLayout());
 		this.setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-
+		this.setLocation(300, 100);
 		this.add(new Menu(this));
 		
 		
