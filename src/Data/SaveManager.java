@@ -5,11 +5,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import Engine.Objets.Ballon;
 import Engine.Objets.Snoopy;
+import Settings.globalVar;
 import Utilitaires.Direction;
 
 public class SaveManager {
@@ -71,5 +78,57 @@ public class SaveManager {
 		Snoopy tmpSnoopy = new Snoopy(l.get(0), l.get(1), l.get(2), l.get(3), l.get(4), l.get(5), l.get(6), l.get(7), l.get(8), l.get(9), l.get(10));
 		
 		return tmpSnoopy;
+	}
+	
+	public static void UpdateLeaderboard(int score, String name) throws IOException
+	{
+		ArrayList<NomScoreAssoc> leaderboard = GetLeaderboard();
+		AddScoreInLeaderboard(score, name, leaderboard);
+		PrintLeaderboard(leaderboard);
+	}
+	
+	@SuppressWarnings("unlikely-arg-type")
+	public static void AddScoreInLeaderboard(int score, String name, ArrayList<NomScoreAssoc> leaderboard)
+	{
+		if (leaderboard.contains(name))
+		{
+			leaderboard.get(leaderboard.indexOf(name)).score = score;
+		}
+
+	}
+	
+	public static ArrayList<NomScoreAssoc> GetLeaderboard() throws IOException
+	{
+		ArrayList<NomScoreAssoc> leaderboard = new ArrayList<NomScoreAssoc>();
+		
+		File saveFile = new File("./Saves/leaderboard.txt");
+		
+		BufferedReader br = new BufferedReader(new FileReader(saveFile));
+		
+		String st;
+		while ( (st = br.readLine()) != null)
+		{
+			leaderboard.add(new NomScoreAssoc(st, StringManager.ParseLineToInt(br.readLine()).get(0)));
+		}
+		
+		br.close();
+		
+		return leaderboard;
+	}
+	
+	public static void PrintLeaderboard(ArrayList<NomScoreAssoc> leaderboard) throws FileNotFoundException, UnsupportedEncodingException
+	{
+		PrintWriter saveFile = new PrintWriter("./Saves/leaderboard.txt", "UTF-8");
+		
+		Collections.sort(leaderboard);
+		if (leaderboard.size() > 10)
+			leaderboard.remove(leaderboard.size()-1);
+		
+		for (NomScoreAssoc nomScoreAssoc : leaderboard) {
+			saveFile.println(nomScoreAssoc.getName());
+			saveFile.println(nomScoreAssoc.getScore());
+		}
+		
+		saveFile.close();
 	}
 }
