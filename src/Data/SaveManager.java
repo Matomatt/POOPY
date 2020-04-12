@@ -125,8 +125,8 @@ public class SaveManager {
 			leaderboard.remove(leaderboard.size()-1);
 		
 		for (NomScoreAssoc nomScoreAssoc : leaderboard) {
-			saveFile.println(nomScoreAssoc.name);
-			saveFile.println(nomScoreAssoc.score);
+			saveFile.println(nomScoreAssoc.getName());
+			saveFile.println(nomScoreAssoc.getScore());
 		}
 		
 		saveFile.close();

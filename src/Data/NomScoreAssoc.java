@@ -11,12 +11,20 @@ public class NomScoreAssoc implements Comparable<NomScoreAssoc> {
 	}
 	
 	public int compareTo(NomScoreAssoc arg) {
-		return score > arg.score ? -1 : score < arg.score ? 1 : 0;
+		return getScore() > arg.getScore() ? -1 : getScore() < arg.getScore() ? 1 : 0;
 	}
 
 	public boolean equals(String _name) 
 	{
-        return name.contentEquals(_name);
+        return getName().contentEquals(_name);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getScore() {
+		return score;
 	}
 	
 }

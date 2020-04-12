@@ -16,6 +16,7 @@ import javax.swing.*;
 import Data.StringManager;
 import Menus.GameOver;
 import Menus.Pause;
+import Menus.ScoreRecorder;
 import Menus.WinPage;
 import Settings.globalVar;
 import Utilitaires.ErrorMessage;
@@ -197,6 +198,8 @@ public class Partie extends JPanel {
 			} catch (InterruptedException e) {
 				new ErrorMessage("Alors y'a un probleme avec la pause de 3 secondes mais ce n'est pas de mon ressort...\n" + e.getLocalizedMessage());
 			}
+			
+			new ScoreRecorder(this);
 			
 		    this.removeAll();
 			menu();
