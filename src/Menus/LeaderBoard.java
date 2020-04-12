@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class LeaderBoard extends JFrame{
+    private static final long serialVersionUID = 1L;
 	private ArrayList<JLabel> nom ;
 	private ArrayList<JLabel> score ;
 	

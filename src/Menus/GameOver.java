@@ -8,8 +8,9 @@ import javax.swing.JPanel;
 import java.util.concurrent.*;
 
 public class GameOver extends JPanel
-
 {
+
+    private static final long serialVersionUID = 1L;
 	private int score;
 	public GameOver(int sco,int width,int height,int lv) 
 	{

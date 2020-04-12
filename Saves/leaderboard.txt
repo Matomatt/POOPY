@@ -1,9 +1,5 @@
-Deja Vu 
-30000
 Ruben
 16200
-test1
-500
 test1
 500
 test1
