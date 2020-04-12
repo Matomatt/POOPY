@@ -107,7 +107,10 @@ public class Partie extends JPanel {
 			menu();
 		}
 	}
-	
+	public int getScore()
+	{
+		return score;
+	}
 	//Initialis l'attribut niveau de la classe éponyme 
 	private void RemplirNiveau()
 	{
