@@ -27,11 +27,8 @@ public class Fenetre extends JFrame
 		this.setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		this.setLocation(300, 100);
-		JOptionPane.showMessageDialog(new JFrame(), "hello");
 		
 		this.add(new Menu(this));
-		
-		JOptionPane.showMessageDialog(new JFrame(), "coucou");
 		
 		this.validate();		
 	}
