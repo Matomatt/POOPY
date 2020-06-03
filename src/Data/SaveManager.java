@@ -9,21 +9,16 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
 import Engine.Objets.Ballon;
 import Engine.Objets.Snoopy;
-import Settings.globalVar;
-import Utilitaires.Direction;
+import Utilitaires.path;
 
 public class SaveManager {
 	
 	public static List<Ballon> LoadSaveNiveau(String fileName) throws IOException
 	{
-		File mapData = new File("./Maps/" + fileName + ".txt");
+		File mapData = new File(path.get()+ "/Maps/" + fileName + ".txt");
 		
 		BufferedReader br = new BufferedReader(new FileReader(mapData));
 		
@@ -49,7 +44,7 @@ public class SaveManager {
 
 	public static Snoopy LoadSaveSnoopy(String fileName) throws IOException 
 	{
-		File mapData = new File("./Maps/" + fileName + ".txt");
+		File mapData = new File(path.get()+ "/Maps/" + fileName + ".txt");
 		
 		BufferedReader br = new BufferedReader(new FileReader(mapData));
 		
@@ -104,7 +99,7 @@ public class SaveManager {
 	{
 		ArrayList<NomScoreAssoc> leaderboard = new ArrayList<NomScoreAssoc>();
 		
-		File saveFile = new File("./Saves/leaderboard.txt");
+		File saveFile = new File(path.get()+ "/Saves/leaderboard.txt");
 		
 		BufferedReader br = new BufferedReader(new FileReader(saveFile));
 		
@@ -121,7 +116,7 @@ public class SaveManager {
 	
 	public static void PrintLeaderboard(ArrayList<NomScoreAssoc> leaderboard) throws FileNotFoundException, UnsupportedEncodingException
 	{
-		PrintWriter saveFile = new PrintWriter("./Saves/leaderboard.txt", "UTF-8");
+		PrintWriter saveFile = new PrintWriter(path.get()+ "/Saves/leaderboard.txt", "UTF-8");
 		
 		Collections.sort(leaderboard);
 		if (leaderboard.size() > 10)

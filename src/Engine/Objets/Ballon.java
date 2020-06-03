@@ -1,9 +1,6 @@
 package Engine.Objets;
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
-
-import Data.ImageManager;
 import Settings.globalVar;
 import Utilitaires.*;
 
@@ -346,12 +343,12 @@ public class Ballon extends AnimatedObject {
 	void vitesseUpdate ()
 	{
 		if (direc == 0|| direc==3) //NE SE
-			vitesse[0]=vit;  
-		else	if (direc== 1|| direc== 2 )// NW SW 
+			vitesse[0]=vit;
+		else if (direc== 1|| direc== 2 )// NW SW 
 			vitesse[0]=-vit;
 		if (direc == 0|| direc==1) //NE NW
 			vitesse[1]=-vit;
-		else   if (direc== 3|| direc== 2 )// SE SW 
+		else if (direc== 3|| direc== 2 )// SE SW 
 			vitesse[1]=vit;
 		//move();
 	}

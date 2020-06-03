@@ -332,6 +332,7 @@ public class Niveau {
 		return false;
 	}
 
+	/** returns true if the object is a movable object and can move and if there is nothing blocking the way */
 	//returns true if the object is a movable object and can move and if there is nothing blocking the way
 	private boolean PossibleToMove(Objet o, Direction d)
 	{
@@ -559,7 +560,7 @@ public class Niveau {
 		boolean printSnoopyInMap = !(POOPY.IsMoving() || map[POOPY.xInMap][POOPY.yInMap] != 0);
 		
 		String fileName = name + "P" + _namePartie;
-		PrintWriter saveFile = new PrintWriter("./Maps/" + fileName + ".txt", "UTF-8");
+		PrintWriter saveFile = new PrintWriter(path.get()+ "/Maps/" + fileName + ".txt", "UTF-8");
 
 		System.out.println("Saving...");
 

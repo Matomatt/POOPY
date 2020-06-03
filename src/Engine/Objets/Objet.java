@@ -4,13 +4,7 @@ import java.io.IOException;
 import Data.ImageManager;
 //import Engine.Niveau.keylistener;
 import Settings.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
 import javax.swing.*;
-import javax.swing.Timer;
-
 import Utilitaires.*;
 import Utilitaires.Action;
 
@@ -77,7 +71,7 @@ public class Objet {
 	
 	protected void ChangeSpriteTo(String fileName, int w, int h) throws IOException
 	{
-		sprite = new ImageIcon(ImageManager.LoadImage("./Images/Sprites/" + fileName, w, h));
+		sprite = new ImageIcon(ImageManager.LoadImage(path.getImagePath("Sprites/" + fileName), w, h));
 	}
 	
 	protected void ChangeSpriteTo(String fileName) throws IOException

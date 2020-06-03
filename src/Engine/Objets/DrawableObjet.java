@@ -3,7 +3,6 @@ package Engine.Objets;
 import javax.swing.ImageIcon;
 
 import Utilitaires.CoordType;
-import Utilitaires.ObjectType;
 
 public class DrawableObjet{
 

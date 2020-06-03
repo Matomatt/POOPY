@@ -10,6 +10,7 @@ import Engine.Partie;
 import Menus.Menu;
 import Settings.globalVar;
 import Utilitaires.ErrorMessage;
+import Utilitaires.path;
 
 
 
@@ -26,7 +27,11 @@ public class Fenetre extends JFrame
 		this.setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		this.setLocation(300, 100);
+		JOptionPane.showMessageDialog(new JFrame(), "hello");
+		
 		this.add(new Menu(this));
+		
+		JOptionPane.showMessageDialog(new JFrame(), "coucou");
 		
 		this.validate();		
 	}
@@ -41,9 +46,8 @@ public class Fenetre extends JFrame
 	// Correspond au chargement d'un niveau , est appelé par menu
 	//returns true if the pw exists
 	public boolean loadlv (String mdp) throws IOException
-
 	{
-		File pwData = new File("./Saves/passwordListDontOpenVerySecret.txt");
+		File pwData = new File(path.get() + "/Saves/passwordListDontOpenVerySecret.txt");
 		
 		BufferedReader br = new BufferedReader(new FileReader(pwData));
 		

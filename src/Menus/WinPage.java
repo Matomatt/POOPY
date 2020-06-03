@@ -11,8 +11,7 @@ import javax.swing.JPanel;
 import Data.ImageManager;
 import Settings.globalVar;
 import Utilitaires.ErrorMessage;
-
-import java.util.concurrent.*;
+import Utilitaires.path;
 
 public class WinPage extends JPanel
 {
@@ -39,7 +38,7 @@ public class WinPage extends JPanel
 		scoring.setSize(300,100);
 		add(game);
 		add(scoring);
-		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Menus/poupywin.png", globalVar.nbTilesHorizontally*globalVar.tileWidth, this.getHeight())) );
+		try { sprite = new JLabel( new ImageIcon(ImageManager.LoadImage(path.getImagePath("Menus/poupywin.png"), globalVar.nbTilesHorizontally*globalVar.tileWidth, this.getHeight())) );
 	      sprite.setBounds(0, 0, globalVar.nbTilesHorizontally*globalVar.tileWidth, (globalVar.nbTilesVertically+1)*globalVar.tileHeight);
 	      this.add(sprite);}
 		

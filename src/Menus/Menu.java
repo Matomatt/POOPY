@@ -11,6 +11,7 @@ import Data.ImageManager;
 import Engine.Niveau;
 import Settings.globalVar;
 import Utilitaires.ErrorMessage;
+import Utilitaires.path;
 import View.Fenetre;
 
 // La classe menu est un panneaux n'ayant pour but que de servir d'interface pour trigger les fonctions approprié dans Fenetre
@@ -67,7 +68,7 @@ public class Menu extends JPanel{
 		this.setVisible(true);
 		
 		try {
-			sprite = new JLabel( new ImageIcon(ImageManager.LoadImage("./Images/Menus/snoopytitile.png", globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically)) );
+			sprite = new JLabel( new ImageIcon(ImageManager.LoadImage(path.getImagePath("Menus/snoopytitile.png"), globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*globalVar.nbTilesVertically)) );
 			sprite.setBounds(0, 0, globalVar.tileWidth*globalVar.nbTilesHorizontally, globalVar.tileHeight*(globalVar.nbTilesVertically+1));
 			this.add(sprite);
 		} catch (IOException e) {

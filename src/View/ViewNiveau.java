@@ -2,16 +2,11 @@ package View;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import Controller.InputManager;
@@ -19,7 +14,6 @@ import Engine.Niveau;
 import Engine.Objets.DrawableObjet;
 import Settings.globalVar;
 import Utilitaires.JLabelText;
-import Utilitaires.KeyType;
 
 public class ViewNiveau extends JPanel {
 	private static final long serialVersionUID = -1571384451040609831L;
@@ -38,9 +32,6 @@ public class ViewNiveau extends JPanel {
 	JLabelText vieDisplayer;
 	JLabelText pressSpaceLabel = new JLabelText("Press space to start...", 600, (int)(globalVar.tileHeight/1.5), Color.WHITE);
 	
-	
-	
-	@SuppressWarnings("serial")
 	public ViewNiveau(Niveau _niveau)
 	{
 		this.setLayout(null);

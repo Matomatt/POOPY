@@ -20,6 +20,7 @@ import Menus.ScoreRecorder;
 import Menus.WinPage;
 import Settings.globalVar;
 import Utilitaires.ErrorMessage;
+import Utilitaires.path;
 import View.Fenetre;
 import View.ViewNiveau;
 
@@ -116,7 +117,7 @@ public class Partie extends JPanel {
 	private void RemplirNiveau()
 	{
 		int totallv = unlockedLevels;
-		File f = new File("./Maps/" + "level"+ (totallv+1) + ".txt");
+		File f = new File(path.get()+ "/Maps/" + "level"+ (totallv+1) + ".txt");
 		
 		while(f.exists() && !f.isDirectory())
 		{
@@ -124,7 +125,7 @@ public class Partie extends JPanel {
 			try { niveaux.add(new Niveau(new String("level"+ totallv), this, false)); } 
 			catch (IOException e) { new ErrorMessage("Impossible d'ajouter le niveau "+totallv+"...\n" + e.getLocalizedMessage()); }
 			
-			f = new File("./Maps/" + "level"+ (totallv+1) + ".txt");
+			f = new File(path.get()+ "/Maps/" + "level"+ (totallv+1) + ".txt");
 		}
 		
 		System.out.println("Nombre total de niveaux : " + totallv);
@@ -278,7 +279,7 @@ public class Partie extends JPanel {
 	// Est utilisé dans le constructeur pour chargé une partie
 	private void LoadPartie(String fileToLoad) throws IOException
 	{
-		File partieData = new File("./Saves/" + fileToLoad + ".txt");
+		File partieData = new File(path.get()+ "/Saves/" + fileToLoad + ".txt");
 		
 		BufferedReader br = new BufferedReader(new FileReader(partieData));
 		
@@ -306,7 +307,7 @@ public class Partie extends JPanel {
 			name = "default";
 		niveaux.get(0).SaveThis(name);
 		
-		PrintWriter saveFile = new PrintWriter("./Saves/" + name + ".txt", "UTF-8");
+		PrintWriter saveFile = new PrintWriter(path.get()+ "/Saves/" + name + ".txt", "UTF-8");
 		
 		saveFile.println(niveaux.get(0).name+"P"+name);
 		saveFile.println(true);
@@ -320,8 +321,6 @@ public class Partie extends JPanel {
 		this.removeAll();
 		
 		System.out.println("Saved !");
-		//fenetre.dispose();
-		//System.exit(0);
 	}
 	
 	public String getnom()

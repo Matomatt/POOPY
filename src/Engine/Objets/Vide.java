@@ -2,8 +2,6 @@ package Engine.Objets;
 
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
-
 import Utilitaires.ErrorMessage;
 import Utilitaires.ObjectType;
 

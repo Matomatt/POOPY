@@ -7,13 +7,11 @@ import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import Engine.Niveau;
 import Engine.Partie;
 import Settings.globalVar;
 import Utilitaires.ErrorMessage;

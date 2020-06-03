@@ -4,12 +4,13 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import Settings.globalVar;
+import Utilitaires.path;
 
 public class MapDataManager {
 	
 	public static int[][] LoadMap(String fileName) throws IOException
 	{
-		File mapData = new File("./Maps/" + fileName);
+		File mapData = new File(path.get()+ "/Maps/" + fileName);
 		
 		BufferedReader br = new BufferedReader(new FileReader(mapData));
 		

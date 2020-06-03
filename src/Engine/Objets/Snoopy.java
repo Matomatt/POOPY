@@ -27,6 +27,8 @@ public class Snoopy extends AnimatedObject {
 		animateOnlyWhenMoving = true;
 		nbSpritesPerAnimationSequence = 4;
 		
+		ChangeAnimationFrequency(100);
+		
 		this.ChangeOrientationTo(Direction.directionOfId(_orientation));
 		this.ChangeSpriteTo(spriteList[currentSprite]);
 	}

@@ -1,6 +1,5 @@
 package Menus;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,8 +8,6 @@ import Data.NomScoreAssoc;
 import Data.SaveManager;
 import Utilitaires.ErrorMessage;
 
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
